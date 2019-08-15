@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="dbf_helper.cs" />
     <Compile Include="excel_data_interop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
