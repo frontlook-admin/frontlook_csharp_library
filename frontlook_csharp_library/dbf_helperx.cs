@@ -14,7 +14,7 @@ namespace frontlook_csharp_library.dbf_helperx
 {
     public static class function
     {
-        public static void dbf_to_xls_series(string dbf_filepath/*, forms.DataGridView dataGridView1*/)
+        public static void dbf_to_xls_series(string dbf_filepath)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;
