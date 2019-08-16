@@ -15,14 +15,13 @@ using forms=System.Windows.Forms;
 
 namespace frontlook_csharp_library.excel_data_interop
 {
-    public static class fl_data_to_excel
+    public static class excel_data_interop
     {
 
         public static void dbf_to_xls_series(string dbf_filepath/*, forms.DataGridView dataGridView1*/)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;
-            string x = Path.GetDirectoryName(dbf_filepath);
             OperatingSystem os = Environment.OSVersion;
             //Get version information about the os.
             Version vs = os.Version;
@@ -32,6 +31,7 @@ namespace frontlook_csharp_library.excel_data_interop
             string dbf_constring1 = "";
             //string dbf_filename = "";
             string[] filePaths;
+            string x = Path.GetDirectoryName(dbf_filepath);
             filePaths = Directory.GetFiles(x, "*.dbf");
             //string[] filePaths = Directory.GetFiles(Path.GetDirectoryName(dbf_filepath), "*.dbf");
 
@@ -181,7 +181,17 @@ namespace frontlook_csharp_library.excel_data_interop
         }
 
 
-
+        public static void fl_data_to_xls(string dbf_filepath)
+        {
+            FileInfo fileInfo = new FileInfo(dbf_filepath);
+            string dbf_directory_filepath = fileInfo.DirectoryName;
+            string x = Path.GetDirectoryName(dbf_filepath);
+            string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath);
+            string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath);
+            string query = "SELECT * FROM " + s_without_ext;
+            DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+            DataTableToExcel(dt, Path.GetDirectoryName(dbf_filepath) + @"\" + Path.GetFileNameWithoutExtension(dbf_filepath));
+        }
 
         public static void dbf_to_xls_single(string dbf_filepath/*,forms.DataGridView dataGridView1*/)
         {
@@ -396,7 +406,7 @@ namespace frontlook_csharp_library.excel_data_interop
                     {
                         Worksheet.SaveAs(ExcelFilePath);
                         Excel.Quit();
-                        MessageBox.Show("Excel file saved as "+ExcelFilePath,"DataTable Saved In Excel File",MessageBoxButton.OK,MessageBoxImage.Information);
+                        //MessageBox.Show("Excel file saved as "+ExcelFilePath,"DataTable Saved In Excel File",MessageBoxButton.OK,MessageBoxImage.Information);
                     }
                     catch (Exception ex)
                     {

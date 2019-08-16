@@ -7,14 +7,14 @@ using System.Windows;
 namespace frontlook_csharp_library.dbf_helper
 {
     [System.Runtime.InteropServices.Guid("3A1A8463-73F7-47FE-BCAD-9DDCB9103B07")]
-    public class fl_dbf_helper
+    public class dbf_helper
     {
-        public static DataTable data(string dbf_filepath)
+        public static DataTable fl_dbf_datatable(string dbf_filepath)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;
             string x = Path.GetDirectoryName(dbf_filepath);
-            string dbf_constring1 = constring(dbf_filepath); ;
+            string dbf_constring1 = fl_dbf_constring(dbf_filepath); ;
             //Get version information about the os.
             //data_helper1.constring(dbf_filepath);
 
@@ -56,7 +56,7 @@ namespace frontlook_csharp_library.dbf_helper
             return dt;
         }
 
-        public static string get_os()
+        public static string fl_dbf_get_os()
         {
             string operatingSystem = "";
             OperatingSystem os = Environment.OSVersion;
@@ -118,9 +118,9 @@ namespace frontlook_csharp_library.dbf_helper
             return operatingSystem;
         }
 
-        public static string constring(string dbf_filepath)
+        public static string fl_dbf_constring(string dbf_filepath)
         {
-            string operatingSystem = get_os(); ;
+            string operatingSystem = fl_dbf_get_os(); ;
             string dbf_constring1 = "";
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;
