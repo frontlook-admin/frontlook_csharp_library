@@ -11,101 +11,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Data.OleDb;
+using forms=System.Windows.Forms;
 
 namespace frontlook_csharp_library.excel_data_interop
 {
     public static class data_to_excel
     {
-        public static void DataTableToExcel(DataTable DataTable, string ExcelFilePath)
-        {
-            //AttachConsole(ATTACH_PARENT_PROCESS);
-            try
-            {
-                var total_cells = (DataTable.Columns.Count + 1) * (DataTable.Rows.Count + 1);
-                var rel_cells = 0;
-                int ColumnsCount = 0;
 
-                if (DataTable == null || (ColumnsCount = DataTable.Columns.Count) == 0)
-                    MessageBox.Show("DataTableToExcel: Null or empty input table!", "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                // load excel, and create a new workbook
-                Microsoft.Office.Interop.Excel.Application Excel = new Microsoft.Office.Interop.Excel.Application();
-                Excel.Workbooks.Add();
-                //Excel.Visible = true;
-                // single worksheet
-                Microsoft.Office.Interop.Excel._Worksheet Worksheet = Excel.ActiveSheet;
-
-                object[] Header = new object[ColumnsCount];
-                //var stopwatch = new Stopwatch();
-                //stopwatch.Reset();
-                //stopwatch.Start();
-                // column headings               
-                for (int i = 0; i < ColumnsCount; i++)
-                    Header[i] = DataTable.Columns[i].ColumnName;
-
-                Microsoft.Office.Interop.Excel.Range HeaderRange = Worksheet.get_Range((Microsoft.Office.Interop.Excel.Range)(Worksheet.Cells[1, 1]), (Microsoft.Office.Interop.Excel.Range)(Worksheet.Cells[1, ColumnsCount]));
-                HeaderRange.Value = Header;
-                //HeaderRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
-                //HeaderRange.Interior.Color = SystemColors.GrayTextBrush;
-                HeaderRange.Font.Bold = true;
-
-                // DataCells
-                int RowsCount = DataTable.Rows.Count;
-                object[,] Cells = new object[RowsCount, ColumnsCount];
-
-                for (int j = 0; j < RowsCount; j++)
-                {
-                    for (int i = 0; i < ColumnsCount; i++)
-                    {
-                        Cells[j, i] = DataTable.Rows[j][i];
-
-                    }
-                    //rel_cells = 0;
-                    //rel_cells = ColumnsCount * j;
-                    //var time = stopwatch.ElapsedMilliseconds;
-                    //var speed = (rel_cells / time);
-                    //Console.WriteLine("Speed:" + speed + "cells/sec");
-                }
-                Worksheet.get_Range((Microsoft.Office.Interop.Excel.Range)(Worksheet.Cells[2, 1]), (Microsoft.Office.Interop.Excel.Range)(Worksheet.Cells[RowsCount + 1, ColumnsCount])).Value2 = Cells;
-                //stopwatch.Stop();
-                //var final_speed = (total_cells / stopwatch.ElapsedMilliseconds);
-                //Console.WriteLine("Completed At Speed:" + final_speed + "cells/sec");
-                if (string.IsNullOrEmpty(ExcelFilePath) || File.Exists(ExcelFilePath))
-                {
-
-                    Excel.Visible = true;
-                }
-                else
-                { // no file path is given
-                    try
-                    {
-                        Worksheet.SaveAs(ExcelFilePath);
-                        Excel.Quit();
-                        MessageBox.Show("Excel file saved!");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("ExportToExcel: Excel file could not be saved! Check filepath.\n"
-                                            + ex.Message, "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-                Marshal.FinalReleaseComObject(Worksheet);
-                Marshal.FinalReleaseComObject(HeaderRange);
-                Marshal.FinalReleaseComObject(Excel);
-
-                //System.Windows.MessageBox.Show("Excel file saved!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-        }
-
-
-
-
-        public static void dbf_to_xls_series(string dbf_filepath)
+        public static void dbf_to_xls_series(string dbf_filepath/*, forms.DataGridView dataGridView1*/)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;
@@ -117,7 +30,7 @@ namespace frontlook_csharp_library.excel_data_interop
             //Variable to hold our return value
             string operatingSystem = "";
             string dbf_constring1 = "";
-            string dbf_filename = "";
+            //string dbf_filename = "";
             string[] filePaths;
             filePaths = Directory.GetFiles(x, "*.dbf");
             //string[] filePaths = Directory.GetFiles(Path.GetDirectoryName(dbf_filepath), "*.dbf");
@@ -221,7 +134,10 @@ namespace frontlook_csharp_library.excel_data_interop
                     dbf_constring1 = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + @dbf_directory_filepath + ";Extended Properties=dBase IV;User ID=;Password=";
                     break;
             }
-            string excelFilename = ""; string xml = ""; string xml_schema = ""; string s_without_ext = "";
+            string excelFilename = "";
+            //string xml = "";
+            //string xml_schema = "";
+            string s_without_ext = "";
             foreach (string s in filePaths)
             {
                 DataTable dt = new DataTable();
@@ -236,16 +152,22 @@ namespace frontlook_csharp_library.excel_data_interop
                 //Path.GetFileNameWithoutExtension(dbf_filepath);
                 try
                 {
-
+                    
                     OleDbConnection connection = new OleDbConnection(dbf_constring1);
                     string sql = "SELECT * FROM " + s_without_ext;
                     //string sql = "SELECT COUNT(),* FROM " + dbf_filename;
-
+                    MessageBox.Show(sql + "      \n" + dbf_constring1);
                     OleDbCommand cmd1 = new OleDbCommand(sql, connection);
                     connection.Open();
                     OleDbDataAdapter DA = new OleDbDataAdapter(cmd1);
                     DA.Fill(dt);
                     //DA.Update(dt);
+                   /* dataGridView1.DataSource = null;
+                    dataGridView1.Refresh();
+                    forms.BindingSource bsource = new forms.BindingSource();
+                    bsource.DataSource = dt;
+                    dataGridView1.DataSource = bsource;
+                    dataGridView1.Refresh();*/
                     connection.Close();
                     DataTableToExcel(dt, Path.GetDirectoryName(s) + @"\" + Path.GetFileNameWithoutExtension(s));
                     //excel_data_interop.DataTableToExcel(dt, excelFilename);
@@ -255,10 +177,13 @@ namespace frontlook_csharp_library.excel_data_interop
                     MessageBox.Show("Error : " + e.Message);
                 }
             }
-            MessageBox.Show("Work is complete");
+            MessageBox.Show("DataTables are Successfully saved in Excle files..","Done",MessageBoxButton.OK,MessageBoxImage.Information);
         }
 
-        public static void dbf_to_xls_single(string dbf_filepath)
+
+
+
+        public static void dbf_to_xls_single(string dbf_filepath/*,forms.DataGridView dataGridView1*/)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;
@@ -270,7 +195,7 @@ namespace frontlook_csharp_library.excel_data_interop
             //Variable to hold our return value
             string operatingSystem = "";
             string dbf_constring1 = "";
-            string dbf_filename = "";
+            //string dbf_filename = "";
 
             if (os.Platform == PlatformID.Win32Windows)
             {
@@ -356,7 +281,10 @@ namespace frontlook_csharp_library.excel_data_interop
                     dbf_constring1 = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + @dbf_directory_filepath + ";Extended Properties=dBase IV;User ID=;Password=";
                     break;
             }
-            string excelFilename = ""; string xml = ""; string xml_schema = ""; string s_without_ext = "";
+            string excelFilename = "";
+            //string xml = "";
+            //string xml_schema = "";
+            string s_without_ext = "";
             string s = "";
 
             DataTable dt = new DataTable();
@@ -376,6 +304,14 @@ namespace frontlook_csharp_library.excel_data_interop
                 connection.Open();
                 OleDbDataAdapter DA = new OleDbDataAdapter(cmd1);
                 DA.Fill(dt);
+
+                /*dataGridView1.DataSource = null;
+                dataGridView1.Refresh();
+                forms.BindingSource bsource = new forms.BindingSource();
+                bsource.DataSource = dt;
+                dataGridView1.DataSource = bsource;
+                dataGridView1.Refresh();*/
+
                 //DA.Update(dt);
                 connection.Close();
                 //BackgroundWorker bgw = new BackgroundWorker();
@@ -386,18 +322,22 @@ namespace frontlook_csharp_library.excel_data_interop
             {
                 MessageBox.Show("Error : " + e.Message);
             }
+
+            MessageBox.Show("DataTable is Successfully saved in Excle file..", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
 
 
-        public static void DataTableToExcelWithProgressBar(DataTable DataTable, string ExcelFilePath, ProgressBar progress, string l, int t)
+
+
+
+        public static void DataTableToExcel(DataTable DataTable, string ExcelFilePath)
         {
             //AttachConsole(ATTACH_PARENT_PROCESS);
             try
             {
-                //progress = new ProgressBar();
                 var total_cells = (DataTable.Columns.Count + 1) * (DataTable.Rows.Count + 1);
-                var rel_cells = 0;
+                
                 int ColumnsCount = 0;
 
                 if (DataTable == null || (ColumnsCount = DataTable.Columns.Count) == 0)
@@ -421,6 +361,7 @@ namespace frontlook_csharp_library.excel_data_interop
                 Microsoft.Office.Interop.Excel.Range HeaderRange = Worksheet.get_Range((Microsoft.Office.Interop.Excel.Range)(Worksheet.Cells[1, 1]), (Microsoft.Office.Interop.Excel.Range)(Worksheet.Cells[1, ColumnsCount]));
                 HeaderRange.Value = Header;
                 //HeaderRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                //HeaderRange.Interior.Color = SystemColors.GrayTextBrush;
                 HeaderRange.Font.Bold = true;
 
                 // DataCells
@@ -432,10 +373,7 @@ namespace frontlook_csharp_library.excel_data_interop
                     for (int i = 0; i < ColumnsCount; i++)
                     {
                         Cells[j, i] = DataTable.Rows[j][i];
-                        rel_cells++;
-                        //progress.Value = (rel_cells / total_cells) * 90;
-                        t = (rel_cells / total_cells) * 90;
-                        l = "Please wait...Work in progress... " + t + "%";
+
                     }
                     //rel_cells = 0;
                     //rel_cells = ColumnsCount * j;
@@ -444,8 +382,6 @@ namespace frontlook_csharp_library.excel_data_interop
                     //Console.WriteLine("Speed:" + speed + "cells/sec");
                 }
                 Worksheet.get_Range((Microsoft.Office.Interop.Excel.Range)(Worksheet.Cells[2, 1]), (Microsoft.Office.Interop.Excel.Range)(Worksheet.Cells[RowsCount + 1, ColumnsCount])).Value2 = Cells;
-                t = 95;
-                l = "Please wait...Work in progress... " + t + "%";
                 //stopwatch.Stop();
                 //var final_speed = (total_cells / stopwatch.ElapsedMilliseconds);
                 //Console.WriteLine("Completed At Speed:" + final_speed + "cells/sec");
@@ -459,13 +395,11 @@ namespace frontlook_csharp_library.excel_data_interop
                     try
                     {
                         Worksheet.SaveAs(ExcelFilePath);
-                        Excel.Visible = true;
-                        //Excel.Quit();
-                        MessageBox.Show("Excel file saved!");
+                        Excel.Quit();
+                        MessageBox.Show("Excel file saved as "+ExcelFilePath,"DataTable Saved In Excel File",MessageBoxButton.OK,MessageBoxImage.Information);
                     }
                     catch (Exception ex)
                     {
-
                         MessageBox.Show("ExportToExcel: Excel file could not be saved! Check filepath.\n"
                                             + ex.Message, "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
@@ -473,8 +407,8 @@ namespace frontlook_csharp_library.excel_data_interop
                 Marshal.FinalReleaseComObject(Worksheet);
                 Marshal.FinalReleaseComObject(HeaderRange);
                 Marshal.FinalReleaseComObject(Excel);
-                t = 100;
-                l = "Please wait...Work in progress... " + t + "%";
+
+                //System.Windows.MessageBox.Show("Excel file saved!");
             }
             catch (Exception ex)
             {
@@ -483,11 +417,9 @@ namespace frontlook_csharp_library.excel_data_interop
 
         }
 
-
-
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
+        public static extern bool AllocConsole();
 
 
     }

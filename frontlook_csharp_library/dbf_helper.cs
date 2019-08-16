@@ -14,7 +14,7 @@ namespace frontlook_csharp_library.dbf_helper
 {
     public static class function
     {
-        public static void get_os(string operatingSystem)
+        public static void get_os(this string operatingSystem)
         {
             OperatingSystem os = Environment.OSVersion;
             Version vs = os.Version;
@@ -74,11 +74,11 @@ namespace frontlook_csharp_library.dbf_helper
             }
         }
 
-        public static void dbf_con_string(string dbf_directory_filepath, string dbf_constring1)
+        public static void dbf_con_string(this string dbf_directory_filepath, string dbf_constring1="")
         {
             string operatingSystem = "";
 
-            string dbf_filename = "";
+            //string dbf_filename = "";
 
             get_os(operatingSystem);
             if (operatingSystem != "")
@@ -112,7 +112,7 @@ namespace frontlook_csharp_library.dbf_helper
             }
         }
 
-        public static void getDataTable(string dbf_filepath, DataTable dt)
+        public static void getDataTable(this DataTable dt, string dbf_filepath)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;
@@ -123,7 +123,10 @@ namespace frontlook_csharp_library.dbf_helper
 
             //Variable to hold our return value
 
-            string excelFilename = ""; string xml = ""; string xml_schema = ""; string s_without_ext = "";
+            string excelFilename = "";
+            //string xml = ""; 
+            //string xml_schema = ""; 
+            string s_without_ext = "";
             string s = "";
 
 
