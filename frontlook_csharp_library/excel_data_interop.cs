@@ -15,7 +15,7 @@ using forms=System.Windows.Forms;
 
 namespace frontlook_csharp_library.excel_data_interop
 {
-    public static class data_to_excel
+    public static class fl_data_to_excel
     {
 
         public static void dbf_to_xls_series(string dbf_filepath/*, forms.DataGridView dataGridView1*/)
@@ -157,9 +157,9 @@ namespace frontlook_csharp_library.excel_data_interop
                     string sql = "SELECT * FROM " + s_without_ext;
                     //string sql = "SELECT COUNT(),* FROM " + dbf_filename;
                     MessageBox.Show(sql + "      \n" + dbf_constring1);
-                    OleDbCommand cmd1 = new OleDbCommand(sql, connection);
+                    OleDbCommand cmd = new OleDbCommand(sql, connection);
                     connection.Open();
-                    OleDbDataAdapter DA = new OleDbDataAdapter(cmd1);
+                    OleDbDataAdapter DA = new OleDbDataAdapter(cmd);
                     DA.Fill(dt);
                     //DA.Update(dt);
                    /* dataGridView1.DataSource = null;
@@ -174,7 +174,7 @@ namespace frontlook_csharp_library.excel_data_interop
                 }
                 catch (OleDbException e)
                 {
-                    MessageBox.Show("Error : " + e.Message);
+                    MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             MessageBox.Show("DataTables are Successfully saved in Excle files..","Done",MessageBoxButton.OK,MessageBoxImage.Information);
@@ -300,9 +300,9 @@ namespace frontlook_csharp_library.excel_data_interop
                 OleDbConnection connection = new OleDbConnection(dbf_constring1);
                 string sql = "SELECT * FROM " + s_without_ext;
 
-                OleDbCommand cmd1 = new OleDbCommand(sql, connection);
+                OleDbCommand cmd = new OleDbCommand(sql, connection);
                 connection.Open();
-                OleDbDataAdapter DA = new OleDbDataAdapter(cmd1);
+                OleDbDataAdapter DA = new OleDbDataAdapter(cmd);
                 DA.Fill(dt);
 
                 /*dataGridView1.DataSource = null;
@@ -320,7 +320,7 @@ namespace frontlook_csharp_library.excel_data_interop
             }
             catch (OleDbException e)
             {
-                MessageBox.Show("Error : " + e.Message);
+                MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             MessageBox.Show("DataTable is Successfully saved in Excle file..", "Done", MessageBoxButton.OK, MessageBoxImage.Information);

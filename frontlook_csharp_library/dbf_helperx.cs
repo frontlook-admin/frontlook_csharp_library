@@ -1,64 +1,21 @@
-﻿using System;
-using System.Data;
-using System.Data.OleDb;
+﻿/*using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
+using System.Data.OleDb;
+using System.Data;
 
-namespace frontlook_csharp_library.dbf_helper
+namespace frontlook_csharp_library.dbf_helperx
 {
-    [System.Runtime.InteropServices.Guid("3A1A8463-73F7-47FE-BCAD-9DDCB9103B07")]
-    public class fl_dbf_helper
+    public static class function
     {
-        public static DataTable data(string dbf_filepath)
+        public static void get_os(this string operatingSystem)
         {
-            FileInfo fileInfo = new FileInfo(dbf_filepath);
-            string dbf_directory_filepath = fileInfo.DirectoryName;
-            string x = Path.GetDirectoryName(dbf_filepath);
-            string dbf_constring1 = constring(dbf_filepath); ;
-            //Get version information about the os.
-            //data_helper1.constring(dbf_filepath);
-
-            //Variable to hold our return value
-
-            string excelFilename = "";
-            //string xml = ""; 
-            //string xml_schema = ""; 
-            string s_without_ext = "";
-            string s = "";
-
-
-            s = dbf_filepath;
-            excelFilename = "";
-            s_without_ext = "";
-            excelFilename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + s + ".xlsx";
-            s_without_ext = Path.GetFileNameWithoutExtension(s);
-            DataTable dt = new DataTable();
-            try
-            {
-
-                OleDbConnection connection = new OleDbConnection(dbf_constring1);
-                string sql = "SELECT * FROM " + s_without_ext;
-
-                OleDbCommand cmd = new OleDbCommand(sql, connection);
-                connection.Open();
-                OleDbDataAdapter DA = new OleDbDataAdapter(cmd);
-                DA.Fill(dt);
-                //DA.Update(dt);
-                connection.Close();
-                //BackgroundWorker bgw = new BackgroundWorker();
-
-
-            }
-            catch (OleDbException e)
-            {
-                MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            return dt;
-        }
-
-        public static string get_os()
-        {
-            string operatingSystem = "";
             OperatingSystem os = Environment.OSVersion;
             Version vs = os.Version;
             if (os.Platform == PlatformID.Win32Windows)
@@ -115,19 +72,15 @@ namespace frontlook_csharp_library.dbf_helper
                         break;
                 }
             }
-            return operatingSystem;
         }
 
-        public static string constring(string dbf_filepath)
+        public static void dbf_con_string(this string dbf_directory_filepath, string dbf_constring1="")
         {
-            string operatingSystem = get_os(); ;
-            string dbf_constring1 = "";
-            FileInfo fileInfo = new FileInfo(dbf_filepath);
-            string dbf_directory_filepath = fileInfo.DirectoryName;
-            string x = Path.GetDirectoryName(dbf_filepath);
+            string operatingSystem = "";
+
             //string dbf_filename = "";
 
-            //data_helper.get_os(operatingSystem);
+            get_os(operatingSystem);
             if (operatingSystem != "")
             {
                 operatingSystem = "Windows " + operatingSystem;
@@ -157,7 +110,53 @@ namespace frontlook_csharp_library.dbf_helper
                     dbf_constring1 = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + @dbf_directory_filepath + ";Extended Properties=dBase IV;User ID=;Password=";
                     break;
             }
-            return dbf_constring1;
+        }
+
+        public static void getDataTable(this DataTable dt, string dbf_filepath)
+        {
+            FileInfo fileInfo = new FileInfo(dbf_filepath);
+            string dbf_directory_filepath = fileInfo.DirectoryName;
+            string x = Path.GetDirectoryName(dbf_filepath);
+            string dbf_constring1 = "";
+            //Get version information about the os.
+            dbf_con_string(dbf_directory_filepath, dbf_constring1);
+
+            //Variable to hold our return value
+
+            string excelFilename = "";
+            //string xml = ""; 
+            //string xml_schema = ""; 
+            string s_without_ext = "";
+            string s = "";
+
+
+            s = dbf_filepath;
+            excelFilename = "";
+            s_without_ext = "";
+            excelFilename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + s + ".xlsx";
+            s_without_ext = Path.GetFileNameWithoutExtension(s);
+
+            try
+            {
+
+                OleDbConnection connection = new OleDbConnection(dbf_constring1);
+                string sql = "SELECT * FROM " + s_without_ext;
+
+                OleDbCommand cmd = new OleDbCommand(sql, connection);
+                connection.Open();
+                OleDbDataAdapter DA = new OleDbDataAdapter(cmd);
+                DA.Fill(dt);
+                //DA.Update(dt);
+                connection.Close();
+                //BackgroundWorker bgw = new BackgroundWorker();
+
+
+            }
+            catch (OleDbException e)
+            {
+                MessageBox.Show("Error : " + e.Message,"Error",MessageBoxButton.OK,MessageBoxImage.Error);
+            }
         }
     }
-}
+
+}*/

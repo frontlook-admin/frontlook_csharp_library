@@ -69,8 +69,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="data_helper1.cs" />
+    <Compile Include="database_helper.cs" />
     <Compile Include="dbf_helper.cs" />
+    <Compile Include="dbf_helperx.cs" />
     <Compile Include="excel_data_interop.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
