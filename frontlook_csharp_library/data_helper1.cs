@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace frontlook_csharp_library.data_helper
@@ -38,7 +34,7 @@ namespace frontlook_csharp_library.data_helper
             DataTable dt = new DataTable();
             try
             {
-                
+
                 OleDbConnection connection = new OleDbConnection(dbf_constring1);
                 string sql = "SELECT * FROM " + s_without_ext;
 
@@ -50,7 +46,7 @@ namespace frontlook_csharp_library.data_helper
                 connection.Close();
                 //BackgroundWorker bgw = new BackgroundWorker();
 
-                
+
             }
             catch (OleDbException e)
             {
