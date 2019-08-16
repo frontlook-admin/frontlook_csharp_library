@@ -12,9 +12,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Data.OleDb;
 
-namespace frontlook_csharp_library
+namespace frontlook_csharp_library.excel_data_interop
 {
-    public class excel_data_interop
+    public static class data_to_excel
     {
         public static void DataTableToExcel(DataTable DataTable, string ExcelFilePath)
         {
@@ -247,7 +247,7 @@ namespace frontlook_csharp_library
                     DA.Fill(dt);
                     //DA.Update(dt);
                     connection.Close();
-                    excel_data_interop.DataTableToExcel(dt, Path.GetDirectoryName(s) + @"\" + Path.GetFileNameWithoutExtension(s));
+                    DataTableToExcel(dt, Path.GetDirectoryName(s) + @"\" + Path.GetFileNameWithoutExtension(s));
                     //excel_data_interop.DataTableToExcel(dt, excelFilename);
                 }
                 catch (OleDbException e)
@@ -380,7 +380,7 @@ namespace frontlook_csharp_library
                 connection.Close();
                 //BackgroundWorker bgw = new BackgroundWorker();
 
-                excel_data_interop.DataTableToExcel(dt, Path.GetDirectoryName(s) + @"\" + Path.GetFileNameWithoutExtension(s));
+                DataTableToExcel(dt, Path.GetDirectoryName(s) + @"\" + Path.GetFileNameWithoutExtension(s));
             }
             catch (OleDbException e)
             {
@@ -488,5 +488,7 @@ namespace frontlook_csharp_library
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
+
+
     }
 }

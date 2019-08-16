@@ -10,9 +10,9 @@ using System.Windows.Controls;
 using System.Data.OleDb;
 using System.Data;
 
-namespace frontlook_csharp_library
+namespace frontlook_csharp_library.dbf_helper
 {
-    public static class dbf_helper
+    public static class function
     {
         public static void get_os(string operatingSystem)
         {
@@ -155,4 +155,5 @@ namespace frontlook_csharp_library
             }
         }
     }
+
 }
