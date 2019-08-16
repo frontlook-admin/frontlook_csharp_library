@@ -95,11 +95,11 @@ namespace frontlook_csharp_library.dbf_helperx
                 operatingSystem = "Windows " + operatingSystem;
                 //See if there's a service pack installed.
 
-                /*if (os.ServicePack != "")
-                {
+                //if (os.ServicePack != "")
+                //{
                     //Append it to the OS name.  i.e. "Windows XP Service Pack 3"
-                    operatingSystem += " " + os.ServicePack;
-                }*/
+                  //  operatingSystem += " " + os.ServicePack;
+                //}
 
                 //Append the OS architecture.  i.e. "Windows XP Service Pack 3 32-bit"
                 //operatingSystem += " " + getOSArchitecture().ToString() + "-bit";
@@ -158,14 +158,14 @@ namespace frontlook_csharp_library.dbf_helperx
                     OleDbDataAdapter DA = new OleDbDataAdapter(cmd);
                     DA.Fill(dt);
                     //DA.Update(dt);
-                    /* dataGridView1.DataSource = null;
-                     dataGridView1.Refresh();
-                     forms.BindingSource bsource = new forms.BindingSource();
-                     bsource.DataSource = dt;
-                     dataGridView1.DataSource = bsource;
-                     dataGridView1.Refresh();*/
-                    connection.Close();
-                    DataTableToExcel(dt, Path.GetDirectoryName(s) + @"\" + Path.GetFileNameWithoutExtension(s));
+                    // dataGridView1.DataSource = null;
+                     //dataGridView1.Refresh();
+                     //forms.BindingSource bsource = new forms.BindingSource();
+                     //bsource.DataSource = dt;
+                     //dataGridView1.DataSource = bsource;
+                     //dataGridView1.Refresh();
+                    //connection.Close();
+                    //DataTableToExcel(dt, Path.GetDirectoryName(s) + @"\" + Path.GetFileNameWithoutExtension(s));
                     //excel_data_interop.DataTableToExcel(dt, excelFilename);
                 }
                 catch (OleDbException e)
