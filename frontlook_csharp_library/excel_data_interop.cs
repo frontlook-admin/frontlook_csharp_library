@@ -140,10 +140,11 @@ namespace frontlook_csharp_library.excel_data_interop
             FileInfo fileinfo = new FileInfo(filepaths[0]);
 
 
-            var ExcelFilePath = dir_name + @"\" + Path.GetFileNameWithoutExtension(filepaths[0]);
+            //var ExcelFilePath1 = dir_name + @"\" + Path.GetFileNameWithoutExtension(filepaths[0]);
+            var ExcelFilePath = dir_name + @"\" + Path.GetFileNameWithoutExtension(dir_name);
+            //MessageBox.Show(ExcelFilePath1);
             if (string.IsNullOrEmpty(ExcelFilePath) || File.Exists(ExcelFilePath))
             {
-
                 ExcelApp.Visible = true;
             }
             else
