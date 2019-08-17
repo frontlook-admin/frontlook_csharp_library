@@ -49,13 +49,6 @@ namespace frontlook_csharp_library.excel_data_interop
             return dt;
         }
 
-
-
-
-
-
-
-
         public static DataTable fl_get_only_datatable(string dbf_filepath_with_name_and_extension)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath_with_name_and_extension);
