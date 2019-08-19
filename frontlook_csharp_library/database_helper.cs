@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.IO;
 
 namespace frontlook_csharp_library.database_helper
 {
@@ -75,7 +76,6 @@ namespace frontlook_csharp_library.database_helper
             return operatingSystem;
         }
 
-
         public static DataTable fl_get_oledb_datatable(string constring, string query)
         {
             DataTable dt = new DataTable();
@@ -86,17 +86,40 @@ namespace frontlook_csharp_library.database_helper
                 connection.Open();
                 OleDbDataAdapter DA = new OleDbDataAdapter(cmd);
                 DA.Fill(dt);
-                //DA.Update(dt);
                 connection.Close();
-                //BackgroundWorker bgw = new BackgroundWorker();
-
-
+                cmd.Dispose();
+                connection.Dispose();
             }
             catch (OleDbException e)
             {
                 MessageBox.Show("Error : " + e.Message,"Error",MessageBoxButton.OK,MessageBoxImage.Error);
             }
             return dt;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
+        public static DataSet fl_get_oledb_dataset(string constring, string query)
+        {
+            DataSet ds = new DataSet("data_set");
+            try
+            {
+                OleDbConnection connection = new OleDbConnection(constring);                
+                OleDbCommand cmd = new OleDbCommand(query, connection);
+                connection.Open();
+                OleDbDataAdapter DA = new OleDbDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                DA.Fill(dt);
+                ds.Locale = System.Threading.Thread.CurrentThread.CurrentCulture;
+                ds.Tables.Add(dt);
+                connection.Close();
+                cmd.Dispose();
+                connection.Dispose();
+            }
+            catch (OleDbException e)
+            {
+                MessageBox.Show("Error : " + e.Message,"Error",MessageBoxButton.OK,MessageBoxImage.Error);
+            }
+            return ds;
         }
 
         public static int fl_oledb_execute_command(string constring, string sql_command)
@@ -112,8 +135,9 @@ namespace frontlook_csharp_library.database_helper
                 //DA.Update(dt);
                 connection.Close();
                 //BackgroundWorker bgw = new BackgroundWorker();
-                
 
+                cmd.Dispose();
+                connection.Dispose();
             }
             catch (OleDbException e)
             {
@@ -134,6 +158,8 @@ namespace frontlook_csharp_library.database_helper
                 DA.Fill(dt);
                 //DA.Update(dt);
                 connection.Close();
+                cmd.Dispose();
+                connection.Dispose();
             }
             catch (OleDbException e)
             {
@@ -142,6 +168,7 @@ namespace frontlook_csharp_library.database_helper
             return dt;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
         public static int fl_odbc_execute_command(string constring, string sql_command)
         {
             int r = 0;
@@ -156,7 +183,8 @@ namespace frontlook_csharp_library.database_helper
                 connection.Close();
                 //BackgroundWorker bgw = new BackgroundWorker();
 
-
+                cmd.Dispose();
+                connection.Dispose();
             }
             catch (OleDbException e)
             {
@@ -164,6 +192,14 @@ namespace frontlook_csharp_library.database_helper
             }
             return r;
         }
+
+        public static DataSet fl_get_only_dataset(string constring, string query)
+        {
+            DataSet ds = fl_get_oledb_dataset(constring, query);
+            return ds;
+        }
+
+
 
     }
 }

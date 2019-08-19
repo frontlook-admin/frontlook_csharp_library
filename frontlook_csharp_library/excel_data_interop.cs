@@ -26,6 +26,31 @@ namespace frontlook_csharp_library.excel_data_interop
             DataTableToExcel(dt, Path.GetDirectoryName(dbf_filepath_with_name_and_extension) + @"\" + Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension));
         }
 
+        public static void fl_data_to_xls(string query,string constring1=null,string dbf_filepath_with_name_and_extension = null)
+        {
+            if(!dbf_filepath_with_name_and_extension.Equals(null)|| !dbf_filepath_with_name_and_extension.Equals(string.Empty))
+            {
+                string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
+                string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension);
+                DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+                DataTableToExcel(dt, Path.GetDirectoryName(dbf_filepath_with_name_and_extension) + @"\" + Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension));
+            }
+            else
+            {
+                DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring1, query);
+                var filename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + dt.TableName;
+                DataTableToExcel(dt, filename);
+            }
+        }
+
+
+        /*public static void fl_data_to_xls(string query,string constring)
+        {
+            DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+            var filename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + dt.TableName;
+            DataTableToExcel(dt, filename);
+        }*/
+
 
         public static void fl_data_to_xls_multiple_datatable_in_single_excel_file(string dbf_filepath_with_name_and_extension)
         {
@@ -33,7 +58,7 @@ namespace frontlook_csharp_library.excel_data_interop
             string[] filePaths;
             //string[] filepath_null;
             filePaths = Directory.GetFiles(dir_name, "*.dbf");
-            DatsetToExcel_single_excel_file(filePaths);
+            DataToExcel_single_excel_file(filePaths);
             //DataTableToExcel(dt, Path.GetDirectoryName(dbf_filepath_with_name_and_extension) + @"\" + Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension));
         }
 
@@ -49,7 +74,7 @@ namespace frontlook_csharp_library.excel_data_interop
             return dt;
         }
 
-        public static DataTable fl_get_only_datatable(string dbf_filepath_with_name_and_extension)
+        public static DataTable fl_get_only_datatable_for_dbf(string dbf_filepath_with_name_and_extension)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath_with_name_and_extension);
             string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
@@ -60,7 +85,27 @@ namespace frontlook_csharp_library.excel_data_interop
         }
 
 
-        public static void DatsetToExcel_single_excel_file(string[] filepaths)
+        public static DataTable fl_get_OnlyDatatableForDbf_variableQuery(string dbf_filepath_with_name_and_extension, String query)
+        {
+            FileInfo fileInfo = new FileInfo(dbf_filepath_with_name_and_extension);
+            string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
+            string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension);
+            DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+            return dt;
+        }
+
+
+        public static DataSet fl_get_only_dataset_for_dbf(string dbf_filepath_with_name_and_extension)
+        {
+            FileInfo fileInfo = new FileInfo(dbf_filepath_with_name_and_extension);
+            string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
+            string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension);
+            string query = "SELECT * FROM " + s_without_ext;
+            DataSet ds = database_helper.database_helper.fl_get_oledb_dataset(constring, query);
+            return ds;
+        }
+
+        public static void DataToExcel_single_excel_file(string[] filepaths)
         {
             string dir_name = Path.GetDirectoryName(filepaths[0]);
             var ExcelApp = new Microsoft.Office.Interop.Excel.Application();
@@ -71,7 +116,7 @@ namespace frontlook_csharp_library.excel_data_interop
             foreach (string dbf_filepath_with_name_and_extension in filepaths)
             {
                 
-                DataTable DataTable = fl_get_only_datatable(dbf_filepath_with_name_and_extension);
+                DataTable DataTable = fl_get_only_datatable_for_dbf(dbf_filepath_with_name_and_extension);
                 try
                 {
                     HeaderRange = null;
@@ -135,6 +180,109 @@ namespace frontlook_csharp_library.excel_data_interop
 
             //var ExcelFilePath1 = dir_name + @"\" + Path.GetFileNameWithoutExtension(filepaths[0]);
             var ExcelFilePath = dir_name + @"\" + Path.GetFileNameWithoutExtension(dir_name);
+            //MessageBox.Show(ExcelFilePath1);
+            if (string.IsNullOrEmpty(ExcelFilePath) || File.Exists(ExcelFilePath))
+            {
+                ExcelApp.Visible = true;
+            }
+            else
+            {
+                try
+                {
+                    ExcelWorkBook.SaveAs(ExcelFilePath);
+                    ExcelWorkBook.Close();
+                    ExcelApp.Quit();
+                    //MessageBox.Show("Excel file saved as "+ExcelFilePath,"DataTable Saved In Excel File",MessageBoxButton.OK,MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("ExportToExcel: Excel file could not be saved! Check filepath.\n"
+                                        + ex.Message, "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            //Marshal.FinalReleaseComObject(ExcelWorkSheet);
+            Marshal.FinalReleaseComObject(HeaderRange);
+            Marshal.FinalReleaseComObject(ExcelApp);
+        }
+
+        public static void DataSetToExcel_single_excel_file(DataSet ds)
+        {
+            //string dir_name = Path.GetDirectoryName(filepaths[0]);
+            var ExcelApp = new Microsoft.Office.Interop.Excel.Application();
+            Microsoft.Office.Interop.Excel.Workbook ExcelWorkBook = null;
+            Microsoft.Office.Interop.Excel.Range HeaderRange = null;
+            ExcelWorkBook = ExcelApp.Workbooks.Add();
+            int no_worksheet = 0;
+            var name = ds.DataSetName.ToString();
+            for (int count = 0; count < ds.Tables.Count; count++)
+            {
+
+                DataTable DataTable = ds.Tables[count];
+                var xlssheetname = ds.Tables[count].TableName.ToString();
+
+                try
+                {
+                    HeaderRange = null;
+                    int ColumnsCount = 0;
+
+                    if (DataTable == null || (ColumnsCount = DataTable.Columns.Count) == 0)
+                        MessageBox.Show("DataTableToExcel: Null or empty input table!", "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
+
+
+                    ExcelApp.Visible = true;
+
+                    Microsoft.Office.Interop.Excel.Worksheet ExcelWorkSheet;
+                    if (no_worksheet == 0)
+                    {
+                        ExcelWorkSheet = ExcelWorkBook.ActiveSheet;
+                        no_worksheet = no_worksheet + 1;
+                    }
+                    else
+                    {
+                        ExcelWorkSheet = ExcelWorkBook.Worksheets.Add();
+                    }
+
+
+                    object[] Header = new object[ColumnsCount];
+
+                    for (int i = 0; i < ColumnsCount; i++)
+                        Header[i] = DataTable.Columns[i].ColumnName;
+
+                    HeaderRange = ExcelWorkSheet.get_Range((Microsoft.Office.Interop.Excel.Range)(ExcelWorkSheet.Cells[1, 1]), (Microsoft.Office.Interop.Excel.Range)(ExcelWorkSheet.Cells[1, ColumnsCount]));
+                    HeaderRange.Value = Header;
+                    HeaderRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+
+                    HeaderRange.Font.Bold = true;
+
+                    // DataCells
+                    int RowsCount = DataTable.Rows.Count;
+                    object[,] Cells = new object[RowsCount, ColumnsCount];
+
+                    for (int j = 0; j < RowsCount; j++)
+                    {
+                        for (int i = 0; i < ColumnsCount; i++)
+                        {
+                            Cells[j, i] = DataTable.Rows[j][i];
+
+                        }
+
+                    }
+                    ExcelWorkSheet.get_Range((Microsoft.Office.Interop.Excel.Range)(ExcelWorkSheet.Cells[2, 1]), (Microsoft.Office.Interop.Excel.Range)(ExcelWorkSheet.Cells[RowsCount + 1, ColumnsCount])).Value2 = Cells;
+
+
+                    ExcelWorkSheet.Name = xlssheetname;
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            //FileInfo fileinfo = new FileInfo(filepaths[0]);
+
+
+            //var ExcelFilePath1 = dir_name + @"\" + Path.GetFileNameWithoutExtension(filepaths[0]);
+            var ExcelFilePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + name;
             //MessageBox.Show(ExcelFilePath1);
             if (string.IsNullOrEmpty(ExcelFilePath) || File.Exists(ExcelFilePath))
             {
