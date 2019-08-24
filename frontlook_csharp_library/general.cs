@@ -24,6 +24,10 @@ namespace frontlook_csharp_library.general
             {
                 return System.DateTime.ParseExact(date_string, "dd-MM-yy", ci, DateTimeStyles.AssumeLocal);
             }
+            else if (date_string.Length.Equals(6))
+            {
+                return System.DateTime.ParseExact(date_string, "dd-MM-", ci, DateTimeStyles.AssumeLocal);
+            }
             else
             {
                 return System.DateTime.ParseExact(date_string, "dd-MM-yyyy", ci, DateTimeStyles.AssumeLocal);
@@ -51,6 +55,19 @@ namespace frontlook_csharp_library.general
         {
             var ci = new CultureInfo("en-IN");
             return System.DateTime.ParseExact(date_string, "yyyy_MM_dd", ci, DateTimeStyles.AssumeLocal);
+        }
+
+        public static System.DateTime Parse_DateTime(string DateTime)
+        {
+            var ci = new CultureInfo("en-IN");
+            if (database_helper.database_helper.fl_get_os().Equals("7"))
+            {
+                return System.DateTime.ParseExact(DateTime, "M/d/yyyy h:mm:ss tt", ci, DateTimeStyles.AssumeLocal);
+            }
+            else
+            {
+                return System.DateTime.ParseExact(DateTime, "dd/MMM/yy h:mm:ss tt", ci, DateTimeStyles.AssumeLocal);
+            }
         }
     }
 }
