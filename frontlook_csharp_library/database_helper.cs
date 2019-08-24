@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Data.Odbc;
+using MySql.Data;
 using Microsoft.SqlServer.Server;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
+using MySql.Data.MySqlClient;
 
 namespace frontlook_csharp_library.database_helper
 {
@@ -193,13 +195,52 @@ namespace frontlook_csharp_library.database_helper
             return r;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
+        public static int fl_mysql_execute_command(string constring, string sql_command)
+        {
+            int r = 0;
+            try
+            {
+                MySqlConnection connection = new MySqlConnection(constring);
+                MySqlCommand cmd = new MySqlCommand(sql_command, connection);
+                connection.Open();
+                r = cmd.ExecuteNonQuery();
+                connection.Close();
+                cmd.Dispose();
+                connection.Dispose();
+            }
+            catch (MySqlException e)
+            {
+                MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return r;
+        }
+
         public static DataSet fl_get_only_dataset(string constring, string query)
         {
             DataSet ds = fl_get_oledb_dataset(constring, query);
             return ds;
         }
 
-
+        public static MySqlDataReader fl_mysql_myreader(string constring, string sql_command)
+        {
+            MySqlDataReader r=null;
+            try
+            {
+                MySqlConnection connection = new MySqlConnection(constring);
+                MySqlCommand cmd = new MySqlCommand(sql_command, connection);
+                connection.Open();
+                r = cmd.ExecuteReader();
+                connection.Close();
+                cmd.Dispose();
+                connection.Dispose();
+            }
+            catch (MySqlException e)
+            {
+                MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return r;
+        }
 
     }
 }
