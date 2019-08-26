@@ -17,42 +17,42 @@ namespace frontlook_csharp_library.excel_data_interop
 {
     public static class data_to_excel
     {
-        public static void fl_data_to_xls(string dbf_filepath_with_name_and_extension)
+        public static void FL_data_to_xls(string dbf_filepath_with_name_and_extension)
         {
-            string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
+            string constring = dbf_helper.dbf_helper.FL_dbf_constring(dbf_filepath_with_name_and_extension);
             string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension);
             string query = "SELECT * FROM " + s_without_ext;
-            DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+            DataTable dt = FL_database_helper.FL_oledb_helper.FL_get_oledb_datatable(constring, query);
             DataTableToExcel(dt, Path.GetDirectoryName(dbf_filepath_with_name_and_extension) + @"\" + Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension));
         }
 
-        public static void fl_data_to_xls(string query,string constring1=null,string dbf_filepath_with_name_and_extension = null)
+        public static void FL_data_to_xls(string query,string constring1=null,string dbf_filepath_with_name_and_extension = null)
         {
             if(!dbf_filepath_with_name_and_extension.Equals(null)|| !dbf_filepath_with_name_and_extension.Equals(string.Empty))
             {
-                string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
+                string constring = dbf_helper.dbf_helper.FL_dbf_constring(dbf_filepath_with_name_and_extension);
                 string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension);
-                DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+                DataTable dt = FL_database_helper.FL_oledb_helper.FL_get_oledb_datatable(constring, query);
                 DataTableToExcel(dt, Path.GetDirectoryName(dbf_filepath_with_name_and_extension) + @"\" + Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension));
             }
             else
             {
-                DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring1, query);
+                DataTable dt = FL_database_helper.FL_oledb_helper.FL_get_oledb_datatable(constring1, query);
                 var filename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + dt.TableName;
                 DataTableToExcel(dt, filename);
             }
         }
 
 
-        /*public static void fl_data_to_xls(string query,string constring)
+        /*public static void FL_data_to_xls(string query,string constring)
         {
-            DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+            DataTable dt = FL_database_helper.FL_oledb_helper.FL_get_oledb_datatable(constring, query);
             var filename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + dt.TableName;
             DataTableToExcel(dt, filename);
         }*/
 
 
-        public static void fl_data_to_xls_multiple_datatable_in_single_excel_file(string dbf_filepath_with_name_and_extension)
+        public static void FL_data_to_xls_multiple_datatable_in_single_excel_file(string dbf_filepath_with_name_and_extension)
         {
             string dir_name = Path.GetDirectoryName(dbf_filepath_with_name_and_extension);
             string[] filePaths;
@@ -63,45 +63,45 @@ namespace frontlook_csharp_library.excel_data_interop
         }
 
 
-        public static DataTable fl_data_to_xls_with_datatable(string dbf_filepath_with_name_and_extension)
+        public static DataTable FL_data_to_xls_with_datatable(string dbf_filepath_with_name_and_extension)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath_with_name_and_extension);
-            string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
+            string constring = dbf_helper.dbf_helper.FL_dbf_constring(dbf_filepath_with_name_and_extension);
             string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension);
             string query = "SELECT * FROM " + s_without_ext;
-            DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+            DataTable dt = FL_database_helper.FL_oledb_helper.FL_get_oledb_datatable(constring, query);
             DataTableToExcel(dt, Path.GetDirectoryName(dbf_filepath_with_name_and_extension) + @"\" + Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension));
             return dt;
         }
 
-        public static DataTable fl_get_only_datatable_for_dbf(string dbf_filepath_with_name_and_extension)
+        public static DataTable FL_get_only_datatable_for_dbf(string dbf_filepath_with_name_and_extension)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath_with_name_and_extension);
-            string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
+            string constring = dbf_helper.dbf_helper.FL_dbf_constring(dbf_filepath_with_name_and_extension);
             string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension);
             string query = "SELECT * FROM " + s_without_ext;
-            DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+            DataTable dt = FL_database_helper.FL_oledb_helper.FL_get_oledb_datatable(constring, query);
             return dt;
         }
 
 
-        public static DataTable fl_get_OnlyDatatableForDbf_variableQuery(string dbf_filepath_with_name_and_extension, String query)
+        public static DataTable FL_get_OnlyDatatableForDbf_variableQuery(string dbf_filepath_with_name_and_extension, String query)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath_with_name_and_extension);
-            string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
+            string constring = dbf_helper.dbf_helper.FL_dbf_constring(dbf_filepath_with_name_and_extension);
             string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension);
-            DataTable dt = database_helper.database_helper.fl_get_oledb_datatable(constring, query);
+            DataTable dt = FL_database_helper.FL_oledb_helper.FL_get_oledb_datatable(constring, query);
             return dt;
         }
 
 
-        public static DataSet fl_get_only_dataset_for_dbf(string dbf_filepath_with_name_and_extension)
+        public static DataSet FL_get_only_dataset_for_dbf(string dbf_filepath_with_name_and_extension)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath_with_name_and_extension);
-            string constring = dbf_helper.dbf_helper.fl_dbf_constring(dbf_filepath_with_name_and_extension);
+            string constring = dbf_helper.dbf_helper.FL_dbf_constring(dbf_filepath_with_name_and_extension);
             string s_without_ext = Path.GetFileNameWithoutExtension(dbf_filepath_with_name_and_extension);
             string query = "SELECT * FROM " + s_without_ext;
-            DataSet ds = database_helper.database_helper.fl_get_oledb_dataset(constring, query);
+            DataSet ds = FL_database_helper.FL_oledb_helper.FL_get_oledb_dataset(constring, query);
             return ds;
         }
 
@@ -116,7 +116,7 @@ namespace frontlook_csharp_library.excel_data_interop
             foreach (string dbf_filepath_with_name_and_extension in filepaths)
             {
                 
-                DataTable DataTable = fl_get_only_datatable_for_dbf(dbf_filepath_with_name_and_extension);
+                DataTable DataTable = FL_get_only_datatable_for_dbf(dbf_filepath_with_name_and_extension);
                 try
                 {
                     HeaderRange = null;

@@ -17,19 +17,19 @@ namespace frontlook_csharp_library.dbf_helper
             foreach (string s in filepaths)
             {
                 DataTable dt = new DataTable();
-                dt = excel_data_interop.data_to_excel.fl_get_only_datatable_for_dbf(s);
+                dt = excel_data_interop.data_to_excel.FL_get_only_datatable_for_dbf(s);
                 ds.Tables.Add(dt);
             }
             return ds;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
-        public static DataTable fl_dbf_datatable(string dbf_filepath)
+        public static DataTable FL_dbf_datatable(string dbf_filepath)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;
             string x = Path.GetDirectoryName(dbf_filepath);
-            string dbf_constring1 = fl_dbf_constring(dbf_filepath); ;
+            string dbf_constring1 = FL_dbf_constring(dbf_filepath); ;
             //Get version information about the os.
             //data_helper1.constring(dbf_filepath);
 
@@ -72,29 +72,29 @@ namespace frontlook_csharp_library.dbf_helper
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
-        public static DataTable fl_dbf_datatable(string dbf_filepath,string sql)
+        public static DataTable FL_dbf_datatable(string dbf_filepath,string sql)
         {
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;
             string x = Path.GetDirectoryName(dbf_filepath);
-            string dbf_constring1 = fl_dbf_constring(dbf_filepath); ;
+            string dbf_constring1 = FL_dbf_constring(dbf_filepath); ;
             //Get version information about the os.
             //data_helper1.constring(dbf_filepath);
 
             //Variable to hold our return value
 
-            string excelFilename = "";
+            //string excelFilename = "";
             //string xml = ""; 
             //string xml_schema = ""; 
-            string s_without_ext = "";
+            //string s_without_ext = "";
             string s = "";
 
 
             s = dbf_filepath;
-            excelFilename = "";
+            /*excelFilename = "";
             s_without_ext = "";
             excelFilename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + s + ".xlsx";
-            s_without_ext = Path.GetFileNameWithoutExtension(s);
+            s_without_ext = Path.GetFileNameWithoutExtension(s);*/
             DataTable dt = new DataTable();
             try
             {
@@ -117,72 +117,10 @@ namespace frontlook_csharp_library.dbf_helper
             }
             return dt;
         }
-
-        public static string fl_dbf_get_os()
+       
+        public static string FL_dbf_constring(string dbf_filepath)
         {
-            string operatingSystem = "";
-            OperatingSystem os = Environment.OSVersion;
-            Version vs = os.Version;
-            if (os.Platform == PlatformID.Win32Windows)
-            {
-                //This is a pre-NT version of Windows
-                switch (vs.Minor)
-                {
-                    case 0:
-                        operatingSystem = "95";
-                        break;
-                    case 10:
-                        if (vs.Revision.ToString() == "2222A")
-                            operatingSystem = "98SE";
-                        else
-                            operatingSystem = "98";
-                        break;
-                    case 90:
-                        operatingSystem = "Me";
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else if (os.Platform == PlatformID.Win32NT)
-            {
-                switch (vs.Major)
-                {
-                    case 3:
-                        operatingSystem = "NT 3.51";
-                        break;
-                    case 4:
-                        operatingSystem = "NT 4.0";
-                        break;
-                    case 5:
-                        if (vs.Minor == 0)
-                            operatingSystem = "2000";
-                        else
-                            operatingSystem = "XP";
-                        break;
-                    case 6:
-                        if (vs.Minor == 0)
-                            operatingSystem = "Vista";
-                        else if (vs.Minor == 1)
-                            operatingSystem = "7";
-                        else if (vs.Minor == 2)
-                            operatingSystem = "8";
-                        else
-                            operatingSystem = "8.1";
-                        break;
-                    case 10:
-                        operatingSystem = "10";
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return operatingSystem;
-        }
-
-        public static string fl_dbf_constring(string dbf_filepath)
-        {
-            string operatingSystem = fl_dbf_get_os(); ;
+            string operatingSystem = FL_general.FL_os_helper.FL_get_os();
             string dbf_constring1 = "";
             FileInfo fileInfo = new FileInfo(dbf_filepath);
             string dbf_directory_filepath = fileInfo.DirectoryName;

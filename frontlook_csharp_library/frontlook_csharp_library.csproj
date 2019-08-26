@@ -103,11 +103,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="database_helper.cs" />
+    <Compile Include="FL_combobox.cs" />
+    <Compile Include="FL_mysql_helper.cs" />
     <Compile Include="dbf_helper.cs" />
     <Compile Include="dbf_helperx.cs" />
     <Compile Include="excel_data_interop.cs" />
-    <Compile Include="general.cs" />
+    <Compile Include="FL_Datetime.cs" />
+    <Compile Include="FL_get_os.cs" />
+    <Compile Include="FL_odbc_helper.cs" />
+    <Compile Include="FL_oledb_helper.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

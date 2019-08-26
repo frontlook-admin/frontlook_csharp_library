@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
 
-namespace frontlook_csharp_library.general
+namespace frontlook_csharp_library.FL_general
 {
     //Returns DateTime
     public class FL_DateTime
@@ -57,10 +57,16 @@ namespace frontlook_csharp_library.general
             return System.DateTime.ParseExact(date_string, "yyyy_MM_dd", ci, DateTimeStyles.AssumeLocal);
         }
 
+        ///<summary>
+        /// Returns DateTime from string like 8/30/2019 1:15:36 PM In windows 7
+        /// Returns DateTime from string like 30/AUG/2019 1:15:36 PM In windows 8 onwards.
+        /// </summary>
+        /// <remarks>Returns Datetime</remarks>
+        /// <returns>DateTime</returns>
         public static System.DateTime Parse_DateTime(string DateTime)
         {
             var ci = new CultureInfo("en-IN");
-            if (database_helper.database_helper.fl_get_os().Equals("7"))
+            if (FL_os_helper.FL_get_os().Equals("7"))
             {
                 return System.DateTime.ParseExact(DateTime, "M/d/yyyy h:mm:ss tt", ci, DateTimeStyles.AssumeLocal);
             }
