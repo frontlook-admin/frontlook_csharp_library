@@ -64,18 +64,13 @@ namespace frontlook_csharp_library.FL_database_helper
 
         
 
-        public static MySqlDataReader FL_mysql_myreader(string constring, string sql_command)
+        public static MySqlDataReader FL_mysql_myreader(MySqlConnection connection, MySqlCommand cmd)
         {
             MySqlDataReader r=null;
             try
             {
-                MySqlConnection connection = new MySqlConnection(constring);
-                MySqlCommand cmd = new MySqlCommand(sql_command, connection);
                 connection.Open();
                 r = cmd.ExecuteReader();
-                connection.Close();
-                cmd.Dispose();
-                connection.Dispose();
             }
             catch (MySqlException e)
             {

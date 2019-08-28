@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Navigation;
 
 namespace frontlook_csharp_library.FL_general
@@ -59,21 +61,19 @@ namespace frontlook_csharp_library.FL_general
 
         ///<summary>
         /// Returns DateTime from string like 8/30/2019 1:15:36 PM In windows 7
-        /// Returns DateTime from string like 30/AUG/2019 1:15:36 PM In windows 8 onwards.
+        /// Returns DateTime from string like 30/AUG/2019 1:15:36 PM/30/08/2019 1:15:36 PM In windows 8 onwards.
         /// </summary>
         /// <remarks>Returns Datetime</remarks>
         /// <returns>DateTime</returns>
         public static System.DateTime Parse_DateTime(string DateTime)
         {
+
             var ci = new CultureInfo("en-IN");
-            if (FL_os_helper.FL_get_os().Equals("7"))
-            {
-                return System.DateTime.ParseExact(DateTime, "M/d/yyyy h:mm:ss tt", ci, DateTimeStyles.AssumeLocal);
-            }
-            else
-            {
-                return System.DateTime.ParseExact(DateTime, "dd/MMM/yy h:mm:ss tt", ci, DateTimeStyles.AssumeLocal);
-            }
+            //var cu = CultureInfo.CurrentUICulture.DateTimeFormat.FullDateTimePattern;
+            //var cd = CultureInfo.CurrentCulture.DateTimeFormat.GetAllDateTimePatterns();
+            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            var cf = currentCulture.DateTimeFormat.ShortDatePattern+" "+ currentCulture.DateTimeFormat.LongTimePattern;
+            return System.DateTime.ParseExact(DateTime, cf, ci, DateTimeStyles.AssumeLocal);
         }
     }
 }
