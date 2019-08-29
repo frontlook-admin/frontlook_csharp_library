@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FL_combobox.cs" />
+    <Compile Include="FL_Date_Validator.cs" />
     <Compile Include="FL_mysql_helper.cs" />
     <Compile Include="dbf_helper.cs" />
     <Compile Include="dbf_helperx.cs" />
@@ -112,8 +113,10 @@
     <Compile Include="FL_get_os.cs" />
     <Compile Include="FL_odbc_helper.cs" />
     <Compile Include="FL_oledb_helper.cs" />
+    <Compile Include="FL_String_Element_Filter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FL_String_Validator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

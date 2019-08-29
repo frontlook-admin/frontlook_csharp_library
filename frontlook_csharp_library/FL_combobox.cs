@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+// ReSharper disable once CheckNamespace
 
 namespace frontlook_csharp_library.FL_general
 {

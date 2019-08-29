@@ -98,7 +98,6 @@ namespace frontlook_csharp_library.dbf_helper
             DataTable dt = new DataTable();
             try
             {
-
                 OleDbConnection connection = new OleDbConnection(dbf_constring1);
                 OleDbCommand cmd = new OleDbCommand(sql, connection);
                 connection.Open();
