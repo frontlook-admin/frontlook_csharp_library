@@ -4,21 +4,21 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
-using frontlook_csharp_library.Data_Manager.FL_database_helper;
+using frontlook_csharp_library.FL_Excel_Data_Interop;
 using Microsoft.Office.Interop.Excel;
 using Application = Microsoft.Office.Interop.Excel.Application;
 using DataTable = System.Data.DataTable;
 
-namespace frontlook_csharp_library.Data_Manager.FL_Excel_Data_Interop
+namespace frontlook_csharp_library.FL_Dbf_Helper
 {
     public static class FL_DbfData_To_Excel
     {
         public static void FL_data_to_xls(string dbfFilepathWithNameAndExtension)
         {
-            string constring = FL_Dbf_Helper.FL_dbf_constring(dbfFilepathWithNameAndExtension);
+            string constring = FL_Dbf_Manager.FL_dbf_constring(dbfFilepathWithNameAndExtension);
             string sWithoutExt = Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension);
             string query = "SELECT * FROM " + sWithoutExt;
-            DataTable dt = FL_Oledb_Helper.FL_get_oledb_datatable(constring, query);
+            DataTable dt = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_datatable(constring, query);
             FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, Path.GetDirectoryName(dbfFilepathWithNameAndExtension) + @"\" + Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension));
         }
 
@@ -26,14 +26,14 @@ namespace frontlook_csharp_library.Data_Manager.FL_Excel_Data_Interop
         {
             if(!dbfFilepathWithNameAndExtension.Equals(null)|| !dbfFilepathWithNameAndExtension.Equals(string.Empty))
             {
-                string constring = FL_Dbf_Helper.FL_dbf_constring(dbfFilepathWithNameAndExtension);
+                string constring = FL_Dbf_Manager.FL_dbf_constring(dbfFilepathWithNameAndExtension);
                 string sWithoutExt = Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension);
-                DataTable dt = FL_Oledb_Helper.FL_get_oledb_datatable(constring, query);
+                DataTable dt = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_datatable(constring, query);
                 FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, Path.GetDirectoryName(dbfFilepathWithNameAndExtension) + @"\" + Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension));
             }
             else
             {
-                DataTable dt = FL_Oledb_Helper.FL_get_oledb_datatable(constring1, query);
+                DataTable dt = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_datatable(constring1, query);
                 var filename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + dt.TableName;
                 FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, filename);
             }
@@ -62,10 +62,10 @@ namespace frontlook_csharp_library.Data_Manager.FL_Excel_Data_Interop
         public static DataTable FL_data_to_xls_with_datatable(string dbfFilepathWithNameAndExtension)
         {
             FileInfo fileInfo = new FileInfo(dbfFilepathWithNameAndExtension);
-            string constring = FL_Dbf_Helper.FL_dbf_constring(dbfFilepathWithNameAndExtension);
+            string constring = FL_Dbf_Manager.FL_dbf_constring(dbfFilepathWithNameAndExtension);
             string sWithoutExt = Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension);
             string query = "SELECT * FROM " + sWithoutExt;
-            DataTable dt = FL_Oledb_Helper.FL_get_oledb_datatable(constring, query);
+            DataTable dt = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_datatable(constring, query);
             FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, Path.GetDirectoryName(dbfFilepathWithNameAndExtension) + @"\" + Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension));
             return dt;
         }
@@ -73,10 +73,10 @@ namespace frontlook_csharp_library.Data_Manager.FL_Excel_Data_Interop
         public static DataTable FL_get_only_datatable_for_dbf(string dbfFilepathWithNameAndExtension)
         {
             FileInfo fileInfo = new FileInfo(dbfFilepathWithNameAndExtension);
-            string constring = FL_Dbf_Helper.FL_dbf_constring(dbfFilepathWithNameAndExtension);
+            string constring = FL_Dbf_Manager.FL_dbf_constring(dbfFilepathWithNameAndExtension);
             string sWithoutExt = Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension);
             string query = "SELECT * FROM " + sWithoutExt;
-            DataTable dt = FL_Oledb_Helper.FL_get_oledb_datatable(constring, query);
+            DataTable dt = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_datatable(constring, query);
             return dt;
         }
 
@@ -84,9 +84,9 @@ namespace frontlook_csharp_library.Data_Manager.FL_Excel_Data_Interop
         public static DataTable FL_get_OnlyDatatableForDbf_variableQuery(string dbfFilepathWithNameAndExtension, String query)
         {
             FileInfo fileInfo = new FileInfo(dbfFilepathWithNameAndExtension);
-            string constring = FL_Dbf_Helper.FL_dbf_constring(dbfFilepathWithNameAndExtension);
+            string constring = FL_Dbf_Manager.FL_dbf_constring(dbfFilepathWithNameAndExtension);
             string sWithoutExt = Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension);
-            DataTable dt = FL_Oledb_Helper.FL_get_oledb_datatable(constring, query);
+            DataTable dt = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_datatable(constring, query);
             return dt;
         }
 
@@ -94,10 +94,10 @@ namespace frontlook_csharp_library.Data_Manager.FL_Excel_Data_Interop
         public static DataSet FL_get_only_dataset_for_dbf(string dbfFilepathWithNameAndExtension)
         {
             FileInfo fileInfo = new FileInfo(dbfFilepathWithNameAndExtension);
-            string constring = FL_Dbf_Helper.FL_dbf_constring(dbfFilepathWithNameAndExtension);
+            string constring = FL_Dbf_Manager.FL_dbf_constring(dbfFilepathWithNameAndExtension);
             string sWithoutExt = Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension);
             string query = "SELECT * FROM " + sWithoutExt;
-            DataSet ds = FL_Oledb_Helper.FL_get_oledb_dataset(constring, query);
+            DataSet ds = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_dataset(constring, query);
             return ds;
         }
 

@@ -4,13 +4,12 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
-using frontlook_csharp_library.FL_general;
-using frontlook_csharp_library.Data_Manager.FL_Excel_Data_Interop;
+using frontlook_csharp_library.FL_General;
 
-namespace frontlook_csharp_library.Data_Manager.FL_database_helper
+namespace frontlook_csharp_library.FL_Dbf_Helper
 {
     [Guid("3A1A8463-73F7-47FE-BCAD-9DDCB9103B07")]
-    public class FL_Dbf_Helper
+    public class FL_Dbf_Manager
     {
         public static DataSet get_all_datatable_in_dataset(string[] filepaths)
         {

@@ -103,17 +103,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data_Manager\FL_Excel_Data_Interop\DataTable_To_Excel.cs" />
+    <Compile Include="FL_Excel_Data_Interop\DataTable_To_Excel.cs" />
     <Compile Include="FL_general\FL_combobox.cs" />
     <Compile Include="FL_general\FL_Os_Helper.cs" />
     <Compile Include="FL_general\FL_string_helper\FL_Date_Validator.cs" />
-    <Compile Include="Data_Manager\FL_database_helper\FL_mysql_helper.cs" />
-    <Compile Include="Data_Manager\FL_database_helper\FL_Dbf_Helper.cs" />
-    <Compile Include="dbf_helperx.cs" />
-    <Compile Include="Data_Manager\FL_Excel_Data_Interop\FL_Dbf_To_Excel.cs" />
+    <Compile Include="FL_Mysql_Helper\FL_mysql_helper.cs" />
+    <Compile Include="FL_Dbf_Helper\FL_Dbf_Manager.cs" />
+    <Compile Include="FL_Dbf_Helper\dbf_helperx.cs" />
+    <Compile Include="FL_Dbf_Helper\FL_Dbf_To_Excel.cs" />
     <Compile Include="FL_general\FL_string_helper\FL_Datetime.cs" />
-    <Compile Include="Data_Manager\FL_database_helper\FL_odbc_helper.cs" />
-    <Compile Include="Data_Manager\FL_database_helper\FL_oledb_helper.cs" />
+    <Compile Include="FL_Odbc_Helper\FL_odbc_helper.cs" />
+    <Compile Include="FL_Oledb_Helper\FL_oledb_helper.cs" />
     <Compile Include="FL_general\FL_string_helper\FL_String_Element_Filter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

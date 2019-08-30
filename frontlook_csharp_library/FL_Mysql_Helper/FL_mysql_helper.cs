@@ -1,11 +1,12 @@
 ﻿//using System.Data;
+
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using MySql.Data.MySqlClient;
 
-namespace frontlook_csharp_library.Data_Manager.FL_database_helper
+namespace frontlook_csharp_library.FL_Mysql_Helper
 {
-    public class FL_Mysql_Helper
+    public class FL_Mysql_Manager
     {
         [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
         public static int FL_mysql_execute_command(string constring, string sqlCommand)

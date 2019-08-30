@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace frontlook_csharp_library.FL_general.FL_string_helper
+namespace frontlook_csharp_library.FL_General.FL_string_helper
 {
     /// <summary>
     /// String Maintainer

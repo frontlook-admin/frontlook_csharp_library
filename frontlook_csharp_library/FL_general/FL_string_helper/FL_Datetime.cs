@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Threading;
 
-namespace frontlook_csharp_library.FL_general.FL_string_helper
+namespace frontlook_csharp_library.FL_General.FL_string_helper
 {
     //Returns DateTime
     public class FL_DateTime

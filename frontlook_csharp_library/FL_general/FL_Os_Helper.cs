@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace frontlook_csharp_library.FL_general
+namespace frontlook_csharp_library.FL_General
 {
     public static class FL_Os_Helper
     {

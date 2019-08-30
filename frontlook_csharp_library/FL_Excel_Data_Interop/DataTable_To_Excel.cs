@@ -7,7 +7,7 @@ using Microsoft.Office.Interop.Excel;
 using Application = Microsoft.Office.Interop.Excel.Application;
 using DataTable = System.Data.DataTable;
 
-namespace frontlook_csharp_library.Data_Manager.FL_Excel_Data_Interop
+namespace frontlook_csharp_library.FL_Excel_Data_Interop
 {
     public static class FL_DataTableToExcel_Helper
     {

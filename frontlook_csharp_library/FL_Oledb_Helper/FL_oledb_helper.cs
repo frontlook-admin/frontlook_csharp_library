@@ -4,9 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows;
 
-namespace frontlook_csharp_library.Data_Manager.FL_database_helper
+namespace frontlook_csharp_library.FL_Oledb_Helper
 {
-    public static class FL_Oledb_Helper
+    public static class FL_Oledb_Manager
     {
         public static DataTable FL_get_oledb_datatable(string constring, string query)
         {

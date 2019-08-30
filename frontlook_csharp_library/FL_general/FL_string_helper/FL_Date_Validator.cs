@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace frontlook_csharp_library.FL_general.FL_string_helper
+namespace frontlook_csharp_library.FL_General.FL_string_helper
 {
     public class FL_Date_Validator
     {

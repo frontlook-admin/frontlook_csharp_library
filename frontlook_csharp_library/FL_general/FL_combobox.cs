@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace frontlook_csharp_library.FL_general
+namespace frontlook_csharp_library.FL_General
 {
     public class FL_Combobox
     {
