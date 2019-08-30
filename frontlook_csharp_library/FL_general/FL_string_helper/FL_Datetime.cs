@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Navigation;
 
-namespace frontlook_csharp_library.FL_general
+namespace frontlook_csharp_library.FL_general.FL_string_helper
 {
     //Returns DateTime
     public class FL_DateTime
@@ -19,22 +13,18 @@ namespace frontlook_csharp_library.FL_general
         /// </summary>
         /// <remarks>Returns Datetime</remarks>
         /// <returns>DateTime</returns>
-        public static System.DateTime Parse_dd_mm_yyyy(string date_string)
+        public static DateTime Parse_dd_mm_yyyy(string dateString)
         {
             var ci = new CultureInfo("en-IN");
-            if (date_string.Length.Equals(8))
+            if (dateString.Length.Equals(8))
             {
-                return System.DateTime.ParseExact(date_string, "dd-MM-yy", ci, DateTimeStyles.AssumeLocal);
+                return DateTime.ParseExact(dateString, "dd-MM-yy", ci, DateTimeStyles.AssumeLocal);
             }
-            else if (date_string.Length.Equals(6))
+            if (dateString.Length.Equals(6))
             {
-                return System.DateTime.ParseExact(date_string, "dd-MM-", ci, DateTimeStyles.AssumeLocal);
+                return DateTime.ParseExact(dateString, "dd-MM-", ci, DateTimeStyles.AssumeLocal);
             }
-            else
-            {
-                return System.DateTime.ParseExact(date_string, "dd-MM-yyyy", ci, DateTimeStyles.AssumeLocal);
-            }
-            
+            return DateTime.ParseExact(dateString, "dd-MM-yyyy", ci, DateTimeStyles.AssumeLocal);
         }
 
         ///<summary>
@@ -42,10 +32,10 @@ namespace frontlook_csharp_library.FL_general
         /// </summary>
         /// <remarks>Returns Datetime</remarks>
         /// <returns>DateTime</returns>
-        public static System.DateTime Parse_ddmmyyyy(string date_string)
+        public static DateTime Parse_ddmmyyyy(string dateString)
         {
             var ci = new CultureInfo("en-IN");
-            return System.DateTime.ParseExact(date_string, "ddMMyyyy", ci, DateTimeStyles.AssumeLocal);
+            return DateTime.ParseExact(dateString, "ddMMyyyy", ci, DateTimeStyles.AssumeLocal);
         }
 
         ///<summary>
@@ -53,10 +43,10 @@ namespace frontlook_csharp_library.FL_general
         /// </summary>
         /// <remarks>Returns Datetime</remarks>
         /// <returns>DateTime</returns>
-        public static System.DateTime Parse_yyyy_mm_dd(string date_string)
+        public static DateTime Parse_yyyy_mm_dd(string dateString)
         {
             var ci = new CultureInfo("en-IN");
-            return System.DateTime.ParseExact(date_string, "yyyy_MM_dd", ci, DateTimeStyles.AssumeLocal);
+            return DateTime.ParseExact(dateString, "yyyy_MM_dd", ci, DateTimeStyles.AssumeLocal);
         }
 
         ///<summary>
@@ -65,15 +55,15 @@ namespace frontlook_csharp_library.FL_general
         /// </summary>
         /// <remarks>Returns Datetime</remarks>
         /// <returns>DateTime</returns>
-        public static System.DateTime Parse_DateTime(string DateTime)
+        public static DateTime Parse_DateTime(string dateTime)
         {
 
             var ci = new CultureInfo("en-IN");
             //var cu = CultureInfo.CurrentUICulture.DateTimeFormat.FullDateTimePattern;
             //var cd = CultureInfo.CurrentCulture.DateTimeFormat.GetAllDateTimePatterns();
-            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+            var currentCulture = Thread.CurrentThread.CurrentCulture;
             var cf = currentCulture.DateTimeFormat.ShortDatePattern+" "+ currentCulture.DateTimeFormat.LongTimePattern;
-            return System.DateTime.ParseExact(DateTime, cf, ci, DateTimeStyles.AssumeLocal);
+            return DateTime.ParseExact(dateTime, cf, ci, DateTimeStyles.AssumeLocal);
         }
     }
 }

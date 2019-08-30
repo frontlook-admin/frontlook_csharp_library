@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text;
+
 // ReSharper disable Checkstring namespace
 
 namespace frontlook_csharp_library.FL_general.FL_string_helper

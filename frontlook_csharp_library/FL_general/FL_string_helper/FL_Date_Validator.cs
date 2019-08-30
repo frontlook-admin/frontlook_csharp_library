@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Globalization;
-// ReSharper disable CheckNamespace
 
-namespace frontlook_csharp_library.FL_general
+namespace frontlook_csharp_library.FL_general.FL_string_helper
 {
     public class FL_Date_Validator
     {

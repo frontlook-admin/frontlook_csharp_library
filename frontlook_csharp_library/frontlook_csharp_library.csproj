@@ -103,26 +103,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FL_combobox.cs" />
-    <Compile Include="FL_Date_Validator.cs" />
-    <Compile Include="FL_mysql_helper.cs" />
-    <Compile Include="dbf_helper.cs" />
+    <Compile Include="Data_Manager\FL_Excel_Data_Interop\DataTable_To_Excel.cs" />
+    <Compile Include="FL_general\FL_combobox.cs" />
+    <Compile Include="FL_general\FL_Os_Helper.cs" />
+    <Compile Include="FL_general\FL_string_helper\FL_Date_Validator.cs" />
+    <Compile Include="Data_Manager\FL_database_helper\FL_mysql_helper.cs" />
+    <Compile Include="Data_Manager\FL_database_helper\FL_Dbf_Helper.cs" />
     <Compile Include="dbf_helperx.cs" />
-    <Compile Include="excel_data_interop.cs" />
-    <Compile Include="FL_Datetime.cs" />
-    <Compile Include="FL_get_os.cs" />
-    <Compile Include="FL_odbc_helper.cs" />
-    <Compile Include="FL_oledb_helper.cs" />
-    <Compile Include="FL_String_Element_Filter.cs" />
+    <Compile Include="Data_Manager\FL_Excel_Data_Interop\FL_Dbf_To_Excel.cs" />
+    <Compile Include="FL_general\FL_string_helper\FL_Datetime.cs" />
+    <Compile Include="Data_Manager\FL_database_helper\FL_odbc_helper.cs" />
+    <Compile Include="Data_Manager\FL_database_helper\FL_oledb_helper.cs" />
+    <Compile Include="FL_general\FL_string_helper\FL_String_Element_Filter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FL_String_Validator.cs" />
+    <Compile Include="FL_general\FL_string_helper\FL_String_Validator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="frontlook_signature.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
