@@ -20,7 +20,6 @@ namespace frontlook_csharp_library.FL_General
 
         public static IEnumerable<string> search_result(string tempStr, List<String> cmblist)
         {
-            
             IEnumerable<string> data = (from m in cmblist
                 where m.ToLower().Contains(tempStr.ToLower())
                 select m);

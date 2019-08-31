@@ -15,12 +15,16 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         {
             try
             {
-                var totalCells = (dataTable.Columns.Count + 1) * (dataTable.Rows.Count + 1);
+                var unused = (dataTable.Columns.Count + 1) * (dataTable.Rows.Count + 1);
 
-                int columnsCount = 0;
+                int columnsCount;
 
-                if (dataTable == null || (columnsCount = dataTable.Columns.Count) == 0)
-                    MessageBox.Show("FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel: Null or empty input table!", "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                int v = (columnsCount = dataTable.Columns.Count);
+                if (v == 0)
+                {
+                    //MessageBox.Show("FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel: Null or empty input table!", "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Null or empty input table!", "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
 
                 // load excel, and create a new workbook
                 Application excel = new Application();
@@ -101,12 +105,15 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         {
             try
             {
-                var totalCells = (dataTable.Columns.Count + 1) * (dataTable.Rows.Count + 1);
+                var unused = (dataTable.Columns.Count + 1) * (dataTable.Rows.Count + 1);
 
-                int columnsCount = 0;
+                int columnsCount;
 
-                if (dataTable == null || (columnsCount = dataTable.Columns.Count) == 0)
-                    MessageBox.Show("FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel: Null or empty input table!", "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                if ((columnsCount = dataTable.Columns.Count) == 0)
+                {
+                    //MessageBox.Show("FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel: Null or empty input table!", "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Null or empty input table!", "Error..!!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
 
                 // load excel, and create a new workbook
                 Application excel = new Application();

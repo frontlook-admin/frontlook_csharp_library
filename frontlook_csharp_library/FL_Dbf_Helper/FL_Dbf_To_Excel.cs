@@ -22,20 +22,27 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, Path.GetDirectoryName(dbfFilepathWithNameAndExtension) + @"\" + Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension));
         }
 
-        public static void FL_data_to_xls(string query,string constring1=null,string dbfFilepathWithNameAndExtension = null)
+        public static void FL_data_to_xls(string query,string constring1)
         {
-            if(!dbfFilepathWithNameAndExtension.Equals(null)|| !dbfFilepathWithNameAndExtension.Equals(string.Empty))
-            {
-                string constring = FL_Dbf_Manager.FL_dbf_constring(dbfFilepathWithNameAndExtension);
-                string sWithoutExt = Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension);
-                DataTable dt = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_datatable(constring, query);
-                FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, Path.GetDirectoryName(dbfFilepathWithNameAndExtension) + @"\" + Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension));
-            }
-            else
+            FL_data_to_xls(query, constring1, null);
+        }
+
+        public static void FL_data_to_xls(string query,string constring1 = null,string dbfFilepathWithNameAndExtension = null)
+        {
+            if(string.IsNullOrEmpty(dbfFilepathWithNameAndExtension))
             {
                 DataTable dt = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_datatable(constring1, query);
                 var filename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + dt.TableName;
                 FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, filename);
+            }
+            else
+            {
+
+                string constring = FL_Dbf_Manager.FL_dbf_constring(dbfFilepathWithNameAndExtension);
+                string sWithoutExt = Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension);
+                DataTable dt = FL_Oledb_Helper.FL_Oledb_Manager.FL_get_oledb_datatable(constring, query);
+                FL_Excel_Data_Interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, Path.GetDirectoryName(dbfFilepathWithNameAndExtension) + @"\" + Path.GetFileNameWithoutExtension(dbfFilepathWithNameAndExtension));
+
             }
         }
 
