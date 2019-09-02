@@ -1,11 +1,12 @@
 ﻿using System.Data;
 using System.Data.Odbc;
 using System.Data.OleDb;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
-namespace frontlook_csharp_library.FL_database_helper
+namespace frontlook_csharp_library.FL_Odbc_Helper
 {
-    public class FL_odbc_helper
+    public class FL_Odbc_Manager
     {
         public static DataTable FL_get_odbc_datatable(string constring, string query)
         {
@@ -15,8 +16,8 @@ namespace frontlook_csharp_library.FL_database_helper
                 OdbcConnection connection = new OdbcConnection(constring);
                 OdbcCommand cmd = new OdbcCommand(query, connection);
                 connection.Open();
-                OdbcDataAdapter DA = new OdbcDataAdapter(cmd);
-                DA.Fill(dt);
+                OdbcDataAdapter da = new OdbcDataAdapter(cmd);
+                da.Fill(dt);
                 //DA.Update(dt);
                 connection.Close();
                 cmd.Dispose();
@@ -29,14 +30,14 @@ namespace frontlook_csharp_library.FL_database_helper
             return dt;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
-        public static int FL_odbc_execute_command(string constring, string sql_command)
+        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
+        public static int FL_odbc_execute_command(string constring, string sqlCommand)
         {
             int r = 0;
             try
             {
                 OdbcConnection connection = new OdbcConnection(constring);
-                OdbcCommand cmd = new OdbcCommand(sql_command, connection);
+                OdbcCommand cmd = new OdbcCommand(sqlCommand, connection);
                 connection.Open();
 
                 r = cmd.ExecuteNonQuery();

@@ -4,9 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows;
 
-namespace frontlook_csharp_library.FL_database_helper
+namespace frontlook_csharp_library.FL_Oledb_Helper
 {
-    public class FL_oledb_helper
+    public static class FL_Oledb_Manager
     {
         public static DataTable FL_get_oledb_datatable(string constring, string query)
         {
@@ -16,8 +16,8 @@ namespace frontlook_csharp_library.FL_database_helper
                 OleDbConnection connection = new OleDbConnection(constring);
                 OleDbCommand cmd = new OleDbCommand(query, connection);
                 connection.Open();
-                OleDbDataAdapter DA = new OleDbDataAdapter(cmd);
-                DA.Fill(dt);
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                da.Fill(dt);
                 connection.Close();
                 cmd.Dispose();
                 connection.Dispose();
@@ -38,9 +38,9 @@ namespace frontlook_csharp_library.FL_database_helper
                 OleDbConnection connection = new OleDbConnection(constring);
                 OleDbCommand cmd = new OleDbCommand(query, connection);
                 connection.Open();
-                OleDbDataAdapter DA = new OleDbDataAdapter(cmd);
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
                 DataTable dt = new DataTable();
-                DA.Fill(dt);
+                da.Fill(dt);
                 ds.Locale = Thread.CurrentThread.CurrentCulture;
                 ds.Tables.Add(dt);
                 connection.Close();
@@ -54,13 +54,13 @@ namespace frontlook_csharp_library.FL_database_helper
             return ds;
         }
 
-        public static int FL_oledb_execute_command(string constring, string sql_command)
+        public static int FL_oledb_execute_command(string constring, string sqlCommand)
         {
             int r = 0;
             try
             {
                 OleDbConnection connection = new OleDbConnection(constring);
-                OleDbCommand cmd = new OleDbCommand(sql_command, connection);
+                OleDbCommand cmd = new OleDbCommand(sqlCommand, connection);
                 connection.Open();
 
                 r = cmd.ExecuteNonQuery();

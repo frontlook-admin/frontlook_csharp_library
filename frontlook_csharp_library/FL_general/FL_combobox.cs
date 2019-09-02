@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-// ReSharper disable once CheckNamespace
 
-namespace frontlook_csharp_library.FL_general
+namespace frontlook_csharp_library.FL_General
 {
     public class FL_Combobox
     {
@@ -21,7 +20,6 @@ namespace frontlook_csharp_library.FL_general
 
         public static IEnumerable<string> search_result(string tempStr, List<String> cmblist)
         {
-            
             IEnumerable<string> data = (from m in cmblist
                 where m.ToLower().Contains(tempStr.ToLower())
                 select m);

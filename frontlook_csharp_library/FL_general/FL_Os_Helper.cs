@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace frontlook_csharp_library.FL_general
+namespace frontlook_csharp_library.FL_General
 {
-    public class FL_os_helper
+    public static class FL_Os_Helper
     {
         public static string FL_get_os()
         {
@@ -25,8 +25,6 @@ namespace frontlook_csharp_library.FL_general
                         break;
                     case 90:
                         operatingSystem = "Me";
-                        break;
-                    default:
                         break;
                 }
             }
@@ -58,8 +56,6 @@ namespace frontlook_csharp_library.FL_general
                         break;
                     case 10:
                         operatingSystem = "10";
-                        break;
-                    default:
                         break;
                 }
             }

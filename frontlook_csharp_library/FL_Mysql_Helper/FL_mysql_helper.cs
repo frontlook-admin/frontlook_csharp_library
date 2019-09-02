@@ -1,29 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.OleDb;
-using System.Data.Odbc;
-using MySql.Data;
-using Microsoft.SqlServer.Server;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using System.Data;
+
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using System.IO;
 using MySql.Data.MySqlClient;
 
-namespace frontlook_csharp_library.FL_database_helper
+namespace frontlook_csharp_library.FL_Mysql_Helper
 {
-    public class FL_mysql_helper
+    public class FL_Mysql_Manager
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
-        public static int FL_mysql_execute_command(string constring, string sql_command)
+        [SuppressMessage("Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "<Pending>")]
+        public static int FL_mysql_execute_command(string constring, string sqlCommand)
         {
             int r = 0;
             try
             {
                 MySqlConnection connection = new MySqlConnection(constring);
-                MySqlCommand cmd = new MySqlCommand(sql_command, connection);
+                MySqlCommand cmd = new MySqlCommand(sqlCommand, connection);
                 connection.Open();
                 r = cmd.ExecuteNonQuery();
                 connection.Close();
@@ -37,16 +29,16 @@ namespace frontlook_csharp_library.FL_database_helper
             return r;
         }
 
-        public static MySqlDataAdapter FL_mysql_dataadapter(string constring, string sql_command)
+        public static MySqlDataAdapter FL_mysql_dataadapter(string constring, string sqlCommand)
         {
-            MySqlDataAdapter DA = new MySqlDataAdapter();
-            DataSet ds = new DataSet();
+            MySqlDataAdapter da = new MySqlDataAdapter();
+            //DataSet ds = new DataSet();
             try
             {
                 MySqlConnection connection = new MySqlConnection(constring);
-                MySqlCommand cmd = new MySqlCommand(sql_command, connection);
+                MySqlCommand cmd = new MySqlCommand(sqlCommand, connection);
                 connection.Open();
-                DA = new MySqlDataAdapter(cmd);
+                da = new MySqlDataAdapter(cmd);
                 //DataTable dt = new DataTable();
                 //DA.Fill(dt);
                 //ds.Locale = System.Threading.Thread.CurrentThread.CurrentCulture;
@@ -59,7 +51,7 @@ namespace frontlook_csharp_library.FL_database_helper
             {
                 MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            return DA;
+            return da;
         }
 
         

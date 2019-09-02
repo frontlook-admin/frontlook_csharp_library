@@ -165,8 +165,8 @@ namespace frontlook_csharp_library.dbf_helperx
                      //dataGridView1.DataSource = bsource;
                      //dataGridView1.Refresh();
                     //connection.Close();
-                    //DataTableToExcel(dt, Path.GetDirectoryName(s) + @"\" + Path.GetFileNameWithoutExtension(s));
-                    //excel_data_interop.DataTableToExcel(dt, excelFilename);
+                    //FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, Path.GetDirectoryName(s) + @"\" + Path.GetFileNameWithoutExtension(s));
+                    //excel_data_interop.FL_DataTableToExcel_Helper.FL_DataTableToExcel(dt, excelFilename);
                 }
                 catch (OleDbException e)
                 {
