@@ -58,12 +58,13 @@ namespace frontlook_csharp_library.FL_General.FL_string_helper
         public static DateTime Parse_DateTime(string dateTime)
         {
 
-            var ci = new CultureInfo("en-IN");
+            //var ci = new CultureInfo("en-IN");
             //var cu = CultureInfo.CurrentUICulture.DateTimeFormat.FullDateTimePattern;
             //var cd = CultureInfo.CurrentCulture.DateTimeFormat.GetAllDateTimePatterns();
             var currentCulture = Thread.CurrentThread.CurrentCulture;
-            var cf = currentCulture.DateTimeFormat.ShortDatePattern+" "+ currentCulture.DateTimeFormat.LongTimePattern;
-            return DateTime.ParseExact(dateTime, cf, ci, DateTimeStyles.AssumeLocal);
+            //var cf = currentCulture.DateTimeFormat.ShortDatePattern + " " + currentCulture.DateTimeFormat.LongTimePattern;
+            //return DateTime.ParseExact(dateTime, cf, ci, DateTimeStyles.AssumeLocal);
+            return DateTime.Parse(dateTime, currentCulture);
         }
     }
 }
