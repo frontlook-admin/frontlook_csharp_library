@@ -39,7 +39,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>frontlook_signature.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>frontlook_signature_rider.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>FL_icon.ico</ApplicationIcon>
@@ -122,7 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="frontlook_signature.pfx" />
+    <None Include="frontlook_signature_rider.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

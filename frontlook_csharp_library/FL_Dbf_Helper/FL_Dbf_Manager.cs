@@ -52,7 +52,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             {
 
                 OleDbConnection connection = new OleDbConnection(dbfConstring1);
-                string sql = "SELECT * FROM " + sWithoutExt;
+                string sql = "SELECT * FROM `" + sWithoutExt + "`;";
 
                 OleDbCommand cmd = new OleDbCommand(sql, connection);
                 connection.Open();
