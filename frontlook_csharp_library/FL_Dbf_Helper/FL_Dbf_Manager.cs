@@ -47,7 +47,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             //sWithoutExt = "";
             //var excelFilename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + s + ".xlsx";
             var sWithoutExt = Path.GetFileNameWithoutExtension(s);
-            DataTable dt = new DataTable();
+            DataTable dt = new DataTable("Database");
             try
             {
 
@@ -107,7 +107,6 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
                 //BackgroundWorker bgw = new BackgroundWorker();
                 cmd.Dispose();
                 connection.Dispose();
-
             }
             catch (OleDbException e)
             {
@@ -119,13 +118,9 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
         public static string FL_dbf_constring(string dbfFilepath)
         {
             string operatingSystem = FL_Os_Helper.FL_get_os();
-            string dbfConstring1;
+            //string dbfConstring1;
             FileInfo fileInfo = new FileInfo(dbfFilepath);
             string dbfDirectoryFilepath = fileInfo.DirectoryName;
-            //string x = Path.GetDirectoryName(dbfFilepath);
-            //string dbf_filename = "";
-
-            //data_helper.get_os(operatingSystem);
             if (operatingSystem != "")
             {
                 operatingSystem = "Windows " + operatingSystem;
@@ -134,28 +129,57 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             switch (operatingSystem)
             {
                 case "Windows XP":
-                    dbfConstring1 = "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
-                    break;
+                    return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
                 case "Windows 7":
-                    dbfConstring1 = "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
-                    break;
+                    return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
                 case "Windows Vista":
-                    dbfConstring1 = "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
-                    break;
+                    return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
                 case "Windows 8":
-                    dbfConstring1 = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
-                    break;
+                    return "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
                 case "Windows 8.1":
-                    dbfConstring1 = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
-                    break;
+                    return "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
                 case "Windows 10":
-                    dbfConstring1 = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
-                    break;
+                    return "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
                 default:
-                    dbfConstring1 = "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
-                    break;
+                    return "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
             }
-            return dbfConstring1;
+        }
+
+        public static string FL_dbf_constring(string dbfFilepath, string UserId, string password)
+        {
+            string operatingSystem = FL_Os_Helper.FL_get_os();
+            //string dbfConstring1;
+            FileInfo fileInfo = new FileInfo(dbfFilepath);
+            string dbfDirectoryFilepath = fileInfo.DirectoryName;
+            if (operatingSystem != "")
+            {
+                operatingSystem = "Windows " + operatingSystem;
+            }
+
+            switch (operatingSystem)
+            {
+                case "Windows XP":
+                    return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath +
+                           ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;
+                case "Windows 7":
+                    return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath +
+                           ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;
+                case "Windows Vista":
+                    return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath +
+                           ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;
+                case "Windows 8":
+                    return "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath +
+                           ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;
+                case "Windows 8.1":
+                    return "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath +
+                           ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;
+                case "Windows 10":
+                    return "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath +
+                           ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;
+                default:
+                    return "Provider = Microsoft.ACE.OLEDB.12.0; Data Source = " + dbfDirectoryFilepath +
+                           ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;
+            }
         }
     }
 }
