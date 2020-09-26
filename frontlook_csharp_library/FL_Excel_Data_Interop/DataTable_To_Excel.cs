@@ -32,6 +32,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 //Excel.Visible = true;
                 // single worksheet
                 _Worksheet worksheet = excel.ActiveSheet;
+                Range cels = worksheet.Cells;
+                //cels.NumberFormat = "@";
 
                 object[] header = new object[columnsCount];
                 //var stopwatch = new Stopwatch();
@@ -42,6 +44,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     header[i] = dataTable.Columns[i].ColumnName;
 
                 Range headerRange = worksheet.get_Range((Range)(worksheet.Cells[1, 1]), (Range)(worksheet.Cells[1, columnsCount]));
+                //headerRange.NumberFormat = "@";
                 headerRange.Value = header;
                 headerRange.Interior.Color = ColorTranslator.ToOle(Color.LightGray);
                 //HeaderRange.Interior.Color = SystemColors.GrayTextBrush;
@@ -121,6 +124,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 excel.Visible = true;
                 // single worksheet
                 _Worksheet worksheet = excel.ActiveSheet;
+                Range cels = worksheet.Cells;
+                //cels.NumberFormat = "@";
 
                 object[] header = new object[columnsCount];
                 //var stopwatch = new Stopwatch();
