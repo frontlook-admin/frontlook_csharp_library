@@ -32,7 +32,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 //Excel.Visible = true;
                 // single worksheet
                 _Worksheet worksheet = excel.ActiveSheet;
-                Range cels = worksheet.Cells;
+                //Range cels = worksheet.Cells;
                 //cels.NumberFormat = "@";
 
                 object[] header = new object[columnsCount];
