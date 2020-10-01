@@ -66,5 +66,16 @@ namespace frontlook_csharp_library.FL_General.FL_string_helper
             //return DateTime.ParseExact(dateTime, cf, ci, DateTimeStyles.AssumeLocal);
             return DateTime.Parse(dateTime, currentCulture);
         }
+
+        public static DateTime Parse_DateTimeWithTime(string dateTime = null)
+        {
+
+            var ci = new CultureInfo("en-IN");
+            //var cu = CultureInfo.CurrentUICulture.DateTimeFormat.FullDateTimePattern;
+            //var cd = CultureInfo.CurrentCulture.DateTimeFormat.GetAllDateTimePatterns();
+            //var cf = currentCulture.DateTimeFormat.ShortDatePattern + " " + currentCulture.DateTimeFormat.LongTimePattern;
+            //return DateTime.ParseExact(dateTime, cf, ci, DateTimeStyles.AssumeLocal);
+            return DateTime.ParseExact(dateTime,"M/d/yyyy hh:mm:ss tt", ci, DateTimeStyles.AssumeLocal);
+        }
     }
 }
