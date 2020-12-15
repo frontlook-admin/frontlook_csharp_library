@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Reflection;
 using FastReport.Web;
@@ -13,7 +14,7 @@ namespace frontlook_csharp_library.FL_General
 {
     public static class FL_FastReportHelper
     {
-        
+
         public static Report FL_GenerateReportFromDataTable(this DataTable dt, string ReportFilePath, string DatabaseName, [CanBeNull] Exception GetExceptions = null)
         {
             try
@@ -68,14 +69,40 @@ namespace frontlook_csharp_library.FL_General
             }
         }
 
-        public static Report FL_GenerateReportFromDataSetDebug(this DataSet ds, string ReportFilePath, string DatabaseName, [CanBeNull] Exception GetExceptions = null)
+
+        public static void FL_PrintReport(this Report report, PrinterSettings settings = null, [CanBeNull] Exception GetExceptions = null)
         {
-            var report = new Report();
+            if (settings != null)
+            {
+                report.Print(settings);
+            }
+            else
+            {
+                report.PrintWithDialog();
+            }
+        }
+
+        public static void FL_PrintReportFromDataSet(this DataSet ds, string ReportFilePath, string DatabaseName, PrinterSettings settings = null, [CanBeNull] Exception GetExceptions = null)
+        {
+            var report = FL_GenerateReportFromDataSet(ds, ReportFilePath, DatabaseName, GetExceptions);
+            report.FL_PrintReport(settings);
+        }
+
+        public static Report FL_GenerateReportFromDataSetDebug(this DataSet ds, string ReportFilePath, string DatabaseName)
+        {
+            var report = new FastReport.Report();
             report.Report.RegisterData(ds, DatabaseName);
             report.Report.Load(ReportFilePath);
             report.Report.Prepare();
             return report;
         }
+
+        public static void FL_PrintReportFromDataSetDebug(this DataSet ds, string ReportFilePath, string DatabaseName, PrinterSettings settings = null)
+        {
+            var report = FL_GenerateReportFromDataSetDebug(ds, ReportFilePath, DatabaseName);
+            report.FL_PrintReport(settings);
+        }
+
 
         public static WebReport FL_GenerateWebReportFromDataSet(this DataSet ds, string ReportFilePath, string DatabaseName, [CanBeNull] Exception GetExceptions)
         {
@@ -94,6 +121,21 @@ namespace frontlook_csharp_library.FL_General
                 return null;
             }
         }
+
+        public static WebReport FL_GenerateWebReportFromDataSetDebug(this DataSet ds, string ReportFilePath, string DatabaseName)
+        {
+            var report = new WebReport();
+            report.Report.RegisterData(ds, DatabaseName);
+            report.Report.Load(ReportFilePath);
+            report.EmbedPictures = true;
+            report.Report.Prepare();
+            return report;
+        }
+
+
+
+
+
 
         public static DataSet FL_ConvertToDataSet<T>(this IEnumerable<T> source, string name)
         {

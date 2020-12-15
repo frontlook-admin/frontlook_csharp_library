@@ -52,6 +52,9 @@
   <PropertyGroup>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
     <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
@@ -252,11 +255,13 @@
     <Compile Include="FL_DataBase\FL_MySql\FL_MySqlExecutor.cs" />
     <Compile Include="FL_DataBase\FL_SqlExecutor.cs" />
     <Compile Include="FL_Excel_Data_Interop\DataTable_To_Excel.cs" />
+    <Compile Include="FL_General\FL_FastReportPrintExtension.cs" />
     <Compile Include="FL_General\FL_combobox.cs" />
     <Compile Include="FL_General\FL_DateHelper.cs" />
     <Compile Include="FL_General\FL_FastReportHelper.cs" />
     <Compile Include="FL_General\FL_MathExpression.cs" />
     <Compile Include="FL_General\FL_Os_Helper.cs" />
+    <Compile Include="FL_General\FL_PrintPageSettings.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_Date_Validator.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_NumberStrings.cs" />
     <Compile Include="FL_Mysql_Helper\FL_mysql_helper.cs" />
