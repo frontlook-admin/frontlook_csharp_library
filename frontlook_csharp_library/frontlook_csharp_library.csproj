@@ -255,6 +255,44 @@
     <Compile Include="FL_DataBase\FL_MySql\FL_MySqlExecutor.cs" />
     <Compile Include="FL_DataBase\FL_SqlExecutor.cs" />
     <Compile Include="FL_Excel_Data_Interop\DataTable_To_Excel.cs" />
+    <Compile Include="FL_FastReportForm\Extensions.cs" />
+    <Compile Include="FL_FastReportForm\FRPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPreview.designer.cs">
+      <DependentUpon>FRPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPreviewAlt.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPreviewAlt.designer.cs">
+      <DependentUpon>FRPreviewAlt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPrintPreviewControl.cs">
+      <SubType>FastReport.OpenSource.Winforms</SubType>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPrintPreviewControl.designer.cs">
+      <DependentUpon>FRPrintPreviewControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPrintPreviewControlAlt.cs">
+      <SubType>FastReport.OpenSource.Winforms</SubType>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPrintPreviewControlAlt.designer.cs">
+      <DependentUpon>FRPrintPreviewControlAlt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPrintPreviewDialog.cs">
+      <SubType>FastReport.OpenSource.Winforms</SubType>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPrintPreviewDialog.designer.cs">
+      <DependentUpon>FRPrintPreviewDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPrintPreviewDialogAlt.cs">
+      <SubType>FastReport.OpenSource.Winforms</SubType>
+    </Compile>
+    <Compile Include="FL_FastReportForm\FRPrintPreviewDialogAlt.designer.cs">
+      <DependentUpon>FRPrintPreviewDialogAlt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FL_FastReportForm\ZoomMode.cs" />
     <Compile Include="FL_General\FL_FastReportPrintExtension.cs" />
     <Compile Include="FL_General\FL_combobox.cs" />
     <Compile Include="FL_General\FL_DateHelper.cs" />
@@ -282,8 +320,36 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FL_FastReportForm\print_preview.bmp" />
+    <Content Include="FL_FastReportForm\Resources\print_16.png" />
+    <Content Include="FL_FastReportForm\Resources\print_help_16.png" />
+    <Content Include="FL_FastReportForm\Resources\print_preview.bmp" />
+    <Content Include="FL_FastReportForm\Resources\print_setup_16.png" />
+    <Content Include="FL_FastReportForm\Resources\window_print.bmp" />
+    <Content Include="FL_FastReportForm\window_print.bmp" />
     <Content Include="FL_icon.ico" />
     <Content Include="google08a59524cbd75b47.html" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="FL_FastReportForm\FRPreview.resx">
+      <DependentUpon>FRPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FL_FastReportForm\FRPreviewAlt.resx">
+      <DependentUpon>FRPreviewAlt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FL_FastReportForm\FRPrintPreviewControl.resx">
+      <DependentUpon>FRPrintPreviewControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FL_FastReportForm\FRPrintPreviewControlAlt.resx">
+      <DependentUpon>FRPrintPreviewControlAlt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FL_FastReportForm\FRPrintPreviewDialog.resx">
+      <DependentUpon>FRPrintPreviewDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FL_FastReportForm\FRPrintPreviewDialogAlt.resx">
+      <DependentUpon>FRPrintPreviewDialogAlt.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -64,7 +64,7 @@ namespace frontlook_csharp_library.FL_General
             doc.Dispose();
         }
 
-        private static PrintDocument PrepareDoc(this Report report, PrinterSettings settings = null)
+        public static PrintDocument PrepareDoc(this Report report, PrinterSettings settings = null)
         {
             if (report.PreparedPages.Count < 1)
             {
@@ -124,7 +124,7 @@ namespace frontlook_csharp_library.FL_General
 
 
 
-        private static PrintDocument PrepareDocMod(this Report report, PrinterSettings settings = null)
+        public static PrintDocument PrepareDocMod(this Report report, PrinterSettings settings = null)
         {
             if (report.PreparedPages.Count < 1)
             {
