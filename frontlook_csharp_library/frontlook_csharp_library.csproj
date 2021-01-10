@@ -310,6 +310,12 @@
     <Compile Include="FL_Odbc_Helper\FL_odbc_helper.cs" />
     <Compile Include="FL_Oledb_Helper\FL_oledb_helper.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_String_Element_Filter.cs" />
+    <Compile Include="FL_Controls\FL_SqlQueryManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FL_Controls\FL_SqlQueryManager.designer.cs">
+      <DependentUpon>FL_SqlQueryManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_String_Validator.cs" />
@@ -349,6 +355,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FL_FastReportForm\FRPrintPreviewDialogAlt.resx">
       <DependentUpon>FRPrintPreviewDialogAlt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FL_Controls\FL_SqlQueryManager.resx">
+      <DependentUpon>FL_SqlQueryManager.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

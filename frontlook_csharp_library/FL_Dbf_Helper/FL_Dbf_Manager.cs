@@ -36,11 +36,10 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             //Variable to hold our return value
 
             //string excelFilename = "";
-            //string xml = ""; 
-            //string xml_schema = ""; 
+            //string xml = "";
+            //string xml_schema = "";
             //string sWithoutExt;
             //string s = "";
-
 
             var s = dbfFilepath;
             //excelFilename = "";
@@ -50,7 +49,6 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             DataTable dt = new DataTable("Database");
             try
             {
-
                 OleDbConnection connection = new OleDbConnection(dbfConstring1);
                 string sql = "SELECT * FROM `" + sWithoutExt + "`;";
 
@@ -61,8 +59,6 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
                 //DA.Update(dt);
                 connection.Close();
                 //BackgroundWorker bgw = new BackgroundWorker();
-
-
             }
             catch (OleDbException e)
             {
@@ -70,30 +66,12 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             }
             return dt;
         }
-        
-        public static DataTable FL_dbf_datatable(string dbfFilepath,string sql)
+
+        public static DataTable FL_dbf_datatable(string DbfFolderPath, string sql, bool UseDirectoryPath = true)
         {
-            //FileInfo fileInfo = new FileInfo(dbfFilepath);
-            //string dbfDirectoryFilepath = fileInfo.DirectoryName;
-            //string x = Path.GetDirectoryName(dbfFilepath);
-            string dbfConstring1 = FL_dbf_constring(dbfFilepath);
-            //Get version information about the os.
-            //data_helper1.constring(dbf_filepath);
+            //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
+            string dbfConstring1 = UseDirectoryPath ? FL_DBFConstring(DbfFolderPath) : FL_dbf_constring(DbfFolderPath);
 
-            //Variable to hold our return value
-
-            //string excelFilename = "";
-            //string xml = ""; 
-            //string xml_schema = ""; 
-            //string s_without_ext = "";
-            //string s = "";
-
-
-            //var s = dbfFilepath;
-            /*excelFilename = "";
-            s_without_ext = "";
-            excelFilename = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\" + s + ".xlsx";
-            s_without_ext = Path.GetFileNameWithoutExtension(s);*/
             DataTable dt = new DataTable();
             try
             {
@@ -114,13 +92,26 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             }
             return dt;
         }
-       
+
         public static string FL_dbf_constring(string dbfFilepath)
         {
-            string operatingSystem = FL_Os_Helper.FL_get_os();
             //string dbfConstring1;
             FileInfo fileInfo = new FileInfo(dbfFilepath);
             string dbfDirectoryFilepath = fileInfo.DirectoryName;
+            return FL_DBFConstring(dbfDirectoryFilepath);
+        }
+
+        public static string FL_dbf_constring(string dbfFilepath, string UserId, string password)
+        {
+            FileInfo fileInfo = new FileInfo(dbfFilepath);
+            string dbfDirectoryFilepath = fileInfo.DirectoryName;
+            return FL_DBFConstring(dbfDirectoryFilepath, UserId, password);
+        }
+
+        public static string FL_DBFConstring(string dbfDirectoryFilepath)
+        {
+            string operatingSystem = FL_Os_Helper.FL_get_os();
+            //string dbfConstring1;
             if (operatingSystem != "")
             {
                 operatingSystem = "Windows " + operatingSystem;
@@ -145,12 +136,10 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             }
         }
 
-        public static string FL_dbf_constring(string dbfFilepath, string UserId, string password)
+        public static string FL_DBFConstring(string dbfDirectoryFilepath, string UserId, string password)
         {
             string operatingSystem = FL_Os_Helper.FL_get_os();
             //string dbfConstring1;
-            FileInfo fileInfo = new FileInfo(dbfFilepath);
-            string dbfDirectoryFilepath = fileInfo.DirectoryName;
             if (operatingSystem != "")
             {
                 operatingSystem = "Windows " + operatingSystem;
