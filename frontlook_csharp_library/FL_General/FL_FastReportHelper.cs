@@ -14,7 +14,6 @@ namespace frontlook_csharp_library.FL_General
 {
     public static class FL_FastReportHelper
     {
-
         public static Report FL_GenerateReportFromDataTable(this DataTable dt, string ReportFilePath, string DatabaseName, [CanBeNull] Exception GetExceptions = null)
         {
             try
@@ -69,7 +68,6 @@ namespace frontlook_csharp_library.FL_General
             }
         }
 
-
         public static void FL_PrintReport(this Report report, PrinterSettings settings = null, [CanBeNull] Exception GetExceptions = null)
         {
             if (settings != null)
@@ -103,7 +101,6 @@ namespace frontlook_csharp_library.FL_General
             report.FL_PrintReport(settings);
         }
 
-
         public static WebReport FL_GenerateWebReportFromDataSet(this DataSet ds, string ReportFilePath, string DatabaseName, [CanBeNull] Exception GetExceptions)
         {
             try
@@ -131,11 +128,6 @@ namespace frontlook_csharp_library.FL_General
             report.Report.Prepare();
             return report;
         }
-
-
-
-
-
 
         public static DataSet FL_ConvertToDataSet<T>(this IEnumerable<T> source, string name)
         {
@@ -226,6 +218,5 @@ namespace frontlook_csharp_library.FL_General
         public string FirstName { get; set; }
         public DateTime BirthDate { get; set; }
         public string Address { get; set; }
-
     }
 }

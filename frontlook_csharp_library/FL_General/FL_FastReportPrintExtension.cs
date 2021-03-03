@@ -55,6 +55,7 @@ namespace frontlook_csharp_library.FL_General
             doc.Print();
             doc.Dispose();
         }
+
         public static void PrintMod(this Report report, PrinterSettings settings = null)
         {
             var doc = report.PrepareDocMod(settings);
@@ -122,8 +123,6 @@ namespace frontlook_csharp_library.FL_General
             return doc;
         }
 
-
-
         public static PrintDocument PrepareDocMod(this Report report, PrinterSettings settings = null)
         {
             if (report.PreparedPages.Count < 1)
@@ -145,7 +144,6 @@ namespace frontlook_csharp_library.FL_General
                 if (settings != null)
                 {
                     args.PageSettings = settings.DefaultPageSettings;
-
                 }
                 else
                 {
@@ -162,9 +160,6 @@ namespace frontlook_csharp_library.FL_General
                         (int)(scaleFactor * rPage.TopMargin * Units.HundrethsOfInch),
                         (int)(scaleFactor * rPage.BottomMargin * Units.HundrethsOfInch));
                 }
-
-
-
             };
 
             doc.PrintPage += (sender, args) =>

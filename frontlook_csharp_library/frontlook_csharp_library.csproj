@@ -302,6 +302,7 @@
     <Compile Include="FL_General\FL_PrintPageSettings.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_Date_Validator.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_NumberStrings.cs" />
+    <Compile Include="FL_General\FL_string_helper\FL_StringParser.cs" />
     <Compile Include="FL_Mysql_Helper\FL_mysql_helper.cs" />
     <Compile Include="FL_Dbf_Helper\FL_Dbf_Manager.cs" />
     <Compile Include="FL_Dbf_Helper\dbf_helperx.cs" />

@@ -4,22 +4,52 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FastReport;
+using FastReport.Export;
+using FastReport.Utils;
 
 namespace frontlook_csharp_library.FL_General
 {
     public static class FL_PrintPageSettings
     {
-        public static PaperSize FL_SetPaperSize(this PrinterSettings ps, int sizeName)
+        private const float scaleFactor = 300 / 96f;
+
+        public static PaperSize FL_SetPaperSize(this PrinterSettings ps, int sizeName, bool Check = true)
+        {
+            List<PaperSize> paperSizes = ps.PaperSizes.Cast<PaperSize>().ToList();
+            if (Check)
+            {
+                PaperSize size = null;
+                /*foreach (var pz in paperSizes)
+                {
+                    // setting paper size to A4 size
+                    size = paperSizes.First(e => e.RawKind == sizeName);
+                }*/
+                size = paperSizes.First(e => e.RawKind == sizeName);
+                return size;
+            }
+            else
+            {
+                return paperSizes.First();
+            }
+        }
+
+        public static PaperSize FL_SetPaperSize(this PrinterSettings ps, int width, int height)
         {
             List<PaperSize> paperSizes = ps.PaperSizes.Cast<PaperSize>().ToList();
             PaperSize size = null;
-            foreach (var pz in paperSizes)
+
+            var b = paperSizes.Any(e => e.Width == width && e.Height == height);
+            if (!b)
             {
-                size = paperSizes.First(e => e.RawKind == sizeName);  // setting paper size to A4 size
-
+                var v = new PaperSize("", width, height);
+                return v;
             }
-
-            return size;
+            else
+            {
+                size = paperSizes.First(e => e.Width == width && e.Height == height);
+                return size;
+            }
         }
 
         public static int FL_GetPaperSize(this PrinterSettings ps)
@@ -34,6 +64,25 @@ namespace frontlook_csharp_library.FL_General
             var sizeName = ps.PaperSize.RawKind;
 
             return sizeName;
+        }
+
+        public static PageSettings FL_GetPageSettings(this Report report)
+        {
+            var page = 0;
+            var rPage = report.PreparedPages.GetPage(page);
+            var p = new PageSettings();
+            p.Landscape = rPage.Landscape;
+            p.PaperSize = new PaperSize("Custom",
+                (int)(ExportUtils.GetPageWidth(rPage) * scaleFactor * Units.HundrethsOfInch),
+                (int)(ExportUtils.GetPageHeight(rPage) * scaleFactor * Units.HundrethsOfInch));
+            p.Margins =
+                new Margins(
+                    (int)(scaleFactor * rPage.LeftMargin * Units.HundrethsOfInch),
+                    (int)(scaleFactor * rPage.RightMargin * Units.HundrethsOfInch),
+                    (int)(scaleFactor * rPage.TopMargin * Units.HundrethsOfInch),
+                    (int)(scaleFactor * rPage.BottomMargin * Units.HundrethsOfInch));
+
+            return p;
         }
     }
 }

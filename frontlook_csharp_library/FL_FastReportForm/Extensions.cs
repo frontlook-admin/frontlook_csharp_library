@@ -56,6 +56,7 @@ namespace frontlook_csharp_library.FL_FastReportForm
             doc.Print();
             doc.Dispose();
         }
+
         public static void PrintMod(this Report report, PrinterSettings settings = null)
         {
             var doc = report.PrepareDocMod(settings);
@@ -106,6 +107,7 @@ namespace frontlook_csharp_library.FL_FastReportForm
                 preview.ShowDialog();
             doc.Dispose();
         }
+
         public static void PreviewMod(this Report report, PrinterSettings settings = null)
         {
             var doc = report.PrepareDocMod(settings);
@@ -115,6 +117,7 @@ namespace frontlook_csharp_library.FL_FastReportForm
                 preview.ShowDialog();
             doc.Dispose();
         }
+
         /*
                 private static PrintDocument PrepareDoc(this Report report, PrinterSettings settings = null)
                 {
@@ -167,8 +170,6 @@ namespace frontlook_csharp_library.FL_FastReportForm
                     return doc;
                 }
 
-
-
                 private static PrintDocument PrepareDocMod(this Report report, PrinterSettings settings = null)
                 {
                     if (report.PreparedPages.Count < 1)
@@ -190,7 +191,6 @@ namespace frontlook_csharp_library.FL_FastReportForm
                         if (settings != null)
                         {
                             args.PageSettings = settings.DefaultPageSettings;
-
                         }
                         else
                         {
@@ -207,9 +207,6 @@ namespace frontlook_csharp_library.FL_FastReportForm
                                 (int)(scaleFactor * rPage.TopMargin * Units.HundrethsOfInch),
                                 (int)(scaleFactor * rPage.BottomMargin * Units.HundrethsOfInch));
                         }
-
-
-
                     };
 
                     doc.PrintPage += (sender, args) =>
@@ -234,6 +231,7 @@ namespace frontlook_csharp_library.FL_FastReportForm
                     return doc;
                 }
         */
+
         #endregion Methods
     }
 }

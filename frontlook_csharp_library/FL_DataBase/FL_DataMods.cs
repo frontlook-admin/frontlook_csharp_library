@@ -110,5 +110,32 @@ namespace frontlook_csharp_library.FL_DataBase
 
             return stringArr;
         }
+
+        public static List<T> FL_ConvertDataTableToList<T>(this DataTable dt)
+        {
+            return (from DataRow row in dt.Rows select GetItem<T>(row)).ToList<T>();
+        }
+
+        private static T GetItem<T>(DataRow dr)
+        {
+            var temp = typeof(T);
+            var obj = Activator.CreateInstance<T>();
+
+            for (var index = 0; index < dr.Table.Columns.Count; index++)
+            {
+                DataColumn column = dr.Table.Columns[index];
+                for (var i = 0; i < temp.GetProperties().Length; i++)
+                {
+                    var pro = temp.GetProperties()[i];
+
+                    if (pro.Name == column.ColumnName)
+                        pro.SetValue(obj, dr[column.ColumnName] ?? "", null);
+                    else
+                        continue;
+                }
+            }
+
+            return obj;
+        }
     }
 }
