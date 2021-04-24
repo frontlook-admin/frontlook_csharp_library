@@ -93,6 +93,31 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             return dt;
         }
 
+
+        public static int FL_DBF_ExecuteNonQuery(string DbfFolderPath, string sql, bool UseDirectoryPath = true)
+        {
+            //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
+            string dbfConstring1 = UseDirectoryPath ? FL_DBFConstring(DbfFolderPath) : FL_dbf_constring(DbfFolderPath);
+            var i = 0;
+            //DataTable dt = new DataTable();
+            try
+            {
+                OleDbConnection connection = new OleDbConnection(dbfConstring1);
+                OleDbCommand cmd = new OleDbCommand(sql, connection);
+                connection.Open();
+                i = cmd.ExecuteNonQuery();
+                connection.Close();
+                //BackgroundWorker bgw = new BackgroundWorker();
+                cmd.Dispose();
+                connection.Dispose();
+            }
+            catch (OleDbException e)
+            {
+                MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return i;
+        }
+
         public static string FL_dbf_constring(string dbfFilepath)
         {
             //string dbfConstring1;

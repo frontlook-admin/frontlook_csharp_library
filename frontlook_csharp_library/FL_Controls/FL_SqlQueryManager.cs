@@ -110,10 +110,10 @@ namespace frontlook_csharp_library.FL_Controls
             foreach (string dbf_filepath_series in filePaths)
             {
                 i = i + 1;
-                label2.Invoke((MethodInvoker)delegate
-                {
-                    label2.Text = dbf_filepath_series;
-                });
+                // label2.Invoke((MethodInvoker)delegate
+                // {
+                //      label2.Text = dbf_filepath_series;
+                //  });
                 DataTable dt = FL_DbfData_To_Excel.FL_data_to_xls_with_datatable(dbf_filepath_series);
                 dataGridView1.Invoke((MethodInvoker)delegate
                 {
@@ -129,15 +129,15 @@ namespace frontlook_csharp_library.FL_Controls
 
         private void Dbf_to_excel_series_worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            label3.Text = e.ProgressPercentage + "%";
-            progress.Value = e.ProgressPercentage;
+            //label3.Text = e.ProgressPercentage + "%";
+            //progress.Value = e.ProgressPercentage;
         }
 
         private void Dbf_to_excel_series_worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             MessageBox.Show("Done..!!", "Work Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             //dbf_to_excel_series_worker.ReportProgress(0);
-            progress.Value = 0;
+            //progress.Value = 0;
         }
 
         private void Dbf_to_excel_single_Click(object sender, EventArgs e)
@@ -283,6 +283,48 @@ namespace frontlook_csharp_library.FL_Controls
              MessageBox.Show(cf_d + " 1 "+cf_t+" 2 "+ currentCulture.DateTimeFormat.FullDateTimePattern+" 3 "+
                  currentCulture.DateTimeFormat.SortableDateTimePattern+" 4 "+ currentCulture.DateTimeFormat.LongDatePattern);*/
             //MessageBox.Show(DateTime.ParseExact(DateTime.Now.ToString(),cf_d+" "+cf_t,ci,DateTimeStyles.AssumeLocal).ToString());
+        }
+
+        private void nonquery_Click(object sender, EventArgs e)
+        {
+            var sql = query.Text.ToString().Trim();
+            var v = FL_Dbf_Manager.FL_DBF_ExecuteNonQuery(dbf_filepath, sql, false);
+            if (v == 1)
+            {
+                if (sql.ToLower().Contains("insert") && sql.ToLower().Contains("update"))
+                {
+                    MessageBox.Show(@"Query Executed Successfully..!!", @"Success..!!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                if (sql.ToLower().Contains("update"))
+                {
+                    MessageBox.Show(@"Update Query Executed Successfully..!!", @"Success..!!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                if (sql.ToLower().Contains("insert"))
+                {
+                    MessageBox.Show(@"Insert Query Executed Successfully..!!", @"Success..!!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                if (sql.ToLower().Contains("insert") && sql.ToLower().Contains("update"))
+                {
+                    MessageBox.Show(@"Query Execution Failed..!!", @"Error..!!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+                if (sql.ToLower().Contains("update"))
+                {
+                    MessageBox.Show(@"Update Query Execution Failed..!!", @"Error..!!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+                if (sql.ToLower().Contains("insert"))
+                {
+                    MessageBox.Show(@"Insert Query Execution Failed..!!", @"Error..!!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
         }
 
         protected void dbf_folder_selection()
