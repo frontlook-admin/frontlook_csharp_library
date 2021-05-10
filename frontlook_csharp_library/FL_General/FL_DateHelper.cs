@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ExpressionIsAlwaysNull
 
@@ -11,23 +12,43 @@ namespace frontlook_csharp_library.FL_General
 {
     public static class FL_DateHelper
     {
+        public enum FL_DateTimeFormats
+        {
+            FL_DateParseFormats, FL_DateParseFormatsT1, FL_DateParseFormatsT2, FL_DateParseFormatsT3, FL_DateParseFormatsT4, FL_DateParseFormatsT5, NoFormat
+        }
 
-        public static string[] DateParseFormats => new string[] 
-        { "MM/dd/yyyy", "M/d/yyyy", "MM-dd-yyyy", "M-d-yyyy", 
+        public static string[] FL_GetDateTimeFormats(FL_DateTimeFormats DateTimeEnumFormat = FL_DateTimeFormats.FL_DateParseFormats)
+        {
+            return DateTimeEnumFormat switch
+            {
+                FL_DateTimeFormats.FL_DateParseFormats => FL_DateParseFormats,
+                FL_DateTimeFormats.FL_DateParseFormatsT1 => FL_DateParseFormatsT1,
+                FL_DateTimeFormats.FL_DateParseFormatsT2 => FL_DateParseFormatsT2,
+                FL_DateTimeFormats.FL_DateParseFormatsT3 => FL_DateParseFormatsT3,
+                FL_DateTimeFormats.FL_DateParseFormatsT4 => FL_DateParseFormatsT4,
+                FL_DateTimeFormats.FL_DateParseFormatsT5 => FL_DateParseFormatsT5,
+                FL_DateTimeFormats.NoFormat => null,
+                _ => FL_DateParseFormats
+            };
+        }
+
+        public static string[] FL_DateParseFormats => new string[]
+        { "MM/dd/yyyy", "M/d/yyyy", "MM-dd-yyyy", "M-d-yyyy",
             "dd/M/yyyy", "d/M/yyyy", "dd-MM-yyyy", "d-M-yyyy" ,
             "MMM/dd/yyyy", "MMM/d/yyyy", "MMM-dd-yyyy", "MMM-d-yyyy",
             "dd/MMM/yyyy","d/MMM/yyyy","dd-MMM-yyyy","d-MMM-yyyy",
             "ddMMyyyy","MMddyyyy","yyyyMMdd"
         };
 
-        public static string[] TimeParseFormats => new string[]
-        { "hh:mm:ss", "HH:mm:ss tt" , "HH:mm:sstt" 
+        public static string[] FL_TimeParseFormats => new string[]
+        { "hh:mm:ss", "HH:mm:ss tt"
         };
-        public static string[] DateParseFormatsT1 => new string[]{"MM/dd/yyyy","M/d/yyyy","MM-dd-yyyy","M-d-yyyy"};
-        public static string[] DateParseFormatsT2 => new string[]{"dd/M/yyyy","d/M/yyyy","dd-MM-yyyy","d-M-yyyy"};
-        public static string[] DateParseFormatsT3 => new string[] { "MMM/dd/yyyy", "MMM/d/yyyy", "MMM-dd-yyyy", "MMM-d-yyyy" };
-        public static string[] DateParseFormatsT4 => new string[]{"dd/MMM/yyyy","d/MMM/yyyy","dd-MMM-yyyy","d-MMM-yyyy"};
-        public static string[] DateParseFormatsT5 => new string[]{"ddMMyyyy","MMddyyyy","yyyyMMdd"};
+
+        private static string[] FL_DateParseFormatsT1 => new string[] { "MM/dd/yyyy", "M/d/yyyy", "MM-dd-yyyy", "M-d-yyyy" };
+        private static string[] FL_DateParseFormatsT2 => new string[] { "dd/M/yyyy", "d/M/yyyy", "dd-MM-yyyy", "d-M-yyyy" };
+        private static string[] FL_DateParseFormatsT3 => new string[] { "MMM/dd/yyyy", "MMM/d/yyyy", "MMM-dd-yyyy", "MMM-d-yyyy" };
+        private static string[] FL_DateParseFormatsT4 => new string[] { "dd/MMM/yyyy", "d/MMM/yyyy", "dd-MMM-yyyy", "d-MMM-yyyy" };
+        private static string[] FL_DateParseFormatsT5 => new string[] { "ddMMyyyy", "MMddyyyy", "yyyyMMdd" };
 
         public static DateTime? FL_ParseDateTime(this string date)
         {
@@ -35,7 +56,7 @@ namespace frontlook_csharp_library.FL_General
             DateTime? dt;
             try
             {
-                dt = DateTime.ParseExact(date,DateParseFormats,CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
+                dt = DateTime.ParseExact(date, FL_DateParseFormats, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal);
             }
             catch
             {
@@ -51,7 +72,7 @@ namespace frontlook_csharp_library.FL_General
             TimeSpan? dt;
             try
             {
-                dt = DateTime.ParseExact(date, TimeParseFormats, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal).TimeOfDay;
+                dt = DateTime.ParseExact(date, FL_TimeParseFormats, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal).TimeOfDay;
             }
             catch
             {
@@ -198,8 +219,8 @@ namespace frontlook_csharp_library.FL_General
         public static DateTime LastDateOfMonthMod(this DateTime date, bool OHour = false)
         {
             var DayNo = DateTime.DaysInMonth(date.Year, date.Month);
-            return OHour?  DateTime.Parse(date.Year + "-" + date.Month + "-" + DayNo).MinTimeOfDay(): 
-                DateTime.Parse(date.Year + "-" + date.Month + "-" + DayNo).MaxTimeOfDay(); 
+            return OHour ? DateTime.Parse(date.Year + "-" + date.Month + "-" + DayNo).MinTimeOfDay() :
+                DateTime.Parse(date.Year + "-" + date.Month + "-" + DayNo).MaxTimeOfDay();
         }
 
         /// <summary>
@@ -246,7 +267,7 @@ namespace frontlook_csharp_library.FL_General
 
         public static string GetNormalisedDayOfWeek(this string DayName)
         {
-            if(string.IsNullOrEmpty(DayName) || string.IsNullOrWhiteSpace(DayName) || DayName == "NA" || DayName == "na")
+            if (string.IsNullOrEmpty(DayName) || string.IsNullOrWhiteSpace(DayName) || DayName == "NA" || DayName == "na")
             {
                 DayName = "NA";
             }
@@ -256,24 +277,31 @@ namespace frontlook_csharp_library.FL_General
                 case "sunday":
                     v = "Sunday";
                     break;
+
                 case "monday":
                     v = "Monday";
                     break;
+
                 case "tuesday":
                     v = "Tuesday";
                     break;
+
                 case "wednesday":
                     v = "Wednesday";
                     break;
+
                 case "thursday":
                     v = "Thursday";
                     break;
+
                 case "friday":
                     v = "Friday";
                     break;
+
                 case "saturday":
                     v = "Saturday";
                     break;
+
                 default:
                     v = null;
                     break;
@@ -348,7 +376,6 @@ namespace frontlook_csharp_library.FL_General
             //Console.WriteLine(Month);
             var DayNo = DateTime.DaysInMonth(Year, Month);
 
-
             var Day = date.Day > DayNo ? DayNo : date.Day;
 
             var Time = date.TimeOfDay;
@@ -372,7 +399,7 @@ namespace frontlook_csharp_library.FL_General
                 Month = monthSpan % 12;
             }
             var DayNo = DateTime.DaysInMonth(Year, Month);
-            
+
             var Day = date.Day > DayNo ? DayNo : date.Day;
 
             var Time = date.TimeOfDay;
@@ -434,18 +461,23 @@ namespace frontlook_csharp_library.FL_General
         [RegularExpression(@"[[0-9]+]*")]
         [Display(Name = "Day")]
         public int? FromDay { get; set; }
+
         [RegularExpression(@"^(2[0-4]|[0-1]?[0-9])$")]
         [Display(Name = "Hour")]
         public int? FromHour { get; set; }
+
         [RegularExpression(@"^[1-5]?[0-9]$")]
         [Display(Name = "Minute")]
         public int? FromMinute { get; set; }
+
         [RegularExpression(@"^[1-5]?[0-9]$")]
         [Display(Name = "Second")]
         public int? FromSecond { get; set; }
+
         [RegularExpression(@"^([0-9]?[0-9]?[0-9])$")]
         [Display(Name = "Mili Second")]
         public int? FromMiliSecond { get; set; }
+
         [Display(Name = "AM/PM")]
         [CanBeNull]
         public string FromAmPm { get; set; }
@@ -453,18 +485,23 @@ namespace frontlook_csharp_library.FL_General
         [RegularExpression(@"[[0-9]+]*")]
         [Display(Name = "Day")]
         public int? ToDay { get; set; }
+
         [RegularExpression(@"^(2[0-4]|[0-1]?[0-9])$")]
         [Display(Name = "Hour")]
         public int? ToHour { get; set; }
+
         [RegularExpression(@"^[1-5]?[0-9]$")]
         [Display(Name = "Minute")]
         public int? ToMinute { get; set; }
+
         [RegularExpression(@"^[1-5]?[0-9]$")]
         [Display(Name = "Second")]
         public int? ToSecond { get; set; }
+
         [Display(Name = "Mili Second")]
         [RegularExpression(@"^([0-9]?[0-9]?[0-9])$")]
         public int? ToMiliSecond { get; set; }
+
         [Display(Name = "AM/PM")]
         [CanBeNull]
         public string ToAmPm { get; set; }
@@ -472,15 +509,19 @@ namespace frontlook_csharp_library.FL_General
         [RegularExpression(@"[[0-9]+]*")]
         [Display(Name = "Day")]
         public int? ChangeDay { get; set; }
+
         [RegularExpression(@"^(2[0-4]|[0-1]?[0-9])$")]
         [Display(Name = "Hour")]
         public int? ChangeHour { get; set; }
+
         [RegularExpression(@"^[1-5]?[0-9]$")]
         [Display(Name = "Minute")]
         public int? ChangeMinute { get; set; }
+
         [RegularExpression(@"^[1-5]?[0-9]$")]
         [Display(Name = "Second")]
         public int? ChangeSecond { get; set; }
+
         [RegularExpression(@"^([0-9]?[0-9]?[0-9])$")]
         [Display(Name = "Mili Second")]
         public int? ChangeMiliSecond { get; set; }
@@ -488,33 +529,42 @@ namespace frontlook_csharp_library.FL_General
         [RegularExpression(@"[[0-9]+]*")]
         [Display(Name = "Day")]
         public int? IDay { get; set; }
+
         [RegularExpression(@"^(2[0-4]|[0-1]?[0-9])$")]
         [Display(Name = "Hour")]
         public int? IHour { get; set; }
+
         [RegularExpression(@"^[1-5]?[0-9]$")]
         [Display(Name = "Minute")]
         public int? IMinute { get; set; }
+
         [RegularExpression(@"^[1-5]?[0-9]$")]
         [Display(Name = "Second")]
         public int? ISecond { get; set; }
+
         [RegularExpression(@"^([0-9]?[0-9]?[0-9])$")]
         [Display(Name = "Mili Second")]
         public int? IMiliSecond { get; set; }
+
         [Display(Name = "AM/PM")]
         [CanBeNull]
         public string IAmPm { get; set; }
 
         [Display(Name = "Month")]
         [CanBeNull] public string IMonth { get; set; }
+
         [Display(Name = "Year")]
         public int? IYear { get; set; }
 
         [Display(Name = "From Month")]
         [CanBeNull] public string FromMonth { get; set; }
+
         [Display(Name = "From Year")]
         public int? FromYear { get; set; }
+
         [Display(Name = "To Month")]
         [CanBeNull] public string ToMonth { get; set; }
+
         [Display(Name = "To Year")]
         public int? ToYear { get; set; }
 
@@ -555,8 +605,8 @@ namespace frontlook_csharp_library.FL_General
 
         public DateTime FromDate => (!string.IsNullOrEmpty(FromMonth) && FromYear != null) ?
             (DateTime.ParseExact(FromMonth + ", " + FromYear, "MMMM, yyyy", new CultureInfo("EN"))) : DateTime.Now.MinTimeOfDay();
-        public DateTime ToDate => (!string.IsNullOrEmpty(ToMonth) && ToYear != null) ? DateTime.ParseExact(ToMonth + ", " + ToYear, "MMMM, yyyy", new CultureInfo("EN")) : DateTime.Now.MaxTimeOfDay();
 
+        public DateTime ToDate => (!string.IsNullOrEmpty(ToMonth) && ToYear != null) ? DateTime.ParseExact(ToMonth + ", " + ToYear, "MMMM, yyyy", new CultureInfo("EN")) : DateTime.Now.MaxTimeOfDay();
     }
 
     public static class FL_DateSelectorDefinations

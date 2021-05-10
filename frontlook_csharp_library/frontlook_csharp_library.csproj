@@ -81,6 +81,9 @@
     <Reference Include="Google.Protobuf, Version=3.13.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.13.0\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\..\AceReporter\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=2020.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\AceReporter\packages\JetBrains.Annotations.2020.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
@@ -194,6 +197,18 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\AceReporter\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NPOI, Version=2.5.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\..\AceReporter\packages\NPOI.2.5.3\lib\net45\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.5.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\..\AceReporter\packages\NPOI.2.5.3\lib\net45\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.5.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\..\AceReporter\packages\NPOI.2.5.3\lib\net45\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.5.3.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\..\AceReporter\packages\NPOI.2.5.3\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>..\packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
@@ -255,6 +270,8 @@
     <Compile Include="FL_DataBase\FL_MySql\FL_MySqlExecutor.cs" />
     <Compile Include="FL_DataBase\FL_SqlExecutor.cs" />
     <Compile Include="FL_Excel_Data_Interop\DataTable_To_Excel.cs" />
+    <Compile Include="FL_Excel_Data_Interop\FL_Excel.cs" />
+    <Compile Include="FL_Excel_Data_Interop\FL_ExcelSupport.cs" />
     <Compile Include="FL_FastReportForm\Extensions.cs" />
     <Compile Include="FL_FastReportForm\FRPreview.cs">
       <SubType>UserControl</SubType>
@@ -293,15 +310,21 @@
       <DependentUpon>FRPrintPreviewDialogAlt.cs</DependentUpon>
     </Compile>
     <Compile Include="FL_FastReportForm\ZoomMode.cs" />
+    <Compile Include="FL_General\FL_ConsoleManager.cs" />
     <Compile Include="FL_General\FL_FastReportPrintExtension.cs" />
     <Compile Include="FL_General\FL_combobox.cs" />
     <Compile Include="FL_General\FL_DateHelper.cs" />
     <Compile Include="FL_General\FL_FastReportHelper.cs" />
+    <Compile Include="FL_General\FL_FileManager.cs" />
+    <Compile Include="FL_General\FL_ImageManager.cs" />
     <Compile Include="FL_General\FL_MathExpression.cs" />
+    <Compile Include="FL_General\FL_Media.cs" />
     <Compile Include="FL_General\FL_Os_Helper.cs" />
     <Compile Include="FL_General\FL_PrintPageSettings.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_Date_Validator.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_NumberStrings.cs" />
+    <Compile Include="FL_General\FL_string_helper\FL_StaticStrings.cs" />
+    <Compile Include="FL_General\FL_string_helper\FL_StringHelper.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_StringParser.cs" />
     <Compile Include="FL_Mysql_Helper\FL_mysql_helper.cs" />
     <Compile Include="FL_Dbf_Helper\FL_Dbf_Manager.cs" />
