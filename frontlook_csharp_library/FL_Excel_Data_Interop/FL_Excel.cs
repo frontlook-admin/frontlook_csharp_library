@@ -105,7 +105,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
 
         #region Excel Writer
 
-        public static async Task<MemoryStream> FL_WriteExcelAsync(this List<string> HeadList,
+        public static void FL_WriteExcelAsync(this List<string> HeadList,
             List<List<string>> dataList, string FilePath = "", bool SaveExcelAsFile = true, bool EnableNumberCheck = true)
         {
             var filePath = SaveExcelAsFile ? FilePath : Path.GetTempFileName();
@@ -177,16 +177,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
 
             excelSheet.CreateFreezePane(0, 1, 0, 1);
             workbook.Write(tempStream);
-
-            using var stream = new FileStream(filePath, FileMode.Open);
-            await stream.CopyToAsync(ms);
-
-            stream.Close();
-            stream.Dispose();
-            return ms;
         }
 
-        public static async Task<MemoryStream> FL_WriteExcelAsync(this DataTable dataTable,
+        public static void FL_WriteExcelAsync(this DataTable dataTable,
             [CanBeNull] List<string> HeadList = null, string FilePath = "", bool SaveExcelAsFile = true, bool EnableNumberCheck = true)
         {
             var filePath = SaveExcelAsFile ? FilePath : Path.GetTempFileName();
@@ -306,16 +299,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
 
             excelSheet.CreateFreezePane(0, 1, 0, 1);
             workbook.Write(tempStream);
-
-            using var stream = new FileStream(filePath, FileMode.Open);
-            await stream.CopyToAsync(ms);
-
-            stream.Close();
-            stream.Dispose();
-            return ms;
         }
 
-        public static async Task<MemoryStream> FL_WriteExcelAsync(this FL_ExcelData Sheet)
+        public static void FL_WriteExcelAsync(this FL_ExcelData Sheet)
         {
             var filePath = Sheet.SaveExcelAsFile.GetValueOrDefault(true) ? Sheet.FilePath : Path.GetTempFileName();
             var ms = new MemoryStream();
@@ -448,15 +434,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
             ms.Flush();*/
 
             workbook.Write(tempStream);
-            using var stream = new FileStream(filePath, FileMode.Open);
-            await stream.CopyToAsync(ms);
-
-            stream.Close();
-            stream.Dispose();
-            return ms;
         }
 
-        public static async Task<MemoryStream> FL_WriteExcelAsync(this List<FL_ExcelData> SheetList)
+        public static void FL_WriteExcelAsync(this List<FL_ExcelData> SheetList)
         {
             var filePath = SheetList.First().SaveExcelAsFile.GetValueOrDefault(true) ? SheetList.First().FilePath : Path.GetTempFileName();
             var ms = new MemoryStream();
@@ -585,15 +565,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
             }
 
             workbook.Write(tempStream);
-            using var stream = new FileStream(filePath, FileMode.Open);
-            await stream.CopyToAsync(ms);
-
-            stream.Close();
-            stream.Dispose();
-            return ms;
         }
 
-        public static async Task<MemoryStream> FL_WriteExcelAsync(this FL_ExcelDataDT SheetDT)
+        public static void FL_WriteExcelAsync(this FL_ExcelDataDT SheetDT)
         {
             var filePath = SheetDT.SaveExcelAsFile.GetValueOrDefault(true) ? SheetDT.FilePath : Path.GetTempFileName();
             var ms = new MemoryStream();
@@ -741,16 +715,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
             //excelSheet.CreateFreezePane(2, topRow);
             excelSheet.CreateFreezePane(SheetDT.ColSplit.GetValueOrDefault(0), topRow, SheetDT.ColSplit.GetValueOrDefault(0), topRow);
             workbook.Write(tempStream);
-
-            using var stream = new FileStream(filePath, FileMode.Open);
-            await stream.CopyToAsync(ms);
-
-            stream.Close();
-            stream.Dispose();
-            return ms;
         }
 
-        public static async Task<MemoryStream> FL_WriteExcelAsync(this List<FL_ExcelDataDT> SheetDTList)
+        public static void FL_WriteExcelAsync(this List<FL_ExcelDataDT> SheetDTList)
         {
             var filePath = SheetDTList.First().SaveExcelAsFile.GetValueOrDefault(true) ? SheetDTList.First().FilePath : Path.GetTempFileName();
             var ms = new MemoryStream();
@@ -903,12 +870,12 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
             }
 
             workbook.Write(tempStream);
-
+            /*
             using var stream = new FileStream(filePath, FileMode.Open);
             await stream.CopyToAsync(ms);
             stream.Close();
             stream.Dispose();
-            return ms;
+            return ms;*/
         }
 
         #endregion Excel Writer
