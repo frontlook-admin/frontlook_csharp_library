@@ -65,7 +65,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         {
         }
 
-        public FL_ExcelDataItem([CanBeNull] object _ItemValue, int _VItemPosition, List<FL_ExcelDataItem> _HItemPosition, VTextAlign vTextAlign = FL_Excel_Data_Interop.VTextAlign.Center, HTextAlign hTextAlign = FL_Excel_Data_Interop.HTextAlign.Left, bool Bold = false)
+        public FL_ExcelDataItem([CanBeNull] object _ItemValue, int _VItemPosition, List<FL_ExcelDataItem> _HItemPosition, VTextAlign vTextAlign = FL_Excel_Data_Interop.VTextAlign.Center, HTextAlign hTextAlign = FL_Excel_Data_Interop.HTextAlign.Left, bool Bold = false, bool _ApplyStyles = true)
         {
             ItemValue = _ItemValue == null ? "" : _ItemValue.ToString();
             VItemPosition = _VItemPosition;
@@ -73,9 +73,10 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
             HTextAlign = (HorizontalAlignment)hTextAlign;
             VTextAlign = (VerticalAlignment)vTextAlign;
             bold = Bold;
+            ApplyStyles = true;
         }
 
-        public FL_ExcelDataItem([CanBeNull] object _ItemValue, int _VItemPosition, int _HItemPosition, VTextAlign vTextAlign = FL_Excel_Data_Interop.VTextAlign.Center, HTextAlign hTextAlign = FL_Excel_Data_Interop.HTextAlign.Left, bool Bold = false)
+        public FL_ExcelDataItem([CanBeNull] object _ItemValue, int _VItemPosition, int _HItemPosition, VTextAlign vTextAlign = FL_Excel_Data_Interop.VTextAlign.Center, HTextAlign hTextAlign = FL_Excel_Data_Interop.HTextAlign.Left, bool Bold = false, bool _ApplyStyles = true)
         {
             ItemValue = _ItemValue == null ? "" : _ItemValue.ToString();
             VItemPosition = _VItemPosition;
@@ -83,12 +84,14 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
             HTextAlign = (HorizontalAlignment)hTextAlign;
             VTextAlign = (VerticalAlignment)vTextAlign;
             bold = Bold;
+            ApplyStyles = true;
         }
 
         public string ItemValue { get; set; }
         public int VItemPosition { get; set; }
         public int HItemPosition { get; set; }
         public bool? bold { get; set; }
+        public bool? ApplyStyles { get; set; }
         public HorizontalAlignment? HTextAlign { get; set; }
         public VerticalAlignment? VTextAlign { get; set; }
     }
@@ -103,6 +106,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         public List<List<object>> SheetOData { get; set; }
         public List<List<string>> SheetData => SheetOData.Select(e => e.Select(f => f.ToString()).ToList()).ToList();
         public bool? EnableNumberCheck { get; set; }
+        public bool? ApplySuperHeadStyles { get; set; }
+        public bool? ApplyHeadStyles { get; set; }
+        public bool? ApplyStyles { get; set; }
         public bool? SaveExcelAsFile { get; set; }
         public string FilePath { get; set; }
     }
@@ -117,6 +123,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         public DataTable SheetData { get; set; }
         public bool? EnableNumberCheck { get; set; }
 
+        public bool? ApplyHeadStyles { get; set; }
+        public bool? ApplySuperHeadStyles { get; set; }
+        public bool? ApplyStyles { get; set; }
         public bool? SaveExcelAsFile { get; set; }
         public string FilePath { get; set; }
     }

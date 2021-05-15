@@ -49,10 +49,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 for (var i = 0; i < sheetCount; i++)
                 {
                     var sht = hssfwb.GetSheetAt(i);
-                    var dt = new FL_ExcelData();
-                    dt.SheetName = sht.SheetName;
-                    dt.SheetNumber = i;
-                    dt.SheetOData = FL_GetExcelODataFromSheet(sht);
+                    var dt = new FL_ExcelData
+                    {
+                        SheetName = sht.SheetName,
+                        SheetNumber = i,
+                        SheetOData = FL_GetExcelODataFromSheet(sht)
+                    };
+                    FileData.Add(dt);
                 }
             }
             else
@@ -62,10 +65,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 for (var i = 0; i < sheetCount; i++)
                 {
                     var sht = hssfwb.GetSheetAt(i);
-                    var dt = new FL_ExcelData();
-                    dt.SheetName = sht.SheetName;
-                    dt.SheetNumber = i;
-                    dt.SheetOData = FL_GetExcelODataFromSheet(sht);
+                    var dt = new FL_ExcelData
+                    {
+                        SheetName = sht.SheetName,
+                        SheetNumber = i,
+                        SheetOData = FL_GetExcelODataFromSheet(sht)
+                    };
+                    FileData.Add(dt);
                 }
             }
 
@@ -106,7 +112,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         #region Excel Writer
 
         public static void FL_WriteExcelAsync(this List<string> HeadList,
-            List<List<string>> dataList, string FilePath = "", bool SaveExcelAsFile = true, bool EnableNumberCheck = true)
+            List<List<string>> dataList, string FilePath = "", bool SaveExcelAsFile = true, bool EnableNumberCheck = true, bool ApplyStyles = true, bool ApplyHeadStyles = true)
         {
             var filePath = SaveExcelAsFile ? FilePath : Path.GetTempFileName();
             var ms = new MemoryStream();
@@ -134,6 +140,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
 
                 var cell = row.CreateCell(i);
                 cell.SetCellValue(head);
+                if (!ApplyHeadStyles) continue;
                 cell.CellStyle = workbook.CreateCellStyle();
                 cell.CellStyle.SetFont(fontHead);
                 cell.CellStyle.Alignment = HorizontalAlignment.Center;
@@ -153,8 +160,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 foreach (var cell in columns.Select(col => row.CreateCell(cellIndex)))
                 {
                     var str = columns[cellIndex];
-
-                    if (EnableNumberCheck && double.TryParse(str, out _))
+                    var b = EnableNumberCheck && double.TryParse(str, out _);
+                    if (b)
                     {
                         cell.SetCellValue(double.Parse(str));
                         cell.SetCellType(CellType.Numeric);
@@ -165,13 +172,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         cell.SetCellType(CellType.String);
                     }
 
+                    cellIndex++;
+                    if (!ApplyStyles) continue;
                     //cell.SetCellType(columns[cellIndex].ToString().FL_SetICellType());
                     cell.CellStyle = workbook.CreateCellStyle();
                     cell.CellStyle.SetFont(font);
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
+                    cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
                     cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-
-                    cellIndex++;
                 }
             }
 
@@ -180,7 +187,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         }
 
         public static void FL_WriteExcelAsync(this DataTable dataTable,
-            [CanBeNull] List<string> HeadList = null, string FilePath = "", bool SaveExcelAsFile = true, bool EnableNumberCheck = true)
+            [CanBeNull] List<string> HeadList = null, string FilePath = "", bool SaveExcelAsFile = true, bool EnableNumberCheck = true, bool ApplyStyles = true, bool ApplyHeadStyles = true)
         {
             var filePath = SaveExcelAsFile ? FilePath : Path.GetTempFileName();
             var ms = new MemoryStream();
@@ -208,14 +215,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     columns.Add(HeadList[i].FL_UnSpaced());
                     var cell = row.CreateCell(i);
                     cell.SetCellValue(HeadList[i]);
-
+                    if (!ApplyHeadStyles) continue;
                     cell.CellStyle = workbook.CreateCellStyle();
                     cell.CellStyle.SetFont(fontHead);
                     cell.CellStyle.Alignment = HorizontalAlignment.Center;
                     cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                     cell.CellStyle.WrapText = true;
                     cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-
                     //columnIndex++;
                 }
             }
@@ -227,14 +233,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     columns.Add(column.ColumnName);
                     var cell = row.CreateCell(i);
                     cell.SetCellValue(column.ColumnName);
-
+                    if (!ApplyHeadStyles) continue;
                     cell.CellStyle = workbook.CreateCellStyle();
                     cell.CellStyle.SetFont(fontHead);
                     cell.CellStyle.Alignment = HorizontalAlignment.Center;
                     cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                     cell.CellStyle.WrapText = true;
                     cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-
                     //columnIndex++;
                 }
             }
@@ -251,7 +256,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     var cell = row.CreateCell(cellIndex);
                     var str = dsrow[col].ToString();
 
-                    if (EnableNumberCheck && double.TryParse(str, out _))
+                    var b = EnableNumberCheck && double.TryParse(str, out _);
+                    if (b)
                     {
                         cell.SetCellValue(double.Parse(str));
                         cell.SetCellType(CellType.Numeric);
@@ -261,6 +267,14 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         cell.SetCellValue(str);
                         cell.SetCellType(CellType.String);
                     }
+
+                    cellIndex++;
+                    if (!ApplyStyles) continue;
+                    //cell.SetCellType(columns[cellIndex].ToString().FL_SetICellType());
+                    cell.CellStyle = workbook.CreateCellStyle();
+                    cell.CellStyle.SetFont(font);
+                    cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
 
                     /*if (str.FL_GetStringType() == FL_StringHelper.FL_StringType.String ||
                         str.FL_GetStringType() == FL_StringHelper.FL_StringType.NullOrEmpty)
@@ -285,13 +299,6 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     }
 
                     */
-
-                    cell.CellStyle = workbook.CreateCellStyle();
-
-                    cell.CellStyle.SetFont(font);
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                    cellIndex++;
                 }
 
                 //rowIndex++;
@@ -318,6 +325,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 new List<FL_ExcelDataItem>();
             var HeadList = Sheet.HeadNames;
             var dataList = Sheet.SheetData;
+            var ApplyStyles = Sheet.ApplyStyles.GetValueOrDefault(true);
+            var ApplyHeadStyles = Sheet.ApplyHeadStyles.GetValueOrDefault(true);
+            var ApplySuperHeadStyles = Sheet.ApplySuperHeadStyles.GetValueOrDefault(true);
 
             var row = excelSheet.CreateRow(0);
 
@@ -342,12 +352,12 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     row = excelSheet.CreateRow(i);
                     foreach (var _itm in itms)
                     {
+                        var cell = row.CreateCell(_itm.HItemPosition);
+                        cell.SetCellValue(_itm.ItemValue);
+                        if (!ApplySuperHeadStyles || !_itm.ApplyStyles.GetValueOrDefault(true)) continue;
                         var fontHeadMaster = workbook.CreateFont();
                         fontHeadMaster.FontHeightInPoints = 11;
                         fontHeadMaster.FontName = "Calibri";
-
-                        var cell = row.CreateCell(_itm.HItemPosition);
-                        cell.SetCellValue(_itm.ItemValue);
 
                         fontHeadMaster.Boldweight = _itm.bold.GetValueOrDefault(false)
                             ? (short)FontBoldWeight.Bold
@@ -356,7 +366,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         cell.CellStyle = workbook.CreateCellStyle();
                         cell.CellStyle.SetFont(fontHead);
                         cell.CellStyle.Alignment = _itm.HTextAlign.GetValueOrDefault(HorizontalAlignment.Left);
-                        cell.CellStyle.VerticalAlignment = _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
+                        cell.CellStyle.VerticalAlignment =
+                            _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
                         cell.CellStyle.WrapText = false;
                         cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
                     }
@@ -372,7 +383,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 {
                     var cell = row.CreateCell(i);
                     cell.SetCellValue(HeadList[i]);
-
+                    if (!ApplyHeadStyles) continue;
                     cell.CellStyle = workbook.CreateCellStyle();
                     cell.CellStyle.SetFont(fontHead);
                     cell.CellStyle.Alignment = HorizontalAlignment.Center;
@@ -409,12 +420,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         cell.SetCellValue(str);
                         cell.SetCellType(CellType.String);
                     }
+
+                    cellIndex++;
+                    if (!ApplyStyles) continue;
                     cell.CellStyle = workbook.CreateCellStyle();
                     cell.CellStyle.SetFont(font);
                     cell.CellStyle.Alignment = HorizontalAlignment.Center;
                     cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-
-                    cellIndex++;
                 }
 
                 rowIndex++;
@@ -442,7 +454,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
             var ms = new MemoryStream();
             using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             IWorkbook workbook = new XSSFWorkbook();
-
+            var ApplyStyles = SheetList[0].ApplyStyles.GetValueOrDefault(true);
+            var ApplyHeadStyles = SheetList[0].ApplyHeadStyles.GetValueOrDefault(true);
+            var ApplySuperHeadStyles = SheetList[0].ApplySuperHeadStyles.GetValueOrDefault(true);
             for (var k = 0; k < SheetList.Count; k++)
             {
                 var Sheet = SheetList[k];
@@ -480,12 +494,12 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         row = excelSheet.CreateRow(i);
                         foreach (var _itm in itms)
                         {
+                            var cell = row.CreateCell(_itm.HItemPosition);
+                            cell.SetCellValue(_itm.ItemValue);
+                            if (!ApplySuperHeadStyles || !_itm.ApplyStyles.GetValueOrDefault(true)) continue;
                             var fontHeadMaster = workbook.CreateFont();
                             fontHeadMaster.FontHeightInPoints = 11;
                             fontHeadMaster.FontName = "Calibri";
-
-                            var cell = row.CreateCell(_itm.HItemPosition);
-                            cell.SetCellValue(_itm.ItemValue);
 
                             fontHeadMaster.Boldweight = _itm.bold.GetValueOrDefault(false)
                                 ? (short)FontBoldWeight.Bold
@@ -510,7 +524,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     {
                         var cell = row.CreateCell(i);
                         cell.SetCellValue(HeadList[i]);
-
+                        if (!ApplyHeadStyles) continue;
                         cell.CellStyle = workbook.CreateCellStyle();
                         cell.CellStyle.SetFont(fontHead);
                         cell.CellStyle.Alignment = HorizontalAlignment.Center;
@@ -536,8 +550,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     foreach (var cell in columns.Select(col => row.CreateCell(cellIndex)))
                     {
                         var str = columns[cellIndex];
-
-                        if (EnableNumberCheck && double.TryParse(str, out _))
+                        var b = EnableNumberCheck && double.TryParse(str, out _);
+                        if (b)
                         {
                             cell.SetCellValue(double.Parse(str));
                             cell.SetCellType(CellType.Numeric);
@@ -547,12 +561,12 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                             cell.SetCellValue(str);
                             cell.SetCellType(CellType.String);
                         }
+                        cellIndex++;
+                        if (!ApplyStyles) continue;
                         cell.CellStyle = workbook.CreateCellStyle();
                         cell.CellStyle.SetFont(font);
-                        cell.CellStyle.Alignment = HorizontalAlignment.Center;
+                        cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
                         cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-
-                        cellIndex++;
                     }
 
                     rowIndex++;
@@ -579,7 +593,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 new List<FL_ExcelDataItem>();
             var dataTable = SheetDT.SheetData;
             var HeadList = SheetDT.HeadNames;
-
+            var ApplyStyles = SheetDT.ApplyStyles.GetValueOrDefault(true);
+            var ApplyHeadStyles = SheetDT.ApplyHeadStyles.GetValueOrDefault(true);
+            var ApplySuperHeadStyles = SheetDT.ApplySuperHeadStyles.GetValueOrDefault(true);
             //var excelSheet = workbook.CreateSheet("Sheet1");
             var excelSheet = string.IsNullOrEmpty(SheetDT.SheetName)
                 ? workbook.CreateSheet("Sheet1")
@@ -608,13 +624,12 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     row = excelSheet.CreateRow(i);
                     foreach (var _itm in itms)
                     {
+                        var cell = row.CreateCell(_itm.HItemPosition);
+                        cell.SetCellValue(_itm.ItemValue);
+                        if (!ApplySuperHeadStyles || !_itm.ApplyStyles.GetValueOrDefault(true)) continue;
                         var fontHeadMaster = workbook.CreateFont();
                         fontHeadMaster.FontHeightInPoints = 11;
                         fontHeadMaster.FontName = "Calibri";
-
-                        var cell = row.CreateCell(_itm.HItemPosition);
-                        cell.SetCellValue(_itm.ItemValue);
-
                         fontHeadMaster.Boldweight = _itm.bold.GetValueOrDefault(false)
                             ? (short)FontBoldWeight.Bold
                             : (short)FontBoldWeight.Normal;
@@ -622,7 +637,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         cell.CellStyle = workbook.CreateCellStyle();
                         cell.CellStyle.SetFont(fontHead);
                         cell.CellStyle.Alignment = _itm.HTextAlign.GetValueOrDefault(HorizontalAlignment.Left);
-                        cell.CellStyle.VerticalAlignment = _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
+                        cell.CellStyle.VerticalAlignment =
+                            _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
                         cell.CellStyle.WrapText = false;
                         cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
                     }
@@ -639,14 +655,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     columns.Add(HeadList[i].FL_UnSpaced());
                     var cell = row.CreateCell(i);
                     cell.SetCellValue(HeadList[i]);
-
+                    if (!ApplyHeadStyles) continue;
                     cell.CellStyle = workbook.CreateCellStyle();
                     cell.CellStyle.SetFont(fontHead);
                     cell.CellStyle.Alignment = HorizontalAlignment.Center;
                     cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                     cell.CellStyle.WrapText = true;
                     cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-
                     //columnIndex++;
                 }
 
@@ -661,14 +676,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     columns.Add(column.ColumnName);
                     var cell = row.CreateCell(i);
                     cell.SetCellValue(column.ColumnName);
-
+                    if (!ApplyHeadStyles) continue;
                     cell.CellStyle = workbook.CreateCellStyle();
                     cell.CellStyle.SetFont(fontHead);
                     cell.CellStyle.Alignment = HorizontalAlignment.Center;
                     cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                     cell.CellStyle.WrapText = true;
                     cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-
                     //columnIndex++;
                 }
 
@@ -690,7 +704,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                     var col = columns[i];
                     var cell = row.CreateCell(cellIndex);
                     var str = dsrow[col].ToString();
-                    if (EnableNumberCheck && double.TryParse(str, out _))
+                    var b = EnableNumberCheck && double.TryParse(str, out _);
+                    if (b)
                     {
                         cell.SetCellValue(double.Parse(str));
                         cell.SetCellType(CellType.Numeric);
@@ -701,12 +716,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         cell.SetCellType(CellType.String);
                     }
 
-                    cell.CellStyle = workbook.CreateCellStyle();
-
-                    cell.CellStyle.SetFont(font);
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                     cellIndex++;
+                    if (!ApplyStyles) continue;
+                    //cell.SetCellType(columns[cellIndex].ToString().FL_SetICellType());
+                    cell.CellStyle = workbook.CreateCellStyle();
+                    cell.CellStyle.SetFont(font);
+                    cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                 }
 
                 rowIndex++;
@@ -723,7 +739,9 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
             var ms = new MemoryStream();
             using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
             IWorkbook workbook = new XSSFWorkbook();
-
+            var ApplyStyles = SheetDTList[0].ApplyStyles.GetValueOrDefault(true);
+            var ApplyHeadStyles = SheetDTList[0].ApplyHeadStyles.GetValueOrDefault(true);
+            var ApplySuperHeadStyles = SheetDTList[0].ApplySuperHeadStyles.GetValueOrDefault(true);
             for (var k = 0; k < SheetDTList.Count(); k++)
             {
                 var SheetDT = SheetDTList[k];
@@ -762,12 +780,12 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         row = excelSheet.CreateRow(i);
                         foreach (var _itm in itms)
                         {
+                            var cell = row.CreateCell(_itm.HItemPosition);
+                            cell.SetCellValue(_itm.ItemValue);
+                            if (!ApplySuperHeadStyles || !_itm.ApplyStyles.GetValueOrDefault(true)) continue;
                             var fontHeadMaster = workbook.CreateFont();
                             fontHeadMaster.FontHeightInPoints = 11;
                             fontHeadMaster.FontName = "Calibri";
-
-                            var cell = row.CreateCell(_itm.HItemPosition);
-                            cell.SetCellValue(_itm.ItemValue);
 
                             fontHeadMaster.Boldweight = _itm.bold.GetValueOrDefault(false)
                                 ? (short)FontBoldWeight.Bold
@@ -776,7 +794,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                             cell.CellStyle = workbook.CreateCellStyle();
                             cell.CellStyle.SetFont(fontHead);
                             cell.CellStyle.Alignment = _itm.HTextAlign.GetValueOrDefault(HorizontalAlignment.Left);
-                            cell.CellStyle.VerticalAlignment = _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
+                            cell.CellStyle.VerticalAlignment =
+                                _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
                             cell.CellStyle.WrapText = false;
                             cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
                         }
@@ -793,7 +812,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         columns.Add(HeadList[i].FL_UnSpaced());
                         var cell = row.CreateCell(i);
                         cell.SetCellValue(HeadList[i]);
-
+                        if (!ApplyHeadStyles) continue;
                         cell.CellStyle = workbook.CreateCellStyle();
                         cell.CellStyle.SetFont(fontHead);
                         cell.CellStyle.Alignment = HorizontalAlignment.Center;
@@ -815,7 +834,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         columns.Add(column.ColumnName);
                         var cell = row.CreateCell(i);
                         cell.SetCellValue(column.ColumnName);
-
+                        if (!ApplyHeadStyles) continue;
                         cell.CellStyle = workbook.CreateCellStyle();
                         cell.CellStyle.SetFont(fontHead);
                         cell.CellStyle.Alignment = HorizontalAlignment.Center;
@@ -844,7 +863,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         var col = columns[i];
                         var cell = row.CreateCell(cellIndex);
                         var str = dsrow[col].ToString();
-                        if (EnableNumberCheck && double.TryParse(str, out _))
+                        var b = EnableNumberCheck && double.TryParse(str, out _);
+                        if (b)
                         {
                             cell.SetCellValue(double.Parse(str));
                             cell.SetCellType(CellType.Numeric);
@@ -855,12 +875,13 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                             cell.SetCellType(CellType.String);
                         }
 
-                        cell.CellStyle = workbook.CreateCellStyle();
-
-                        cell.CellStyle.SetFont(font);
-                        cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                        cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                         cellIndex++;
+                        if (!ApplyStyles) continue;
+                        //cell.SetCellType(columns[cellIndex].ToString().FL_SetICellType());
+                        cell.CellStyle = workbook.CreateCellStyle();
+                        cell.CellStyle.SetFont(font);
+                        cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+                        cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                     }
 
                     rowIndex++;
@@ -980,8 +1001,6 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
 
     public static partial class FL_Excel
     {
-        #region Excel Reader Obsolate
-
         /// <summary>
         /// Generates List of string list
         /// </summary>
@@ -1060,6 +1079,8 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
 
             return FileData;
         }
+
+        #region Excel Reader Obsolate
 
         /// <summary>
         /// Generates List of string list

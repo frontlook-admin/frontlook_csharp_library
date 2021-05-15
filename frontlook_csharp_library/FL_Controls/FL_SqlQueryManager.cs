@@ -111,7 +111,6 @@ namespace frontlook_csharp_library.FL_Controls
             dbf_to_excel_series_worker.ReportProgress((1));
             var i = 0;
             var j = filePaths.Length.FL_ConsoleWriteDebug();
-
             foreach (var dbf_filepath_series in filePaths)
             {
                 i = i + 1;
@@ -119,24 +118,29 @@ namespace frontlook_csharp_library.FL_Controls
                 // {
                 //      label2.Text = dbf_filepath_series;
                 //  });
+                //var dt = FL_DbfData_To_Excel.FL_data_to_xls_with_datatable(dbf_filepath_series);
                 try
                 {
-                    //var dt = FL_DbfData_To_Excel.FL_data_to_xls_with_datatable(dbf_filepath_series);
-                    var v = FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath, query.Text.ToString().Trim(), false);
+                    string sWithoutExt = Path.GetFileNameWithoutExtension(dbf_filepath_series);
+                    string query1 = $"SELECT * FROM `{sWithoutExt}`";
+                    var v = FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath_series, query1, false);
                     v.TableName = "Table1";
-                    v.FL_WriteExcelAsync(null, Path.GetDirectoryName(dbf_filepath));
+                    var fileName = Path.Combine(Path.GetDirectoryName(dbf_filepath_series),
+                        Path.GetFileNameWithoutExtension(dbf_filepath_series) + ".xlsx");
+                    v.FL_WriteExcelAsync(null, fileName, ApplyStyles: false, ApplyHeadStyles: true);
 
-                    dt = v;
-                    dataGridView1.Invoke((MethodInvoker)delegate { dataGridView1.DataSource = dt; });
+                    //dt = v;
+                    //dataGridView1.Invoke((MethodInvoker)delegate { dataGridView1.DataSource = dt; });
+                    //dataGridView1.DataSource = dbf_helper.FL_dbf_datatable(dbf_filepath_series);
+                    //label2.Text = dbf_filepath_series;
+                    dbf_to_excel_series_worker.ReportProgress((i * 100 / j));
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show($"{ex.Message}", "Error..!!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //throw;
                 }
-                //dataGridView1.DataSource = dbf_helper.FL_dbf_datatable(dbf_filepath_series);
-                //label2.Text = dbf_filepath_series;
-                dbf_to_excel_series_worker.ReportProgress((i * 100 / j));
             }
-
             //excel_data_interop.dbf_to_xls_series(dbf_filepath);
         }
 
