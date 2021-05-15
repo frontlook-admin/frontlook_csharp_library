@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "frontlook_csharp_library", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FclTest", "FclTest\FclTest.csproj", "{7BB15285-CBE3-4064-BCD2-99ABFA0BDF7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "frontlook_csharp_library.Test", "frontlook_csharp_library.Test\frontlook_csharp_library.Test.csproj", "{EF028228-45AE-43EB-8102-75BF8EF93209}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7BB15285-CBE3-4064-BCD2-99ABFA0BDF7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BB15285-CBE3-4064-BCD2-99ABFA0BDF7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BB15285-CBE3-4064-BCD2-99ABFA0BDF7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF028228-45AE-43EB-8102-75BF8EF93209}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF028228-45AE-43EB-8102-75BF8EF93209}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF028228-45AE-43EB-8102-75BF8EF93209}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF028228-45AE-43EB-8102-75BF8EF93209}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

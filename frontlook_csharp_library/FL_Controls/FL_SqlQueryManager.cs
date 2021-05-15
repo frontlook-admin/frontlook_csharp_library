@@ -3,13 +3,15 @@ using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
 using System.IO;
+using System.Linq;
 using frontlook_csharp_library.FL_Dbf_Helper;
 using frontlook_csharp_library.FL_Excel_Data_Interop;
+using frontlook_csharp_library.FL_General;
 using JetBrains.Annotations;
 
 namespace frontlook_csharp_library.FL_Controls
 {
-    public sealed partial class SqlQueryManager : UserControl
+    public sealed partial class FL_SqlQueryManager : UserControl
     {
         private string dbf_filepath, dbf_filename, dbf_filename_withext;
         private DataSet ds = new DataSet("new_dataset1");
@@ -24,15 +26,17 @@ namespace frontlook_csharp_library.FL_Controls
         private string dbf_constring, dbf_constring1, dbf_constring2, s_without_ext;
         private string[] filePaths;
 
-        public SqlQueryManager([CanBeNull] string Path = null)
+        public FL_SqlQueryManager([CanBeNull] string path = null)
         {
             this.Dock = DockStyle.Fill;
             InitializeComponent();
-            if (Path != null)
+            if (path != null)
             {
-                dbf_filepath = Path;
+                dbf_filepath = path;
                 dbf_filename = string.Empty;
                 dbf_filename_withext = string.Empty;
+                filePaths = Directory.GetFiles(Path.GetDirectoryName(path), "*.dbf");
+                filePaths.ToList().ForEach(e => e.FL_ConsoleWriteDebug());
             }
             else
             {
@@ -104,21 +108,30 @@ namespace frontlook_csharp_library.FL_Controls
 
         private void Dbf_to_excel_series_worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            dbf_to_excel_series_worker.ReportProgress((5));
-            int i = 0;
-            int j = filePaths.Length;
-            foreach (string dbf_filepath_series in filePaths)
+            dbf_to_excel_series_worker.ReportProgress((1));
+            var i = 0;
+            var j = filePaths.Length.FL_ConsoleWriteDebug();
+
+            foreach (var dbf_filepath_series in filePaths)
             {
                 i = i + 1;
                 // label2.Invoke((MethodInvoker)delegate
                 // {
                 //      label2.Text = dbf_filepath_series;
                 //  });
-                DataTable dt = FL_DbfData_To_Excel.FL_data_to_xls_with_datatable(dbf_filepath_series);
-                dataGridView1.Invoke((MethodInvoker)delegate
+                try
                 {
-                    dataGridView1.DataSource = dt;
-                });
+                    //var dt = FL_DbfData_To_Excel.FL_data_to_xls_with_datatable(dbf_filepath_series);
+                    var v = FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath, query.Text.ToString().Trim(), false);
+                    v.TableName = "Table1";
+                    v.FL_WriteExcelAsync(null, Path.GetDirectoryName(dbf_filepath));
+
+                    dt = v;
+                    dataGridView1.Invoke((MethodInvoker)delegate { dataGridView1.DataSource = dt; });
+                }
+                catch (Exception ex)
+                {
+                }
                 //dataGridView1.DataSource = dbf_helper.FL_dbf_datatable(dbf_filepath_series);
                 //label2.Text = dbf_filepath_series;
                 dbf_to_excel_series_worker.ReportProgress((i * 100 / j));
@@ -131,11 +144,14 @@ namespace frontlook_csharp_library.FL_Controls
         {
             //label3.Text = e.ProgressPercentage + "%";
             //progress.Value = e.ProgressPercentage;
+
+            progress.FL_Progress(e.ProgressPercentage + "%", e.ProgressPercentage, true);
         }
 
         private void Dbf_to_excel_series_worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             MessageBox.Show("Done..!!", "Work Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            progress.Dismiss();
             //dbf_to_excel_series_worker.ReportProgress(0);
             //progress.Value = 0;
         }
@@ -194,13 +210,13 @@ namespace frontlook_csharp_library.FL_Controls
 
                 var v = FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath, query.Text.ToString().Trim(), false);
                 v.TableName = "Table1";
-
-                FL_DataTableToExcel_Helper.FL_DataTableToExcel(v, Path.GetDirectoryName(dbf_filename));
+                v.FL_WriteExcelAsync(null, Path.GetDirectoryName(dbf_filepath));
+                //FL_DataTableToExcel_Helper.FL_DataTableToExcel(v, Path.GetDirectoryName(dbf_filename));
                 //dataGridView1.DataSource = v;
                 /*
                  SELECT smast.SDES as SDES,bill.DT,billmed.VNO,billmed.BATCH,billmed.EXPDT, bill.MPT,aconf.ADD1,aconf.ADD2,aconf.ADD3, (SELECT smast.SDES FROM [smast],[bill] WHERE bill.LCOD=smast.SCOD AND bill.VNO='00534' AND bill.MPT='M') AS TRANSPORT_SDES FROM [billmed],[bill],[smast],[aconf] WHERE billmed.VNO = bill.VNO AND bill.SCOD=smast.SCOD AND bill.MPT='M' AND bill.SCOD=aconf.GCOD AND bill.VNO='00534'
                  */
-                DataSet ds = new DataSet("client_info");
+                var ds = new DataSet("client_info");
 
                 ds.Tables.Add(v);
                 //ReportViewer rv = new ReportViewer();
@@ -236,7 +252,7 @@ namespace frontlook_csharp_library.FL_Controls
                 v.TableName = "Table1";
                 FL_DataTableToExcel_Helper.FL_DataTableToExcel(v, Path.GetDirectoryName(dbf_filename));
                 dataGridView1.DataSource = v;
-                DataSet ds = new DataSet("client_info");
+                var ds = new DataSet("client_info");
                 ds.Tables.Add(v);
                 //ReportViewer rv = new ReportViewer();
 
@@ -327,11 +343,18 @@ namespace frontlook_csharp_library.FL_Controls
             }
         }
 
+        private void stop_Click(object sender, EventArgs e)
+        {
+            dbf_to_excel_series_worker.CancelAsync();
+            db_to_excel_single_worker.CancelAsync();
+            db_viewer.CancelAsync();
+        }
+
         protected void dbf_folder_selection()
         {
-            OpenFileDialog dbfselect = new OpenFileDialog
+            var dbfselect = new OpenFileDialog
             {
-                InitialDirectory = @"C:\",
+                InitialDirectory = string.IsNullOrEmpty(dbf_filepath) ? @"C:\" : Path.GetDirectoryName(dbf_filepath),
                 RestoreDirectory = true,
                 Filter = "DBF files (*.dbf)|*.dbf|All files (*.*)|*.*",
                 FilterIndex = 1,
@@ -355,9 +378,9 @@ namespace frontlook_csharp_library.FL_Controls
                 MessageBox.Show(dbf_filename);
                 //label2.Text = dbf_filepath + "    " + dbf_filename;
 
-                FileInfo fileInfo = new FileInfo(dbf_filepath);
-                string directoryFullPath = fileInfo.DirectoryName;
-                string x = Path.GetDirectoryName(dbf_filepath);
+                var fileInfo = new FileInfo(dbf_filepath);
+                var directoryFullPath = fileInfo.DirectoryName;
+                var x = Path.GetDirectoryName(dbf_filepath);
                 string[] filePaths1;
                 //string[] filepath_null;
                 filePaths1 = Directory.GetFiles(x, "*.dbf");
@@ -399,17 +422,17 @@ namespace frontlook_csharp_library.FL_Controls
 
         public void fast_report()
         {
-            string query1 = "SELECT " +
-                            "smast.SDES as SDES,bill.DT,billmed.VNO,billmed.BATCH,billmed.EXPDT, bill.MPT,aconf.ADD1,aconf.ADD2,aconf.ADD3," +
-                            "(SELECT smast.SDES FROM [smast],[bill] WHERE bill.LCOD=smast.SCOD AND bill.VNO='00534' AND bill.MPT='M') AS TRANSPORT_SDES " +
-                            "FROM " +
-                            "[billmed],[bill],[smast],[aconf] WHERE billmed.VNO = bill.VNO AND bill.SCOD=smast.SCOD AND bill.MPT='M' AND bill.SCOD=aconf.GCOD " +
-                            "AND " +
-                            "bill.VNO='00534'";
+            var query1 = "SELECT " +
+                         "smast.SDES as SDES,bill.DT,billmed.VNO,billmed.BATCH,billmed.EXPDT, bill.MPT,aconf.ADD1,aconf.ADD2,aconf.ADD3," +
+                         "(SELECT smast.SDES FROM [smast],[bill] WHERE bill.LCOD=smast.SCOD AND bill.VNO='00534' AND bill.MPT='M') AS TRANSPORT_SDES " +
+                         "FROM " +
+                         "[billmed],[bill],[smast],[aconf] WHERE billmed.VNO = bill.VNO AND bill.SCOD=smast.SCOD AND bill.MPT='M' AND bill.SCOD=aconf.GCOD " +
+                         "AND " +
+                         "bill.VNO='00534'";
             /*
              SELECT smast.SDES as SDES,bill.DT,billmed.VNO,billmed.BATCH,billmed.EXPDT, bill.MPT,aconf.ADD1,aconf.ADD2,aconf.ADD3, (SELECT smast.SDES FROM [smast],[bill] WHERE bill.LCOD=smast.SCOD AND bill.VNO='00534' AND bill.MPT='M') AS TRANSPORT_SDES FROM [billmed],[bill],[smast],[aconf] WHERE billmed.VNO = bill.VNO AND bill.SCOD=smast.SCOD AND bill.MPT='M' AND bill.SCOD=aconf.GCOD AND bill.VNO='00534'
              */
-            DataSet ds = new DataSet("client_info");
+            var ds = new DataSet("client_info");
             ds.Tables.Add(FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath, query1, false));
             //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
             //ReportViewer rv = new ReportViewer();

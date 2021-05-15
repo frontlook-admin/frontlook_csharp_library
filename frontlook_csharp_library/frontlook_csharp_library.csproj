@@ -22,7 +22,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -74,6 +74,9 @@
     </Reference>
     <Reference Include="FastReport.Data.Json, Version=2020.4.11.0, Culture=neutral, PublicKeyToken=b33a9a06fcc00c4c, processorArchitecture=MSIL">
       <HintPath>..\..\AceReporter\packages\FastReport.OpenSource.Data.Json.2020.4.11\lib\net45\FastReport.Data.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.OpenSource.Export.PdfSimple, Version=2021.1.0.0, Culture=neutral, PublicKeyToken=b33a9a06fcc00c4c, processorArchitecture=MSIL">
+      <HintPath>..\..\AceReporter\packages\FastReport.OpenSource.Export.PdfSimple.2021.1.0\lib\net40\FastReport.OpenSource.Export.PdfSimple.dll</HintPath>
     </Reference>
     <Reference Include="FastReport.OpenSource.Web, Version=2020.4.11.0, Culture=neutral, PublicKeyToken=5ceb240df42bf6e8, processorArchitecture=MSIL">
       <HintPath>..\..\AceReporter\packages\FastReport.OpenSource.Web.2020.4.11\lib\netstandard2.0\FastReport.OpenSource.Web.dll</HintPath>
@@ -266,6 +269,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FL_Controls\FL_ProgressBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FL_Controls\FL_ProgressBar.Designer.cs">
+      <DependentUpon>FL_ProgressBar.cs</DependentUpon>
+    </Compile>
     <Compile Include="FL_DataBase\FL_DataMods.cs" />
     <Compile Include="FL_DataBase\FL_MySql\FL_MySqlExecutor.cs" />
     <Compile Include="FL_DataBase\FL_SqlExecutor.cs" />
@@ -362,6 +371,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <EmbeddedResource Include="FL_Controls\FL_ProgressBar.resx">
+      <DependentUpon>FL_ProgressBar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FL_FastReportForm\FRPreview.resx">
       <DependentUpon>FRPreview.cs</DependentUpon>
     </EmbeddedResource>

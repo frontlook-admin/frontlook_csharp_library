@@ -5,7 +5,9 @@ using System.Windows.Forms;
 using FastReport;
 using FastReport.Export;
 using FastReport.Export.Image;
+using FastReport.Export.PdfSimple;
 using FastReport.Utils;
+using JetBrains.Annotations;
 
 namespace frontlook_csharp_library.FL_General
 {
@@ -19,32 +21,32 @@ namespace frontlook_csharp_library.FL_General
 
         #region Methods
 
+        public static void ExportAsPdf([CanBeNull] this Report report, string path)
+        {
+            if (report == null) return;
+            var pdfExport = new PDFSimpleExport();
+            using var ms = new MemoryStream();
+            pdfExport.Export(report, ms);
+            ms.Flush();
+            File.WriteAllBytes(path, ms.ToArray());
+        }
+
         public static void PrintWithDialog(this Report report)
         {
-            using (var dlg = new PrintDialog())
-            {
-                dlg.AllowSomePages = true;
-                dlg.AllowSelection = true;
-                dlg.UseEXDialog = true;
+            using var dlg = new PrintDialog { AllowSomePages = true, AllowSelection = true, UseEXDialog = true };
 
-                if (dlg.ShowDialog() != DialogResult.OK) return;
+            if (dlg.ShowDialog() != DialogResult.OK) return;
 
-                report.Print(dlg.PrinterSettings);
-            }
+            report.Print(dlg.PrinterSettings);
         }
 
         public static void PrintWithDialogMod(this Report report)
         {
-            using (var dlg = new PrintDialog())
-            {
-                dlg.AllowSomePages = true;
-                dlg.AllowSelection = true;
-                dlg.UseEXDialog = true;
+            using var dlg = new PrintDialog { AllowSomePages = true, AllowSelection = true, UseEXDialog = true };
 
-                if (dlg.ShowDialog() != DialogResult.OK) return;
+            if (dlg.ShowDialog() != DialogResult.OK) return;
 
-                report.PrintMod(dlg.PrinterSettings);
-            }
+            report.PrintMod(dlg.PrinterSettings);
         }
 
         public static void Print(this Report report, PrinterSettings settings = null)
@@ -118,7 +120,8 @@ namespace frontlook_csharp_library.FL_General
             };
 
             doc.EndPrint += (sender, args) => page = 0;
-            doc.Disposed += (sender, args) => exp?.Dispose();
+            doc.Disposed += (sender, args) => exp.Dispose();
+            //doc.Disposed += (sender, args) => exp?.Dispose();
 
             return doc;
         }
@@ -179,7 +182,8 @@ namespace frontlook_csharp_library.FL_General
             };
 
             doc.EndPrint += (sender, args) => page = 0;
-            doc.Disposed += (sender, args) => exp?.Dispose();
+            doc.Disposed += (sender, args) => exp.Dispose();
+            //doc.Disposed += (sender, args) => exp?.Dispose();
 
             return doc;
         }
