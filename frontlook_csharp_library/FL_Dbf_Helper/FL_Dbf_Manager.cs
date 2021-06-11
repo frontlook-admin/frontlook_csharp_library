@@ -9,7 +9,7 @@ using frontlook_csharp_library.FL_General;
 namespace frontlook_csharp_library.FL_Dbf_Helper
 {
     [Guid("3A1A8463-73F7-47FE-BCAD-9DDCB9103B07")]
-    public class FL_Dbf_Manager
+    public static class FL_Dbf_Manager
     {
         public static DataSet get_all_datatable_in_dataset(string[] filepaths)
         {
@@ -24,7 +24,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             return ds;
         }
 
-        public static DataTable FL_dbf_datatable(string dbfFilepath)
+        public static DataTable FL_DBF_ExecuteQuery(string dbfFilepath)
         {
             //FileInfo fileInfo = new FileInfo(dbfFilepath);
             //string dbfDirectoryFilepath = fileInfo.DirectoryName;
@@ -67,7 +67,34 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             return dt;
         }
 
-        public static DataTable FL_dbf_datatable(string DbfFolderPath, string sql, bool UseDirectoryPath = true)
+        public static DataTable FL_DBFExecuteQuery(string DbfFolderPath, string sql, bool UseDirectoryPath = true)
+        {
+            //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
+            string dbfConstring1 = UseDirectoryPath ? FL_DBFConstring(DbfFolderPath) : FL_dbf_constring(DbfFolderPath);
+
+            DataTable dt = new DataTable();
+            try
+            {
+                OleDbConnection connection = new OleDbConnection(dbfConstring1);
+                OleDbCommand cmd = new OleDbCommand(sql, connection);
+                connection.Open();
+                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                da.Fill(dt);
+                //DA.Update(dt);
+                connection.Close();
+                //BackgroundWorker bgw = new BackgroundWorker();
+                cmd.Dispose();
+                connection.Dispose();
+            }
+            catch (OleDbException e)
+            {
+                MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return dt;
+        }
+
+
+        public static DataTable FL_DBF_ExecuteQuery(this string sql, string DbfFolderPath, bool UseDirectoryPath = true)
         {
             //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
             string dbfConstring1 = UseDirectoryPath ? FL_DBFConstring(DbfFolderPath) : FL_dbf_constring(DbfFolderPath);
@@ -97,7 +124,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
         public static int FL_DBF_ExecuteNonQuery(string DbfFolderPath, string sql, bool UseDirectoryPath = true)
         {
             //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
-            string dbfConstring1 = UseDirectoryPath ? FL_DBFConstring(DbfFolderPath) : FL_dbf_constring(DbfFolderPath);
+            string dbfConstring1 = FL_GetDbfConnectionString(DbfFolderPath,UseDirectoryPath);
             var i = 0;
             //DataTable dt = new DataTable();
             try
@@ -116,6 +143,12 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
                 MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             return i;
+        }
+
+        public static string FL_GetDbfConnectionString(this string DbfFolderPath, bool UseDirectoryPath = true)
+        {
+            string dbfConstring1 = UseDirectoryPath ? FL_DBFConstring(DbfFolderPath) : FL_dbf_constring(DbfFolderPath);
+            return dbfConstring1;
         }
 
         public static string FL_dbf_constring(string dbfFilepath)

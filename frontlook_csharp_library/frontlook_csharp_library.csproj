@@ -319,6 +319,7 @@
       <DependentUpon>FRPrintPreviewDialogAlt.cs</DependentUpon>
     </Compile>
     <Compile Include="FL_FastReportForm\ZoomMode.cs" />
+    <Compile Include="FL_General\FL_Ace.cs" />
     <Compile Include="FL_General\FL_ConsoleManager.cs" />
     <Compile Include="FL_General\FL_FastReportPrintExtension.cs" />
     <Compile Include="FL_General\FL_combobox.cs" />

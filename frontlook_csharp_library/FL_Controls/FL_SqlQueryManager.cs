@@ -123,7 +123,7 @@ namespace frontlook_csharp_library.FL_Controls
                 {
                     string sWithoutExt = Path.GetFileNameWithoutExtension(dbf_filepath_series);
                     string query1 = $"SELECT * FROM `{sWithoutExt}`";
-                    var v = FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath_series, query1, false);
+                    var v = query1.FL_DBF_ExecuteQuery(dbf_filepath_series, false);
                     v.TableName = "Table1";
                     var fileName = Path.Combine(Path.GetDirectoryName(dbf_filepath_series),
                         Path.GetFileNameWithoutExtension(dbf_filepath_series) + ".xlsx");
@@ -131,7 +131,7 @@ namespace frontlook_csharp_library.FL_Controls
 
                     //dt = v;
                     //dataGridView1.Invoke((MethodInvoker)delegate { dataGridView1.DataSource = dt; });
-                    //dataGridView1.DataSource = dbf_helper.FL_dbf_datatable(dbf_filepath_series);
+                    //dataGridView1.DataSource = dbf_helper.FL_DBF_ExecuteQuery(dbf_filepath_series);
                     //label2.Text = dbf_filepath_series;
                     dbf_to_excel_series_worker.ReportProgress((i * 100 / j));
                 }
@@ -212,7 +212,7 @@ namespace frontlook_csharp_library.FL_Controls
             {
                 dbf_folder_selection();
 
-                var v = FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath, query.Text.ToString().Trim(), false);
+                var v = query.Text.ToString().Trim().FL_DBF_ExecuteQuery(dbf_filepath,  false);
                 v.TableName = "Table1";
                 v.FL_WriteExcelAsync(null, Path.GetDirectoryName(dbf_filepath));
                 //FL_DataTableToExcel_Helper.FL_DataTableToExcel(v, Path.GetDirectoryName(dbf_filename));
@@ -252,7 +252,7 @@ namespace frontlook_csharp_library.FL_Controls
                 /*
                  SELECT smast.SDES as SDES,bill.DT,billmed.VNO,billmed.BATCH,billmed.EXPDT, bill.MPT,aconf.ADD1,aconf.ADD2,aconf.ADD3, (SELECT smast.SDES FROM [smast],[bill] WHERE bill.LCOD=smast.SCOD AND bill.VNO='00534' AND bill.MPT='M') AS TRANSPORT_SDES FROM [billmed],[bill],[smast],[aconf] WHERE billmed.VNO = bill.VNO AND bill.SCOD=smast.SCOD AND bill.MPT='M' AND bill.SCOD=aconf.GCOD AND bill.VNO='00534'
                  */
-                var v = FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath, query.Text.ToString().Trim(), false);
+                var v = query.Text.ToString().Trim().FL_DBF_ExecuteQuery(dbf_filepath,  false);
                 v.TableName = "Table1";
                 FL_DataTableToExcel_Helper.FL_DataTableToExcel(v, Path.GetDirectoryName(dbf_filename));
                 dataGridView1.DataSource = v;
@@ -437,7 +437,7 @@ namespace frontlook_csharp_library.FL_Controls
              SELECT smast.SDES as SDES,bill.DT,billmed.VNO,billmed.BATCH,billmed.EXPDT, bill.MPT,aconf.ADD1,aconf.ADD2,aconf.ADD3, (SELECT smast.SDES FROM [smast],[bill] WHERE bill.LCOD=smast.SCOD AND bill.VNO='00534' AND bill.MPT='M') AS TRANSPORT_SDES FROM [billmed],[bill],[smast],[aconf] WHERE billmed.VNO = bill.VNO AND bill.SCOD=smast.SCOD AND bill.MPT='M' AND bill.SCOD=aconf.GCOD AND bill.VNO='00534'
              */
             var ds = new DataSet("client_info");
-            ds.Tables.Add(FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath, query1, false));
+            ds.Tables.Add(query1.FL_DBF_ExecuteQuery(dbf_filepath,  false));
             //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
             //ReportViewer rv = new ReportViewer();
             /*rv.ShowPrintButton = true;
@@ -472,7 +472,7 @@ namespace frontlook_csharp_library.FL_Controls
             {
                 MessageBox.Show("Error : " + e.Message);
             }*/
-            dataGridView1.DataSource = FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath);
+            dataGridView1.DataSource = FL_Dbf_Manager.FL_DBF_ExecuteQuery(dbf_filepath);
         }
 
         /*protected void dbf_selection()
@@ -511,7 +511,7 @@ namespace frontlook_csharp_library.FL_Controls
         protected void try_1()
         {
             //query.Text = query1;
-            var v = FL_Dbf_Manager.FL_dbf_datatable(dbf_filepath, query.Text.ToString().Trim(), false);
+            var v = query.Text.ToString().Trim().FL_DBF_ExecuteQuery(dbf_filepath,  false);
             dataGridView1.DataSource = v;
             //dataGridView1.DataSource =
 
