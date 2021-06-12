@@ -319,7 +319,7 @@
       <DependentUpon>FRPrintPreviewDialogAlt.cs</DependentUpon>
     </Compile>
     <Compile Include="FL_FastReportForm\ZoomMode.cs" />
-    <Compile Include="FL_General\FL_Ace.cs" />
+    <Compile Include="FL_Ace\FL_Ace_Code.cs" />
     <Compile Include="FL_General\FL_ConsoleManager.cs" />
     <Compile Include="FL_General\FL_FastReportPrintExtension.cs" />
     <Compile Include="FL_General\FL_combobox.cs" />
@@ -350,6 +350,8 @@
     <Compile Include="FL_Controls\FL_SqlQueryManager.designer.cs">
       <DependentUpon>FL_SqlQueryManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="FL_XmlDataInterop\FL_DataToXml.cs" />
+    <Compile Include="FL_XmlDataInterop\FL_XmlToData.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_String_Validator.cs" />
