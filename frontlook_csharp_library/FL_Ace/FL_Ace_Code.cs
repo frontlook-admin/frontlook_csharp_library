@@ -14,7 +14,7 @@ namespace frontlook_csharp_library.FL_Ace
 {
     public static class FL_Ace_Code
     {
-        private const int paddChar = 2;
+        private static int paddChar = 4;
 
         public static string FL_SetNewCode(this string TableName, string FieldName, string DbfFolderPath,  bool UseDirectoryPath = true, bool DebugMode = false)
         {
@@ -22,7 +22,7 @@ namespace frontlook_csharp_library.FL_Ace
             {
                 var LastCode = TableName.FL_GetLastCode(FieldName, DbfFolderPath, UseDirectoryPath);
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"\nLast Code: {LastCode}");
-                var Z_Asc = FL_Z_Asc(LastCode);
+                var Z_Asc = FL_Z_Asc(LastCode)+1;
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"New Ascii val : {Z_Asc}");
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"New Ascii val (Long): {(long)Z_Asc}");
                 var Z_Chr = FL_Z_Chr((long)Z_Asc);
@@ -31,7 +31,7 @@ namespace frontlook_csharp_library.FL_Ace
             }
             else
             {
-                return FL_Z_Chr((long)FL_Z_Asc(TableName.FL_GetLastCode(FieldName, DbfFolderPath, UseDirectoryPath)));
+                return FL_Z_Chr((long)FL_Z_Asc(TableName.FL_GetLastCode(FieldName, DbfFolderPath, UseDirectoryPath))+1);
             }
         }
 
@@ -62,27 +62,23 @@ namespace frontlook_csharp_library.FL_Ace
             var code = " ";
             if (dt.Rows.Count > 0)
             {
-                code = dt.Rows[0]["valFld"].ToString().PadRight(paddChar, ' ');
-            }
-            else
-            {
-                code = dt.Rows[0]["valFld"].ToString().PadRight(paddChar, ' ');
+                code = dt.Rows[0]["valFld"].ToString().PadRight(paddChar,' ');
             }
             return code;
         }
 
-        public static double FL_Z_Asc(string LastCode, bool DebugMode = false)
+        public static double FL_Z_Asc(this string LastCode, bool DebugMode = false)
         {
-            double pg = 0;
-            var i = LastCode.Length;
             try
             {
+                double pg = 0;
+                var i = LastCode.Length;
                 while (i != 0)
                 {
                     if (DebugMode) $"Generating Ascii: {pg}".FL_ConsoleWriteDebug();
                     if (DebugMode) $"Generating Ascii => i: {i}".FL_ConsoleWriteDebug();
                     pg += (char.ConvertToUtf32(LastCode.Substring(i - 1, 1), 0) - 31) * Math.Pow(91, (LastCode.Length - i));
-                    
+
                     i -= 1;
                 }
                 return pg;
@@ -93,38 +89,38 @@ namespace frontlook_csharp_library.FL_Ace
             }
         }
 
-        public static string FL_Z_Chr(long Z_Asc, bool DebugMode = false)
+        public static string FL_Z_Chr(this long Z_Asc, bool DebugMode = false)
         {
-            var f_str = "";
-            long i = 1;
-            long pg;
+            string f_str = "";
+            long i = 1L;
 
             try
             {
-                while (i != 0)
+                while (i != 0L)
                 {
                     if (DebugMode) $"Generating char: {f_str}".FL_ConsoleWriteDebug();
                     if (DebugMode) $"Generating char=> i: {i}".FL_ConsoleWriteDebug();
-                    pg = Convert.ToInt64(Z_Asc % 91);
-                    if (pg == 0)
+                    long pg = Convert.ToInt64(Z_Asc % 91L);
+                    if (pg == 0L)
                     {
-                        pg = 122;
+                        pg = 122L;
                     }
                     else
                     {
-                        pg += 31;
+                        pg += 31L;
                     }
-                    f_str = $"{char.ConvertFromUtf32(Convert.ToInt32(pg))}{f_str}";
-                    var k = Z_Asc / 91;
-                    i = Convert.ToInt64(Math.Truncate(double.Parse(k.ToString())));
-                    if (pg == 122)
+                    f_str = char.ConvertFromUtf32(Convert.ToInt32(pg)) + f_str;
+                    i = Convert.ToInt64(Math.Truncate(Z_Asc / 91d));
+
+
+                    if (pg == 122L)
                     {
-                        i = Convert.ToInt64(Math.Truncate(double.Parse((Z_Asc / 91).ToString())));
-                        pg = Convert.ToInt64(Math.Truncate(double.Parse((Z_Asc / 91).ToString())))-1;
+                        i = Convert.ToInt64(Math.Truncate(i / 91d));
+                        Z_Asc = Convert.ToInt64(Math.Truncate(Z_Asc / 91d)) - 1L;
                     }
                     else
                     {
-                        i = Convert.ToInt64(Math.Truncate(double.Parse((Z_Asc / 91).ToString())));
+                        Z_Asc = Convert.ToInt64(Math.Truncate(Z_Asc / 91d));
                     }
                 }
                 return f_str;

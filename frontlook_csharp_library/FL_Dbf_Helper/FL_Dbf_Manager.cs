@@ -158,21 +158,25 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             var i = 0;
             //DataTable dt = new DataTable();
             OleDbConnection connection = new OleDbConnection(dbfConstring1);
+            connection.Open();
             using var transaction = connection.BeginTransaction();
+            OleDbCommand cmd = new OleDbCommand(sql, connection, transaction);
             try
             {
-                OleDbCommand cmd = new OleDbCommand(sql, connection);
-                connection.Open();
+                
                 i = cmd.ExecuteNonQuery();
                 //BackgroundWorker bgw = new BackgroundWorker();
-                cmd.Dispose();
                 transaction.Commit();
+                cmd.Dispose();
+                transaction.Dispose();
                 connection.Close();
                 connection.Dispose();
             }
             catch (OleDbException e)
             {
+                cmd.Dispose();
                 transaction.Rollback();
+                transaction.Dispose();
                 connection.Close();
                 connection.Dispose();
                 MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -187,31 +191,30 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             var i = 0;
             //DataTable dt = new DataTable();
             OleDbConnection connection = new OleDbConnection(dbfConstring1);
+            connection.Open();
             using var transaction = connection.BeginTransaction();
-            OleDbCommand cmd = new OleDbCommand();
+            OleDbCommand cmd = new OleDbCommand("", connection, transaction);
             try
             {
-                cmd.Connection = connection;
-                connection.Open();
                 foreach(var _sql in sql)
                 {
                     cmd.CommandText = _sql;    
                     i = cmd.ExecuteNonQuery();
                     //BackgroundWorker bgw = new BackgroundWorker();
                 }
-                cmd.Dispose();
-                transaction.Commit();
-                connection.Close();
-                connection.Dispose();
-               
             }
             catch (OleDbException e)
             {
                 transaction.Rollback();
                 connection.Close();
                 connection.Dispose();
-                MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error : {e.Message}\n Details : {e.InnerException.Message}\n\n{e.StackTrace}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            cmd.Dispose();
+            transaction.Commit();
+            connection.Close();
+            connection.Dispose();
             return i;
         }
 

@@ -269,6 +269,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FL_Ace\FL_Ace_DataParser.cs" />
     <Compile Include="FL_Controls\FL_ProgressBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
