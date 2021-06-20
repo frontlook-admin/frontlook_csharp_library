@@ -16,6 +16,11 @@ namespace frontlook_csharp_library.FL_Ace
     {
         private static int paddChar = 4;
 
+        public enum DataBaseType
+        {
+            DBF = 1, MSSQL = 2
+        }
+
         public static string FL_SetNewCode(this string TableName, string FieldName, string DbfFolderPath,  bool UseDirectoryPath = true, bool DebugMode = false)
         {
             if (DebugMode)
@@ -56,8 +61,7 @@ namespace frontlook_csharp_library.FL_Ace
 
         public static string FL_GetLastCode(this string TableName, string FieldName, string DbfFolderPath, bool UseDirectoryPath = true)
         {
-            //var dbfConstring1 = DbfFolderPath.FL_GetDbfConnectionString(UseDirectoryPath);
-            var query = $"select top 1 {FieldName} as valFld from {TableName} order by cast({FieldName} as varbinary) desc";
+            string query =  $"select top 1 {FieldName} as valFld from {TableName} order by {FieldName} desc";
             var dt = query.FL_DBF_ExecuteQuery(DbfFolderPath, UseDirectoryPath);
             var code = " ";
             if (dt.Rows.Count > 0)
@@ -130,6 +134,24 @@ namespace frontlook_csharp_library.FL_Ace
                 return "";
             }
 
+        }
+
+
+
+
+
+
+
+        public static string FL_GetLastCodeForSql(this string TableName, string FieldName, string DbfFolderPath, DataBaseType dataBaseType = DataBaseType.DBF, bool UseDirectoryPath = true)
+        {
+            string query = $"select top 1 {FieldName} as valFld from {TableName} order by cast({FieldName} as varbinary) desc";
+            var dt = query.FL_DBF_ExecuteQuery(DbfFolderPath, UseDirectoryPath);
+            var code = " ";
+            if (dt.Rows.Count > 0)
+            {
+                code = dt.Rows[0]["valFld"].ToString().PadRight(paddChar, ' ');
+            }
+            return code;
         }
     }
 }
