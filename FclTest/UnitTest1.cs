@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using frontlook_csharp_library.FL_Ace;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace FclTest
@@ -9,6 +10,7 @@ namespace FclTest
         [TestMethod]
         public void TestMethod1()
         {
+            var F = "   &".FL_SetNewCode();
         }
     }
 }
