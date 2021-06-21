@@ -1,14 +1,5 @@
-﻿using System;
-using System.Data;
-using System.Data.OleDb;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Windows;
-using frontlook_csharp_library.FL_Dbf_Helper;
+﻿using frontlook_csharp_library.FL_Dbf_Helper;
 using frontlook_csharp_library.FL_General;
-using NPOI.SS.Formula.Functions;
-using dh = frontlook_csharp_library.FL_Dbf_Helper.FL_Dbf_Manager;
 
 namespace frontlook_csharp_library.FL_Ace
 {
@@ -51,7 +42,5 @@ namespace frontlook_csharp_library.FL_Ace
             }
             return code;
         }
-
-        
     }
 }

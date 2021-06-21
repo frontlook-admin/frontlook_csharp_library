@@ -10,7 +10,7 @@ namespace FclTest
         [TestMethod]
         public void TestMethod1()
         {
-            var F = "   &".FL_SetNewCode();
+            //var F = "   &".FL_SetNewCode();
         }
     }
 }
