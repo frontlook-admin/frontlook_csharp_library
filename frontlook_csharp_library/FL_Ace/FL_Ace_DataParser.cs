@@ -8,19 +8,25 @@ namespace frontlook_csharp_library.FL_Ace
 {
     public static class FL_Ace_DataParser
     {
-        public const string DBF_Empty_Value = "''";
+        //public const string DBF_Empty_Value = "null";
         public static object FL_AceDataTableDataParser(this object value, Type type)
         {
-            var s = string.IsNullOrEmpty(value.ToString());
+            string DBF_Empty_Value = "null";
+            var s = string.IsNullOrEmpty(value.ToString()) || value.ToString() == "";
             if (s)
             {
                 if (type == typeof(double) || type == typeof(int) || type == typeof(long) || type == typeof(decimal))
                 {
-                    return 0;
+                    return "null";
+                }
+                else if (type == typeof(Boolean))
+                {
+                    var val = $"null";
+                    return val;
                 }
                 else if (type == typeof(DateTime))
                 {
-                    var val = $"##";
+                    var val = $"null";
                     return val;
                 }
                 else
@@ -32,7 +38,12 @@ namespace frontlook_csharp_library.FL_Ace
             {
                 if (type == typeof(string))
                 {
-                    return $"'{value}'";
+                    return $"'{value.ToString().Replace("'", "''")}'";
+                }
+                else if (type == typeof(Boolean))
+                {
+                    var val = $"{(bool)value}";
+                    return val;
                 }
                 else if (type == typeof(double) || type == typeof(int) || type == typeof(long) || type == typeof(decimal))
                 {
@@ -48,7 +59,6 @@ namespace frontlook_csharp_library.FL_Ace
                     return DBF_Empty_Value;
                 }
             }
-            
         }
     }
 }
