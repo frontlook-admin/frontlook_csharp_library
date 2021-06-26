@@ -9,33 +9,17 @@ namespace frontlook_csharp_library.FL_Ace
     public static class FL_Ace_DataParser
     {
         //public const string DBF_Empty_Value = "null";
-        public static object FL_AceDataTableDataParser(this object value, Type type)
+        public static object FL_AceDataTableDataParser(this object value)
         {
             string DBF_Empty_Value = "null";
-            var s = string.IsNullOrEmpty(value.ToString()) || value.ToString() == "";
-            if (s)
+            Type type;
+            if(value == null)
             {
-                if (type == typeof(double) || type == typeof(int) || type == typeof(long) || type == typeof(decimal))
-                {
-                    return "null";
-                }
-                else if (type == typeof(Boolean))
-                {
-                    var val = $"null";
-                    return val;
-                }
-                else if (type == typeof(DateTime))
-                {
-                    var val = $"null";
-                    return val;
-                }
-                else
-                {
-                    return DBF_Empty_Value;
-                }
+                return DBF_Empty_Value;
             }
             else
             {
+                type = value.GetType();
                 if (type == typeof(string))
                 {
                     return $"'{value.ToString().Replace("'", "''")}'";
@@ -59,6 +43,7 @@ namespace frontlook_csharp_library.FL_Ace
                     return DBF_Empty_Value;
                 }
             }
+            
         }
     }
 }

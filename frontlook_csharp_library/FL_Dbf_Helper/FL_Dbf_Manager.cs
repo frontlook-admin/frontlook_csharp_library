@@ -124,12 +124,12 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
 
 
 
-        public static DataTable FL_DBF_ExecuteQuery(this string sql, string TableName, string DbfFolderPath, bool UseDirectoryPath = true)
+        public static DataTable FL_DBF_ExecuteQuery(this string sql, string DataTableName, string DbfFolderPath, bool UseDirectoryPath = true)
         {
             //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
             string dbfConstring1 = UseDirectoryPath ? FL_DBFConstring(DbfFolderPath) : FL_dbf_constring(DbfFolderPath);
 
-            DataTable dt = new DataTable(TableName);
+            DataTable dt = new DataTable(DataTableName);
             try
             {
                 OleDbConnection connection = new OleDbConnection(dbfConstring1);
@@ -151,7 +151,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
         }
 
 
-        public static int FL_DBF_ExecuteNonQuery(string DbfFolderPath, string sql, bool UseDirectoryPath = true)
+        public static int FL_DBF_ExecuteNonQuery(this string DbfFolderPath, string sql, bool UseDirectoryPath = true)
         {
             //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
             string dbfConstring1 = FL_GetDbfConnectionString(DbfFolderPath,UseDirectoryPath);
@@ -187,7 +187,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
         public static int FL_DBF_ExecuteNonQuery(string DbfFolderPath, List<string> sql, bool UseDirectoryPath = true)
         {
             //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
-            string dbfConstring1 = FL_GetDbfConnectionString(DbfFolderPath, UseDirectoryPath);
+            string dbfConstring1 = FL_Dbf_Manager.FL_GetDbfConnectionString(DbfFolderPath, UseDirectoryPath);
             var i = 0;
             //DataTable dt = new DataTable();
             OleDbConnection connection = new OleDbConnection(dbfConstring1);
@@ -196,9 +196,9 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             OleDbCommand cmd = new OleDbCommand("", connection, transaction);
             try
             {
-                foreach(var _sql in sql)
+                foreach (var _sql in sql)
                 {
-                    cmd.CommandText = _sql;    
+                    cmd.CommandText = _sql;
                     i = cmd.ExecuteNonQuery();
                     //BackgroundWorker bgw = new BackgroundWorker();
                 }
@@ -208,7 +208,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
                 transaction.Rollback();
                 connection.Close();
                 connection.Dispose();
-                MessageBox.Show($"Error : {e.Message}\n Details : {e.InnerException.Message}\n\n{e.StackTrace}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error : {e.Message}\n Details : {e.InnerException.Message}\n\n{e.StackTrace}", @"ERROR..!!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             cmd.Dispose();
@@ -256,8 +256,8 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
 
             switch (operatingSystem)
             {
-                case "Windows XP":
-                    return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
+                /*case "Windows XP":
+                    return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";*/
                 case "Windows 7":
                     return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath + ";Extended Properties=dBase IV;User ID=;Password=";
                 case "Windows Vista":
@@ -284,9 +284,9 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
 
             switch (operatingSystem)
             {
-                case "Windows XP":
+                /*case "Windows XP":
                     return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath +
-                           ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;
+                           ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;*/
                 case "Windows 7":
                     return "Provider = Microsoft.Jet.OLEDB.4.0; Data Source = " + dbfDirectoryFilepath +
                            ";Extended Properties=dBase IV;User ID=" + UserId + ";Password=" + password;

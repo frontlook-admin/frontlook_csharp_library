@@ -241,6 +241,8 @@ namespace frontlook_csharp_library.FL_FastReportForm
             }
         }
 
+
+
         public static void SetPrinterSettings(PrintType printType, string PrintSettingDirPath, string PrintSettingFilePath)
         {
             if (printType == PrintType.Default)

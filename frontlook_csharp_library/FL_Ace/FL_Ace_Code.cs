@@ -18,16 +18,16 @@ namespace frontlook_csharp_library.FL_Ace
             {
                 var LastCode = TableName.FL_GetAceLastCode(FieldName, DbfFolderPath, UseDirectoryPath);
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"\nLast Code: {LastCode}");
-                var Z_Asc = LastCode.FL_Z_Asc()+1;
+                var Z_Asc = LastCode.FL_Z_Asc();
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"New Ascii val : {Z_Asc}");
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"New Ascii val (Long): {(long)Z_Asc}");
-                var Z_Chr = FL_AsciiSerial.FL_Z_Chr((long)Z_Asc);
+                var Z_Chr = FL_AsciiSerial.FL_Z_Chr((long)Z_Asc+1L);
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"New Code In Char : {Z_Chr}\n");
                 return Z_Chr;
             }
             else
             {
-                return FL_AsciiSerial.FL_Z_Chr((long)FL_AsciiSerial.FL_Z_Asc(TableName.FL_GetAceLastCode(FieldName, DbfFolderPath, UseDirectoryPath))+1);
+                return FL_AsciiSerial.FL_Z_Chr((long)FL_AsciiSerial.FL_Z_Asc(TableName.FL_GetAceLastCode(FieldName, DbfFolderPath, UseDirectoryPath))+1L);
             }
         }
 

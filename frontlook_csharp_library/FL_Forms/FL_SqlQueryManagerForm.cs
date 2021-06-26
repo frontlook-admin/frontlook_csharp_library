@@ -10,9 +10,9 @@ using frontlook_csharp_library.FL_General;
 using JetBrains.Annotations;
 using NPOI.SS.Formula.Functions;
 
-namespace frontlook_csharp_library.FL_Controls
+namespace frontlook_csharp_library.FL_Forms
 {
-    public sealed partial class FL_SqlQueryManager : UserControl
+    public sealed partial class FL_SqlQueryManagerForm : Form
     {
         private string dbf_filepath, dbf_filename, dbf_filename_withext;
         private DataSet ds = new DataSet("new_dataset1");
@@ -27,7 +27,7 @@ namespace frontlook_csharp_library.FL_Controls
         private string dbf_constring, dbf_constring1, dbf_constring2, s_without_ext;
         private string[] filePaths;
 
-        public FL_SqlQueryManager([CanBeNull] string path = null)
+        public FL_SqlQueryManagerForm([CanBeNull] string path = null)
         {
             this.Dock = DockStyle.Fill;
             InitializeComponent();
@@ -150,13 +150,13 @@ namespace frontlook_csharp_library.FL_Controls
             //label3.Text = e.ProgressPercentage + "%";
             //progress.Value = e.ProgressPercentage;
 
-            progress.FL_Progress(e.ProgressPercentage + "%", e.ProgressPercentage, true);
+            //progress.FL_Progress(e.ProgressPercentage + "%", e.ProgressPercentage, true);
         }
 
         private void Dbf_to_excel_series_worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             MessageBox.Show("Done..!!", "Work Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            progress.Dismiss();
+            //progress.Dismiss();
             //dbf_to_excel_series_worker.ReportProgress(0);
             //progress.Value = 0;
         }

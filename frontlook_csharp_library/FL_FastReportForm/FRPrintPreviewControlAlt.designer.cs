@@ -1,4 +1,6 @@
-﻿namespace frontlook_csharp_library.FL_FastReportForm
+﻿using System;
+
+namespace frontlook_csharp_library.FL_FastReportForm
 {
     partial class FRPrintPreviewControlAlt
     {
@@ -33,7 +35,9 @@
             this.btnQuickPrint = new System.Windows.Forms.ToolStripButton();
             this.btnPrint = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.zoomPlus = new System.Windows.Forms.ToolStripButton();
             this._btnZoom = new System.Windows.Forms.ToolStripSplitButton();
+            this.zoomMinus = new System.Windows.Forms.ToolStripButton();
             this._itemActualSize = new System.Windows.Forms.ToolStripMenuItem();
             this._itemFullPage = new System.Windows.Forms.ToolStripMenuItem();
             this._itemPageWidth = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +70,9 @@
             this.btnQuickPrint,
             this.btnPrint,
             this.toolStripSeparator2,
+            this.zoomMinus,
             this._btnZoom,
+            this.zoomPlus,
             this.btnFirst,
             this._btnPrev,
             this.txtStartPage,
@@ -106,7 +112,6 @@
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Visible = false;
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // _btnZoom
@@ -132,6 +137,27 @@
             this._btnZoom.Size = new System.Drawing.Size(71, 22);
             this._btnZoom.Text = "&Zoom";
             this._btnZoom.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.btnZoom_DropDownItemClicked);
+            // 
+            // zoomPlus
+            // 
+            this.zoomPlus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.zoomPlus.Image = ((System.Drawing.Image)(resources.GetObject("positive.Image")));
+            this.zoomPlus.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.zoomPlus.Name = "zoomPositive";
+            this.zoomPlus.Size = new System.Drawing.Size(23, 22);
+            this.zoomPlus.Text = "+";
+            this.zoomPlus.Click += new System.EventHandler(this.zoomPositiveAction);
+            // 
+            // zoomPlus
+            // 
+            this.zoomMinus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.zoomMinus.Image = ((System.Drawing.Image)(resources.GetObject("negetive.Image")));
+            this.zoomMinus.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.zoomMinus.Name = "zoomNegetive";
+            this.zoomMinus.Size = new System.Drawing.Size(23, 22);
+            this.zoomMinus.Text = "-";
+            this.zoomMinus.Click += new System.EventHandler(this.zoomNegetiveAction);
+
             // 
             // _itemActualSize
             // 
@@ -285,7 +311,6 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(73, 22);
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.Visible = false;
             this.btnCancel.ToolTipText = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -322,7 +347,9 @@
         private System.Windows.Forms.ToolStrip _toolStrip;
         private System.Windows.Forms.ToolStripButton btnQuickPrint;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton zoomPlus;
         private System.Windows.Forms.ToolStripSplitButton _btnZoom;
+        private System.Windows.Forms.ToolStripButton zoomMinus;
         private System.Windows.Forms.ToolStripMenuItem _itemActualSize;
         private System.Windows.Forms.ToolStripMenuItem _itemFullPage;
         private System.Windows.Forms.ToolStripMenuItem _itemPageWidth;

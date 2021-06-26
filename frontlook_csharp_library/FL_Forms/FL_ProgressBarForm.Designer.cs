@@ -1,7 +1,7 @@
 ﻿
-namespace frontlook_csharp_library.FL_Controls
+namespace frontlook_csharp_library.FL_Forms
 {
-    partial class FL_ProgressBar
+    partial class FL_ProgressBarForm
     {
         /// <summary> 
         /// Required designer variable.
@@ -31,14 +31,15 @@ namespace frontlook_csharp_library.FL_Controls
         {
             this.progress = new System.Windows.Forms.ProgressBar();
             this.progressText = new System.Windows.Forms.Label();
+            this.worker = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // progress
             // 
             this.progress.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.progress.Location = new System.Drawing.Point(0, 21);
+            this.progress.Location = new System.Drawing.Point(0, 23);
             this.progress.Name = "progress";
-            this.progress.Size = new System.Drawing.Size(239, 23);
+            this.progress.Size = new System.Drawing.Size(561, 23);
             this.progress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progress.TabIndex = 0;
             // 
@@ -53,15 +54,24 @@ namespace frontlook_csharp_library.FL_Controls
             this.progressText.TabIndex = 1;
             this.progressText.Text = "ProgressText";
             // 
-            // FL_ProgressBar
+            // worker
+            // 
+            this.worker.WorkerReportsProgress = true;
+            this.worker.WorkerSupportsCancellation = true;
+            this.worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DoAction);
+            this.worker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.worker_ProgressChanged);
+            // 
+            // FL_ProgressBarForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.ClientSize = new System.Drawing.Size(561, 46);
+            this.ControlBox = false;
             this.Controls.Add(this.progressText);
             this.Controls.Add(this.progress);
-            this.Name = "FL_ProgressBar";
-            this.Size = new System.Drawing.Size(239, 44);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Name = "FL_ProgressBarForm";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -69,7 +79,8 @@ namespace frontlook_csharp_library.FL_Controls
 
         #endregion
 
-        private System.Windows.Forms.ProgressBar progress;
-        private System.Windows.Forms.Label progressText;
+        public System.Windows.Forms.ProgressBar progress;
+        public System.Windows.Forms.Label progressText;
+        public System.ComponentModel.BackgroundWorker worker;
     }
 }

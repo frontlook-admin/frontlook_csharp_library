@@ -300,6 +300,23 @@ namespace frontlook_csharp_library.FL_FastReportForm
             }
         }
 
+        private void zoomNegetiveAction(object sender, EventArgs e)
+        {
+            var z = preview.Zoom;
+            var y = z * 20 / 100;
+            var w = z - y;
+            preview.Zoom = w;
+        }
+
+        private void zoomPositiveAction(object sender, EventArgs e)
+        {
+            var z = preview.Zoom;
+            var y = z * 20 / 100;
+            var w = z + y;
+            preview.Zoom = w;
+        }
+
+
         #endregion Zoom
 
         #region Page Navigation
@@ -369,7 +386,9 @@ namespace frontlook_csharp_library.FL_FastReportForm
             }
             else
             {
-                ParentForm?.Close();
+                //ParentForm?.Close();
+                preview.Document = new PrintDocument();
+                preview.Refresh();
             }
         }
 

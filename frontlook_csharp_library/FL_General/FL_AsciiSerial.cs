@@ -21,13 +21,13 @@ namespace frontlook_csharp_library.FL_General
                 var Z_Asc = FL_Z_Asc(LastCode, DebugMode);
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"New Ascii val : {Z_Asc}");
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"New Ascii val (Long): {(long)Z_Asc}");
-                var Z_Chr = FL_Z_Chr((long)Z_Asc, DebugMode);
+                var Z_Chr = FL_Z_Chr((long)Z_Asc+1L, DebugMode);
                 FL_ConsoleManager.FL_ConsoleWriteDebug($"New Code In Char : {Z_Chr}\n");
                 return Z_Chr;
             }
             else
             {
-                return FL_Z_Chr((long)FL_Z_Asc(code));
+                return FL_Z_Chr((long)FL_Z_Asc(code) + 1L);
             }
         }
 

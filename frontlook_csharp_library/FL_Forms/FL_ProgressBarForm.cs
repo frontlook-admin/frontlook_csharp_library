@@ -10,11 +10,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using frontlook_csharp_library.FL_General;
 
-namespace frontlook_csharp_library.FL_Controls
+namespace frontlook_csharp_library.FL_Forms
 {
-    public partial class FL_ProgressBar : UserControl
+    public partial class FL_ProgressBarForm : Form
     {
-        public FL_ProgressBar()
+        public Action action;
+
+        public Action<string[]> actionwithargs;
+        public FL_ProgressBarForm()
         {
             InitializeComponent();
             FL_Progress("", 100, 0, 0);
@@ -26,13 +29,20 @@ namespace frontlook_csharp_library.FL_Controls
             FL_Progress(_progressText, maxValue, minValue, currentValue);
         }*/
 
-        public FL_ProgressBar(string _progressText)
+        public FL_ProgressBarForm(string _progressText)
         {
             InitializeComponent();
             FL_Progress(_progressText, 100, 0, 0);
         }
 
-        public FL_ProgressBar(string _progressText, int maxValue, int minValue, int currentValue)
+        public FL_ProgressBarForm(string _progressText, int value)
+        {
+            InitializeComponent();
+            FL_Progress(_progressText, 100, 0, 0);
+            FL_Progress(value);
+        }
+
+        public FL_ProgressBarForm(string _progressText, int maxValue, int minValue, int currentValue)
         {
             InitializeComponent();
             FL_Progress(_progressText, maxValue, minValue, currentValue);
@@ -121,6 +131,17 @@ namespace frontlook_csharp_library.FL_Controls
         {
             progress.Value = 0;
             this.Hide();
+        }
+
+        public void DoAction(object sender, DoWorkEventArgs e)
+        {
+            action.Invoke();
+        }
+
+
+        private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progress.Value = e.ProgressPercentage;
         }
     }
 }

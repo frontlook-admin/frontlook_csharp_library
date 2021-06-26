@@ -277,6 +277,7 @@
       <DependentUpon>FL_ProgressBar.cs</DependentUpon>
     </Compile>
     <Compile Include="FL_DataBase\FL_DataMods.cs" />
+    <Compile Include="FL_DataBase\DataTableParser.cs" />
     <Compile Include="FL_DataBase\FL_MySql\FL_MySqlExecutor.cs" />
     <Compile Include="FL_DataBase\FL_SqlExecutor.cs" />
     <Compile Include="FL_Excel_Data_Interop\DataTable_To_Excel.cs" />
@@ -321,6 +322,18 @@
     </Compile>
     <Compile Include="FL_FastReportForm\ZoomMode.cs" />
     <Compile Include="FL_Ace\FL_Ace_Code.cs" />
+    <Compile Include="FL_Forms\FL_ProgressBarForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FL_Forms\FL_ProgressBarForm.Designer.cs">
+      <DependentUpon>FL_ProgressBarForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FL_Forms\FL_SqlQueryManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FL_Forms\FL_SqlQueryManagerForm.designer.cs">
+      <DependentUpon>FL_SqlQueryManagerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FL_General\FL_AsciiSerial.cs" />
     <Compile Include="FL_General\FL_ConsoleManager.cs" />
     <Compile Include="FL_General\FL_FastReportPrintExtension.cs" />
@@ -338,6 +351,7 @@
     <Compile Include="FL_General\FL_string_helper\FL_StaticStrings.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_StringHelper.cs" />
     <Compile Include="FL_General\FL_string_helper\FL_StringParser.cs" />
+    <Compile Include="FL_General\FL_ThreadHealper.cs" />
     <Compile Include="FL_Mysql_Helper\FL_mysql_helper.cs" />
     <Compile Include="FL_Dbf_Helper\FL_Dbf_Manager.cs" />
     <Compile Include="FL_Dbf_Helper\dbf_helperx.cs" />
@@ -365,6 +379,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FL_FastReportForm\print_preview.bmp" />
+    <None Include="FL_FastReportForm\Resources\positive.png" />
+    <None Include="FL_FastReportForm\Resources\negetive.png" />
+    <None Include="FL_FastReportForm\Resources\+.png" />
+    <None Include="FL_FastReportForm\Resources\-.png" />
+    <None Include="FL_FastReportForm\Resources\negetive.Image.png" />
     <Content Include="FL_FastReportForm\Resources\print_16.png" />
     <Content Include="FL_FastReportForm\Resources\print_help_16.png" />
     <Content Include="FL_FastReportForm\Resources\print_preview.bmp" />
@@ -373,6 +392,7 @@
     <Content Include="FL_FastReportForm\window_print.bmp" />
     <Content Include="FL_icon.ico" />
     <Content Include="google08a59524cbd75b47.html" />
+    <None Include="Resources\zoomPlus.png" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -399,6 +419,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FL_Controls\FL_SqlQueryManager.resx">
       <DependentUpon>FL_SqlQueryManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FL_Forms\FL_ProgressBarForm.resx">
+      <DependentUpon>FL_ProgressBarForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FL_Forms\FL_SqlQueryManagerForm.resx">
+      <DependentUpon>FL_SqlQueryManagerForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
