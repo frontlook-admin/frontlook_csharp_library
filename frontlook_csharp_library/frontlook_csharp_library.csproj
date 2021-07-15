@@ -269,6 +269,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FL_Ace\FL_AceClass_Code.cs" />
     <Compile Include="FL_Ace\FL_Ace_DataParser.cs" />
     <Compile Include="FL_Controls\FL_ProgressBar.cs">
       <SubType>UserControl</SubType>
@@ -280,6 +281,7 @@
     <Compile Include="FL_DataBase\DataTableParser.cs" />
     <Compile Include="FL_DataBase\FL_MySql\FL_MySqlExecutor.cs" />
     <Compile Include="FL_DataBase\FL_SqlExecutor.cs" />
+    <Compile Include="FL_DataCollectionDataTable_Interop\FL_DataCollectionDataTable.cs" />
     <Compile Include="FL_Excel_Data_Interop\DataTable_To_Excel.cs" />
     <Compile Include="FL_Excel_Data_Interop\FL_Excel.cs" />
     <Compile Include="FL_Excel_Data_Interop\FL_ExcelSupport.cs" />

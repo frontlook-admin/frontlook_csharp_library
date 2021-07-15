@@ -143,5 +143,10 @@ namespace frontlook_csharp_library.FL_Forms
         {
             progress.Value = e.ProgressPercentage;
         }
+
+        public void dismiss()
+        {
+            this.Visible = false;
+        }
     }
 }

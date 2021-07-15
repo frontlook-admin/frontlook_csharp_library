@@ -114,362 +114,30 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         public static void FL_WriteExcelAsync(this List<string> HeadList,
             List<List<string>> dataList, string FilePath = "", bool SaveExcelAsFile = true, bool EnableNumberCheck = true, bool ApplyStyles = true, bool ApplyHeadStyles = true)
         {
-            var filePath = SaveExcelAsFile ? FilePath : Path.GetTempFileName();
-            var ms = new MemoryStream();
-            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            IWorkbook workbook = new XSSFWorkbook();
-
-            var excelSheet = workbook.CreateSheet("Sheet1");
-
-            var row = excelSheet.CreateRow(0);
-
-            var fontHead = workbook.CreateFont();
-            fontHead.FontHeightInPoints = 11;
-            fontHead.FontName = "Calibri";
-            fontHead.Boldweight = (short)FontBoldWeight.Bold;
-
-            var font = workbook.CreateFont();
-            font.FontHeightInPoints = 11;
-            font.FontName = "Calibri";
-            font.Boldweight = (short)FontBoldWeight.Normal;
-
-            for (var i = 0; i < HeadList.Count; i++)
+            try
             {
-                var head = HeadList[i];
-                //row.CreateCell(columnIndex).SetCellValue(head);
-
-                var cell = row.CreateCell(i);
-                cell.SetCellValue(head);
-                if (!ApplyHeadStyles) continue;
-                cell.CellStyle = workbook.CreateCellStyle();
-                cell.CellStyle.SetFont(fontHead);
-                cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                cell.CellStyle.WrapText = true;
-                cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-
-                //columnIndex++;
-            }
-
-            //var rowIndex = 1;
-            for (var i = 0; i < dataList.Count; i++)
-            {
-                var columns = dataList[i];
-                row = excelSheet.CreateRow(i + 1);
-                var cellIndex = 0;
-                foreach (var cell in columns.Select(col => row.CreateCell(cellIndex)))
+                var sheet = new FL_ExcelData()
                 {
-                    var str = columns[cellIndex];
-                    var b = EnableNumberCheck && double.TryParse(str, out _);
-                    if (b)
-                    {
-                        cell.SetCellValue(double.Parse(str));
-                        cell.SetCellType(CellType.Numeric);
-                    }
-                    else
-                    {
-                        cell.SetCellValue(str);
-                        cell.SetCellType(CellType.String);
-                    }
-
-                    cellIndex++;
-                    if (!ApplyStyles) continue;
-                    //cell.SetCellType(columns[cellIndex].ToString().FL_SetICellType());
-                    cell.CellStyle = workbook.CreateCellStyle();
-                    cell.CellStyle.SetFont(font);
-                    cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                }
+                    EnableNumberCheck = EnableNumberCheck,
+                    ApplySuperHeadStyles = ApplyHeadStyles,
+                    ApplyHeadStyles = ApplyHeadStyles,
+                    ApplyStyles = ApplyStyles,
+                    SheetOData = dataList.Select(e => e.Select(f => (object)f).ToList()).ToList(),
+                    HeadNames = HeadList,
+                    SaveExcelAsFile = SaveExcelAsFile,
+                    FilePath = FilePath
+                };
+                sheet.FL_WriteExcelAsync();
             }
-
-            excelSheet.CreateFreezePane(0, 1, 0, 1);
-            workbook.Write(tempStream);
-        }
-
-        public static void FL_WriteExcelAsync(this DataTable dataTable,
-            [CanBeNull] List<string> HeadList = null, string FilePath = "", bool SaveExcelAsFile = true, bool EnableNumberCheck = true, bool ApplyStyles = true, bool ApplyHeadStyles = true)
-        {
-            var filePath = SaveExcelAsFile ? FilePath : Path.GetTempFileName();
-            var ms = new MemoryStream();
-            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            IWorkbook workbook = new XSSFWorkbook();
-            var excelSheet = workbook.CreateSheet("Sheet1");
-
-            var columns = new List<string>();
-            var row = excelSheet.CreateRow(0);
-
-            var fontHead = workbook.CreateFont();
-            fontHead.FontHeightInPoints = 11;
-            fontHead.FontName = "Calibri";
-            fontHead.Boldweight = (short)FontBoldWeight.Bold;
-            var font = workbook.CreateFont();
-            font.FontHeightInPoints = 11;
-            font.FontName = "Calibri";
-            font.Boldweight = (short)FontBoldWeight.Normal;
-
-            //var columnIndex = 0;
-            if (HeadList != null)
+            catch
             {
-                for (var i = 0; i < HeadList.Count(); i++)
-                {
-                    columns.Add(HeadList[i].FL_UnSpaced());
-                    var cell = row.CreateCell(i);
-                    cell.SetCellValue(HeadList[i]);
-                    if (!ApplyHeadStyles) continue;
-                    cell.CellStyle = workbook.CreateCellStyle();
-                    cell.CellStyle.SetFont(fontHead);
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                    cell.CellStyle.WrapText = true;
-                    cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-                    //columnIndex++;
-                }
-            }
-            else
-            {
-                for (var i = 0; i < dataTable.Columns.Count; i++)
-                {
-                    DataColumn column = dataTable.Columns[i];
-                    columns.Add(column.ColumnName);
-                    var cell = row.CreateCell(i);
-                    cell.SetCellValue(column.ColumnName);
-                    if (!ApplyHeadStyles) continue;
-                    cell.CellStyle = workbook.CreateCellStyle();
-                    cell.CellStyle.SetFont(fontHead);
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                    cell.CellStyle.WrapText = true;
-                    cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-                    //columnIndex++;
-                }
-            }
 
-            //var rowIndex = 1;
-            for (var j = 0; j < dataTable.Rows.Count; j++)
-            {
-                var dsrow = dataTable.Rows[j];
-                row = excelSheet.CreateRow(j + 1);
-                var cellIndex = 0;
-                for (var i = 0; i < columns.Count; i++)
-                {
-                    var col = columns[i];
-                    var cell = row.CreateCell(cellIndex);
-                    var str = dsrow[col].ToString();
+                var filePath = SaveExcelAsFile ? FilePath : Path.GetTempFileName();
+                var ms = new MemoryStream();
+                using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                IWorkbook workbook = new XSSFWorkbook();
 
-                    var b = EnableNumberCheck && double.TryParse(str, out _);
-                    if (b)
-                    {
-                        cell.SetCellValue(double.Parse(str));
-                        cell.SetCellType(CellType.Numeric);
-                    }
-                    else
-                    {
-                        cell.SetCellValue(str);
-                        cell.SetCellType(CellType.String);
-                    }
-
-                    cellIndex++;
-                    if (!ApplyStyles) continue;
-                    //cell.SetCellType(columns[cellIndex].ToString().FL_SetICellType());
-                    cell.CellStyle = workbook.CreateCellStyle();
-                    cell.CellStyle.SetFont(font);
-                    cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-
-                    /*if (str.FL_GetStringType() == FL_StringHelper.FL_StringType.String ||
-                        str.FL_GetStringType() == FL_StringHelper.FL_StringType.NullOrEmpty)
-                    {
-                        cell.SetCellValue(str);
-                    }
-                    if (str.FL_GetStringType() == FL_StringHelper.FL_StringType.Int)
-                    {
-                        cell.SetCellValue(int.Parse(str));
-                    }
-                    if (str.FL_GetStringType() == FL_StringHelper.FL_StringType.Double)
-                    {
-                        cell.SetCellValue(double.Parse(str));
-                    }
-                    if (str.FL_GetStringType() == FL_StringHelper.FL_StringType.Date)
-                    {
-                        cell.SetCellValue(DateTime.ParseExact(str, FL_DateHelper.DateParseFormats, CultureInfo.InvariantCulture));
-                    }
-                    else
-                    {
-                        cell.SetCellValue(str);
-                    }
-
-                    */
-                }
-
-                //rowIndex++;
-            }
-
-            excelSheet.CreateFreezePane(0, 1, 0, 1);
-            workbook.Write(tempStream);
-        }
-
-        public static void FL_WriteExcelAsync(this FL_ExcelData Sheet)
-        {
-            var filePath = Sheet.SaveExcelAsFile.GetValueOrDefault(true) ? Sheet.FilePath : Path.GetTempFileName();
-            var ms = new MemoryStream();
-            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            IWorkbook workbook = new XSSFWorkbook();
-
-            var excelSheet = string.IsNullOrEmpty(Sheet.SheetName)
-                ? workbook.CreateSheet("Sheet1")
-                : workbook.CreateSheet(Sheet.SheetName);
-
-            var EnableNumberCheck = Sheet.EnableNumberCheck.GetValueOrDefault(true);
-            var DataItems = Sheet.ExcelDataItems.Any() ?
-                Sheet.ExcelDataItems.OrderBy(e => e.VItemPosition).ThenBy(e => e.HItemPosition).ToList() :
-                new List<FL_ExcelDataItem>();
-            var HeadList = Sheet.HeadNames;
-            var dataList = Sheet.SheetData;
-            var ApplyStyles = Sheet.ApplyStyles.GetValueOrDefault(true);
-            var ApplyHeadStyles = Sheet.ApplyHeadStyles.GetValueOrDefault(true);
-            var ApplySuperHeadStyles = Sheet.ApplySuperHeadStyles.GetValueOrDefault(true);
-
-            var row = excelSheet.CreateRow(0);
-
-            var fontHead = workbook.CreateFont();
-            fontHead.FontHeightInPoints = 11;
-            fontHead.FontName = "Calibri";
-            fontHead.Boldweight = (short)FontBoldWeight.Bold;
-
-            var font = workbook.CreateFont();
-            font.FontHeightInPoints = 11;
-            font.FontName = "Calibri";
-            font.Boldweight = (short)FontBoldWeight.Normal;
-
-            //var columnIndex = 0;
-            var rowIndex = 0;
-            if (DataItems.Count > 0)
-            {
-                var _rowIndex = DataItems.Max(e => e.VItemPosition);
-                for (var i = 0; i <= _rowIndex; i++)
-                {
-                    var itms = DataItems.Where(e => e.VItemPosition == i).OrderBy(e => e.HItemPosition).ToList();
-                    row = excelSheet.CreateRow(i);
-                    foreach (var _itm in itms)
-                    {
-                        var cell = row.CreateCell(_itm.HItemPosition);
-                        cell.SetCellValue(_itm.ItemValue);
-                        if (!ApplySuperHeadStyles || !_itm.ApplyStyles.GetValueOrDefault(true)) continue;
-                        var fontHeadMaster = workbook.CreateFont();
-                        fontHeadMaster.FontHeightInPoints = 11;
-                        fontHeadMaster.FontName = "Calibri";
-
-                        fontHeadMaster.Boldweight = _itm.bold.GetValueOrDefault(false)
-                            ? (short)FontBoldWeight.Bold
-                            : (short)FontBoldWeight.Normal;
-
-                        cell.CellStyle = workbook.CreateCellStyle();
-                        cell.CellStyle.SetFont(fontHead);
-                        cell.CellStyle.Alignment = _itm.HTextAlign.GetValueOrDefault(HorizontalAlignment.Left);
-                        cell.CellStyle.VerticalAlignment =
-                            _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
-                        cell.CellStyle.WrapText = false;
-                        cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-                    }
-                }
-
-                rowIndex = _rowIndex + 1;
-            }
-            var x = false;
-            if (HeadList != null && HeadList.Any())
-            {
-                row = excelSheet.CreateRow(rowIndex);
-                for (var i = 0; i < HeadList.Count(); i++)
-                {
-                    var cell = row.CreateCell(i);
-                    cell.SetCellValue(HeadList[i]);
-                    if (!ApplyHeadStyles) continue;
-                    cell.CellStyle = workbook.CreateCellStyle();
-                    cell.CellStyle.SetFont(fontHead);
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                    cell.CellStyle.WrapText = true;
-                    cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-
-                    //columnIndex++;
-                }
-
-                rowIndex++;
-                x = true;
-            }
-
-            var topRow = rowIndex;
-
-            //var rowIndex = 1;
-            for (var i = 0; i < dataList.Count; i++)
-            {
-                var columns = dataList[i];
-                row = excelSheet.CreateRow(rowIndex);
-                var cellIndex = 0;
-                foreach (var cell in columns.Select(col => row.CreateCell(cellIndex)))
-                {
-                    var str = columns[cellIndex];
-
-                    if (EnableNumberCheck && double.TryParse(str, out _))
-                    {
-                        cell.SetCellValue(double.Parse(str));
-                        cell.SetCellType(CellType.Numeric);
-                    }
-                    else
-                    {
-                        cell.SetCellValue(str);
-                        cell.SetCellType(CellType.String);
-                    }
-
-                    cellIndex++;
-                    if (!ApplyStyles) continue;
-                    cell.CellStyle = workbook.CreateCellStyle();
-                    cell.CellStyle.SetFont(font);
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                }
-
-                rowIndex++;
-            }
-
-            if (x)
-            {
-                excelSheet.CreateFreezePane(Sheet.ColSplit.GetValueOrDefault(0), topRow, Sheet.ColSplit.GetValueOrDefault(0), topRow);
-            }
-            //excelSheet.CreateFreezePane(0, 1);
-            /*//var ms = new MemoryStream();
-            using var tempStream = new MemoryStream();
-            workbook.Write(tempStream);
-            return tempStream;
-            var byteArray = tempStream.ToArray();
-            ms.Write(byteArray, 0, byteArray.Length);
-            ms.Flush();*/
-
-            workbook.Write(tempStream);
-        }
-
-        public static void FL_WriteExcelAsync(this List<FL_ExcelData> SheetList)
-        {
-            var filePath = SheetList.First().SaveExcelAsFile.GetValueOrDefault(true) ? SheetList.First().FilePath : Path.GetTempFileName();
-            var ms = new MemoryStream();
-            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            IWorkbook workbook = new XSSFWorkbook();
-            var ApplyStyles = SheetList[0].ApplyStyles.GetValueOrDefault(true);
-            var ApplyHeadStyles = SheetList[0].ApplyHeadStyles.GetValueOrDefault(true);
-            var ApplySuperHeadStyles = SheetList[0].ApplySuperHeadStyles.GetValueOrDefault(true);
-            for (var k = 0; k < SheetList.Count; k++)
-            {
-                var Sheet = SheetList[k];
-
-                var excelSheet = string.IsNullOrEmpty(Sheet.SheetName)
-                    ? workbook.CreateSheet($"Sheet{k + 1}")
-                    : workbook.CreateSheet(Sheet.SheetName);
-                var EnableNumberCheck = Sheet.EnableNumberCheck.GetValueOrDefault(true);
-                var DataItems = Sheet.ExcelDataItems.Any() ?
-                Sheet.ExcelDataItems.OrderBy(e => e.VItemPosition).ThenBy(e => e.HItemPosition).ToList() :
-                new List<FL_ExcelDataItem>();
-                var HeadList = Sheet.HeadNames;
-                var dataList = Sheet.SheetData;
+                var excelSheet = workbook.CreateSheet("Sheet1");
 
                 var row = excelSheet.CreateRow(0);
 
@@ -483,386 +151,33 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                 font.FontName = "Calibri";
                 font.Boldweight = (short)FontBoldWeight.Normal;
 
-                //var columnIndex = 0;
-                var rowIndex = 0;
-                if (DataItems.Count > 0)
+                for (var i = 0; i < HeadList.Count; i++)
                 {
-                    var _rowIndex = DataItems.Max(e => e.VItemPosition);
-                    for (var i = 0; i <= _rowIndex; i++)
-                    {
-                        var itms = DataItems.Where(e => e.VItemPosition == i).OrderBy(e => e.HItemPosition).ToList();
-                        row = excelSheet.CreateRow(i);
-                        foreach (var _itm in itms)
-                        {
-                            var cell = row.CreateCell(_itm.HItemPosition);
-                            cell.SetCellValue(_itm.ItemValue);
-                            if (!ApplySuperHeadStyles || !_itm.ApplyStyles.GetValueOrDefault(true)) continue;
-                            var fontHeadMaster = workbook.CreateFont();
-                            fontHeadMaster.FontHeightInPoints = 11;
-                            fontHeadMaster.FontName = "Calibri";
+                    var head = HeadList[i];
+                    //row.CreateCell(columnIndex).SetCellValue(head);
 
-                            fontHeadMaster.Boldweight = _itm.bold.GetValueOrDefault(false)
-                                ? (short)FontBoldWeight.Bold
-                                : (short)FontBoldWeight.Normal;
+                    var cell = row.CreateCell(i);
+                    cell.SetCellValue(head);
+                    if (!ApplyHeadStyles) continue;
+                    cell.CellStyle = workbook.CreateCellStyle();
+                    cell.CellStyle.SetFont(fontHead);
+                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
+                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                    cell.CellStyle.WrapText = true;
+                    cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
 
-                            cell.CellStyle = workbook.CreateCellStyle();
-                            cell.CellStyle.SetFont(fontHead);
-                            cell.CellStyle.Alignment = _itm.HTextAlign.GetValueOrDefault(HorizontalAlignment.Left);
-                            cell.CellStyle.VerticalAlignment = _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
-                            cell.CellStyle.WrapText = false;
-                            cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-                        }
-                    }
-
-                    rowIndex = _rowIndex + 1;
+                    //columnIndex++;
                 }
-                var x = false;
-                if (HeadList != null && HeadList.Any())
-                {
-                    row = excelSheet.CreateRow(rowIndex);
-                    for (var i = 0; i < HeadList.Count(); i++)
-                    {
-                        var cell = row.CreateCell(i);
-                        cell.SetCellValue(HeadList[i]);
-                        if (!ApplyHeadStyles) continue;
-                        cell.CellStyle = workbook.CreateCellStyle();
-                        cell.CellStyle.SetFont(fontHead);
-                        cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                        cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell.CellStyle.WrapText = true;
-                        cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-
-                        //columnIndex++;
-                    }
-
-                    rowIndex++;
-                    x = true;
-                }
-
-                var topRow = rowIndex;
 
                 //var rowIndex = 1;
                 for (var i = 0; i < dataList.Count; i++)
                 {
                     var columns = dataList[i];
-                    row = excelSheet.CreateRow(rowIndex);
+                    row = excelSheet.CreateRow(i + 1);
                     var cellIndex = 0;
                     foreach (var cell in columns.Select(col => row.CreateCell(cellIndex)))
                     {
                         var str = columns[cellIndex];
-                        var b = EnableNumberCheck && double.TryParse(str, out _);
-                        if (b)
-                        {
-                            cell.SetCellValue(double.Parse(str));
-                            cell.SetCellType(CellType.Numeric);
-                        }
-                        else
-                        {
-                            cell.SetCellValue(str);
-                            cell.SetCellType(CellType.String);
-                        }
-                        cellIndex++;
-                        if (!ApplyStyles) continue;
-                        cell.CellStyle = workbook.CreateCellStyle();
-                        cell.CellStyle.SetFont(font);
-                        cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-                        cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                    }
-
-                    rowIndex++;
-                }
-
-                if (x)
-                {
-                    excelSheet.CreateFreezePane(Sheet.ColSplit.GetValueOrDefault(0), topRow, Sheet.ColSplit.GetValueOrDefault(0), topRow);
-                }
-            }
-
-            workbook.Write(tempStream);
-        }
-
-        public static void FL_WriteExcelAsync(this FL_ExcelDataDT SheetDT)
-        {
-            var filePath = SheetDT.SaveExcelAsFile.GetValueOrDefault(true) ? SheetDT.FilePath : Path.GetTempFileName();
-            var ms = new MemoryStream();
-            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            IWorkbook workbook = new XSSFWorkbook();
-            var EnableNumberCheck = SheetDT.EnableNumberCheck.GetValueOrDefault(true);
-            var DataItems = SheetDT.ExcelDataItems.Any() ?
-                SheetDT.ExcelDataItems.OrderBy(e => e.VItemPosition).ThenBy(e => e.HItemPosition).ToList() :
-                new List<FL_ExcelDataItem>();
-            var dataTable = SheetDT.SheetData;
-            var HeadList = SheetDT.HeadNames;
-            var ApplyStyles = SheetDT.ApplyStyles.GetValueOrDefault(true);
-            var ApplyHeadStyles = SheetDT.ApplyHeadStyles.GetValueOrDefault(true);
-            var ApplySuperHeadStyles = SheetDT.ApplySuperHeadStyles.GetValueOrDefault(true);
-            //var excelSheet = workbook.CreateSheet("Sheet1");
-            var excelSheet = string.IsNullOrEmpty(SheetDT.SheetName)
-                ? workbook.CreateSheet("Sheet1")
-                : workbook.CreateSheet(SheetDT.SheetName);
-
-            var columns = new List<string>();
-            var row = excelSheet.CreateRow(0);
-
-            var fontHead = workbook.CreateFont();
-            fontHead.FontHeightInPoints = 11;
-            fontHead.FontName = "Calibri";
-            fontHead.Boldweight = (short)FontBoldWeight.Bold;
-            var font = workbook.CreateFont();
-            font.FontHeightInPoints = 11;
-            font.FontName = "Calibri";
-            font.Boldweight = (short)FontBoldWeight.Normal;
-
-            //var columnIndex = 0;
-            var rowIndex = 0;
-            if (DataItems.Count > 0)
-            {
-                var _rowIndex = DataItems.Max(e => e.VItemPosition);
-                for (var i = 0; i <= _rowIndex; i++)
-                {
-                    var itms = DataItems.Where(e => e.VItemPosition == i).OrderBy(e => e.HItemPosition).ToList();
-                    row = excelSheet.CreateRow(i);
-                    foreach (var _itm in itms)
-                    {
-                        var cell = row.CreateCell(_itm.HItemPosition);
-                        cell.SetCellValue(_itm.ItemValue);
-                        if (!ApplySuperHeadStyles || !_itm.ApplyStyles.GetValueOrDefault(true)) continue;
-                        var fontHeadMaster = workbook.CreateFont();
-                        fontHeadMaster.FontHeightInPoints = 11;
-                        fontHeadMaster.FontName = "Calibri";
-                        fontHeadMaster.Boldweight = _itm.bold.GetValueOrDefault(false)
-                            ? (short)FontBoldWeight.Bold
-                            : (short)FontBoldWeight.Normal;
-
-                        cell.CellStyle = workbook.CreateCellStyle();
-                        cell.CellStyle.SetFont(fontHead);
-                        cell.CellStyle.Alignment = _itm.HTextAlign.GetValueOrDefault(HorizontalAlignment.Left);
-                        cell.CellStyle.VerticalAlignment =
-                            _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
-                        cell.CellStyle.WrapText = false;
-                        cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-                    }
-                }
-
-                rowIndex = _rowIndex + 1;
-            }
-            //var columnIndex = 0;
-            if (HeadList != null && HeadList.Any())
-            {
-                row = excelSheet.CreateRow(rowIndex);
-                for (var i = 0; i < HeadList.Count(); i++)
-                {
-                    columns.Add(HeadList[i].FL_UnSpaced());
-                    var cell = row.CreateCell(i);
-                    cell.SetCellValue(HeadList[i]);
-                    if (!ApplyHeadStyles) continue;
-                    cell.CellStyle = workbook.CreateCellStyle();
-                    cell.CellStyle.SetFont(fontHead);
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                    cell.CellStyle.WrapText = true;
-                    cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-                    //columnIndex++;
-                }
-
-                rowIndex++;
-            }
-            else
-            {
-                row = excelSheet.CreateRow(rowIndex);
-                for (var i = 0; i < dataTable.Columns.Count; i++)
-                {
-                    var column = dataTable.Columns[i];
-                    columns.Add(column.ColumnName);
-                    var cell = row.CreateCell(i);
-                    cell.SetCellValue(column.ColumnName);
-                    if (!ApplyHeadStyles) continue;
-                    cell.CellStyle = workbook.CreateCellStyle();
-                    cell.CellStyle.SetFont(fontHead);
-                    cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                    cell.CellStyle.WrapText = true;
-                    cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-                    //columnIndex++;
-                }
-
-                rowIndex++;
-            }
-
-            var topRow = rowIndex;
-            //var rowIndex = 1;
-            for (var j = 0; j < dataTable.Rows.Count; j++)
-            {
-                var dsrow = dataTable.Rows[j];
-                if (rowIndex != 0)
-                {
-                    row = excelSheet.CreateRow(rowIndex);
-                }
-                var cellIndex = 0;
-                for (var i = 0; i < columns.Count; i++)
-                {
-                    var col = columns[i];
-                    var cell = row.CreateCell(cellIndex);
-                    var str = dsrow[col].ToString();
-                    var b = EnableNumberCheck && double.TryParse(str, out _);
-                    if (b)
-                    {
-                        cell.SetCellValue(double.Parse(str));
-                        cell.SetCellType(CellType.Numeric);
-                    }
-                    else
-                    {
-                        cell.SetCellValue(str);
-                        cell.SetCellType(CellType.String);
-                    }
-
-                    cellIndex++;
-                    if (!ApplyStyles) continue;
-                    //cell.SetCellType(columns[cellIndex].ToString().FL_SetICellType());
-                    cell.CellStyle = workbook.CreateCellStyle();
-                    cell.CellStyle.SetFont(font);
-                    cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-                    cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                }
-
-                rowIndex++;
-            }
-
-            //excelSheet.CreateFreezePane(2, topRow);
-            excelSheet.CreateFreezePane(SheetDT.ColSplit.GetValueOrDefault(0), topRow, SheetDT.ColSplit.GetValueOrDefault(0), topRow);
-            workbook.Write(tempStream);
-        }
-
-        public static void FL_WriteExcelAsync(this List<FL_ExcelDataDT> SheetDTList)
-        {
-            var filePath = SheetDTList.First().SaveExcelAsFile.GetValueOrDefault(true) ? SheetDTList.First().FilePath : Path.GetTempFileName();
-            var ms = new MemoryStream();
-            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            IWorkbook workbook = new XSSFWorkbook();
-            var ApplyStyles = SheetDTList[0].ApplyStyles.GetValueOrDefault(true);
-            var ApplyHeadStyles = SheetDTList[0].ApplyHeadStyles.GetValueOrDefault(true);
-            var ApplySuperHeadStyles = SheetDTList[0].ApplySuperHeadStyles.GetValueOrDefault(true);
-            for (var k = 0; k < SheetDTList.Count(); k++)
-            {
-                var SheetDT = SheetDTList[k];
-
-                var EnableNumberCheck = SheetDT.EnableNumberCheck.GetValueOrDefault(true);
-                var DataItems = SheetDT.ExcelDataItems.Any() ?
-                    SheetDT.ExcelDataItems.OrderBy(e => e.VItemPosition).ThenBy(e => e.HItemPosition).ToList() :
-                    new List<FL_ExcelDataItem>();
-                var dataTable = SheetDT.SheetData;
-                var HeadList = SheetDT.HeadNames;
-
-                var excelSheet = string.IsNullOrEmpty(SheetDT.SheetName)
-                    ? workbook.CreateSheet($"Sheet{k + 1}")
-                    : workbook.CreateSheet(SheetDT.SheetName);
-
-                var columns = new List<string>();
-                var row = excelSheet.CreateRow(0);
-
-                var fontHead = workbook.CreateFont();
-                fontHead.FontHeightInPoints = 11;
-                fontHead.FontName = "Calibri";
-                fontHead.Boldweight = (short)FontBoldWeight.Bold;
-                var font = workbook.CreateFont();
-                font.FontHeightInPoints = 11;
-                font.FontName = "Calibri";
-                font.Boldweight = (short)FontBoldWeight.Normal;
-
-                //var columnIndex = 0;
-                var rowIndex = 0;
-                if (DataItems.Count > 0)
-                {
-                    var _rowIndex = DataItems.Max(e => e.VItemPosition);
-                    for (var i = 0; i <= _rowIndex; i++)
-                    {
-                        var itms = DataItems.Where(e => e.VItemPosition == i).OrderBy(e => e.HItemPosition).ToList();
-                        row = excelSheet.CreateRow(i);
-                        foreach (var _itm in itms)
-                        {
-                            var cell = row.CreateCell(_itm.HItemPosition);
-                            cell.SetCellValue(_itm.ItemValue);
-                            if (!ApplySuperHeadStyles || !_itm.ApplyStyles.GetValueOrDefault(true)) continue;
-                            var fontHeadMaster = workbook.CreateFont();
-                            fontHeadMaster.FontHeightInPoints = 11;
-                            fontHeadMaster.FontName = "Calibri";
-
-                            fontHeadMaster.Boldweight = _itm.bold.GetValueOrDefault(false)
-                                ? (short)FontBoldWeight.Bold
-                                : (short)FontBoldWeight.Normal;
-
-                            cell.CellStyle = workbook.CreateCellStyle();
-                            cell.CellStyle.SetFont(fontHead);
-                            cell.CellStyle.Alignment = _itm.HTextAlign.GetValueOrDefault(HorizontalAlignment.Left);
-                            cell.CellStyle.VerticalAlignment =
-                                _itm.VTextAlign.GetValueOrDefault(VerticalAlignment.Center);
-                            cell.CellStyle.WrapText = false;
-                            cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-                        }
-                    }
-
-                    rowIndex = _rowIndex + 1;
-                }
-                //var columnIndex = 0;
-                if (HeadList != null && HeadList.Any())
-                {
-                    row = excelSheet.CreateRow(rowIndex);
-                    for (var i = 0; i < HeadList.Count(); i++)
-                    {
-                        columns.Add(HeadList[i].FL_UnSpaced());
-                        var cell = row.CreateCell(i);
-                        cell.SetCellValue(HeadList[i]);
-                        if (!ApplyHeadStyles) continue;
-                        cell.CellStyle = workbook.CreateCellStyle();
-                        cell.CellStyle.SetFont(fontHead);
-                        cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                        cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell.CellStyle.WrapText = true;
-                        cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-
-                        //columnIndex++;
-                    }
-
-                    rowIndex++;
-                }
-                else
-                {
-                    row = excelSheet.CreateRow(rowIndex);
-                    for (var i = 0; i < dataTable.Columns.Count; i++)
-                    {
-                        var column = dataTable.Columns[i];
-                        columns.Add(column.ColumnName);
-                        var cell = row.CreateCell(i);
-                        cell.SetCellValue(column.ColumnName);
-                        if (!ApplyHeadStyles) continue;
-                        cell.CellStyle = workbook.CreateCellStyle();
-                        cell.CellStyle.SetFont(fontHead);
-                        cell.CellStyle.Alignment = HorizontalAlignment.Center;
-                        cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
-                        cell.CellStyle.WrapText = true;
-                        cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
-
-                        //columnIndex++;
-                    }
-
-                    rowIndex++;
-                }
-
-                var topRow = rowIndex;
-                //var rowIndex = 1;
-                for (var j = 0; j < dataTable.Rows.Count; j++)
-                {
-                    var dsrow = dataTable.Rows[j];
-                    if (rowIndex != 0)
-                    {
-                        row = excelSheet.CreateRow(rowIndex);
-                    }
-                    var cellIndex = 0;
-                    for (var i = 0; i < columns.Count; i++)
-                    {
-                        var col = columns[i];
-                        var cell = row.CreateCell(cellIndex);
-                        var str = dsrow[col].ToString();
                         var b = EnableNumberCheck && double.TryParse(str, out _);
                         if (b)
                         {
@@ -883,13 +198,451 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
                         cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
                         cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
                     }
-
-                    rowIndex++;
                 }
 
-                excelSheet.CreateFreezePane(SheetDT.ColSplit.GetValueOrDefault(0), topRow, SheetDT.ColSplit.GetValueOrDefault(0), topRow);
+                excelSheet.CreateFreezePane(0, 1, 0, 1);
+                workbook.Write(tempStream);
+            }
+           
+        }
+
+        public static void FL_WriteExcelAsync(this DataTable dataTable,
+            [CanBeNull] List<string> HeadList = null, string FilePath = "", bool SaveExcelAsFile = true, bool EnableNumberCheck = true, bool ApplyStyles = true, bool ApplyHeadStyles = true)
+        {
+            try
+            {
+                var sheetDT = new FL_ExcelDataDT()
+                {
+                    EnableNumberCheck = EnableNumberCheck,
+                    ApplySuperHeadStyles = ApplyHeadStyles,
+                    ApplyHeadStyles = ApplyHeadStyles,
+                    ApplyStyles = ApplyStyles,
+                    SheetData = dataTable,
+                    HeadNames = HeadList,
+                    SaveExcelAsFile = SaveExcelAsFile,
+                    FilePath = FilePath
+                };
+                sheetDT.FL_WriteExcelAsync();
+            }
+            catch
+            {
+                var filePath = SaveExcelAsFile ? FilePath : Path.GetTempFileName();
+                var ms = new MemoryStream();
+                using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                IWorkbook workbook = new XSSFWorkbook();
+                var excelSheet = workbook.CreateSheet("Sheet1");
+
+                var columns = new List<string>();
+                var row = excelSheet.CreateRow(0);
+
+                var fontHead = workbook.CreateFont();
+                fontHead.FontHeightInPoints = 11;
+                fontHead.FontName = "Calibri";
+                fontHead.Boldweight = (short)FontBoldWeight.Bold;
+                var font = workbook.CreateFont();
+                font.FontHeightInPoints = 11;
+                font.FontName = "Calibri";
+                font.Boldweight = (short)FontBoldWeight.Normal;
+
+                //var columnIndex = 0;
+                if (HeadList != null)
+                {
+                    for (var i = 0; i < HeadList.Count(); i++)
+                    {
+                        columns.Add(HeadList[i].FL_UnSpaced());
+                        var cell = row.CreateCell(i);
+                        cell.SetCellValue(HeadList[i]);
+                        if (!ApplyHeadStyles) continue;
+                        cell.CellStyle = workbook.CreateCellStyle();
+                        cell.CellStyle.SetFont(fontHead);
+                        cell.CellStyle.Alignment = HorizontalAlignment.Center;
+                        cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell.CellStyle.WrapText = true;
+                        cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
+                        //columnIndex++;
+                    }
+                }
+                else
+                {
+                    for (var i = 0; i < dataTable.Columns.Count; i++)
+                    {
+                        DataColumn column = dataTable.Columns[i];
+                        columns.Add(column.ColumnName);
+                        var cell = row.CreateCell(i);
+                        cell.SetCellValue(column.ColumnName);
+                        if (!ApplyHeadStyles) continue;
+                        cell.CellStyle = workbook.CreateCellStyle();
+                        cell.CellStyle.SetFont(fontHead);
+                        cell.CellStyle.Alignment = HorizontalAlignment.Center;
+                        cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+                        cell.CellStyle.WrapText = true;
+                        cell.CellStyle.FillBackgroundColor = new XSSFColor(Color.DarkTurquoise).Indexed;
+                        //columnIndex++;
+                    }
+                }
+
+                //var rowIndex = 1;
+                for (var j = 0; j < dataTable.Rows.Count; j++)
+                {
+                    var dsrow = dataTable.Rows[j];
+                    row = excelSheet.CreateRow(j + 1);
+                    var cellIndex = 0;
+                    for (var i = 0; i < columns.Count; i++)
+                    {
+                        var col = columns[i];
+                        var cell = row.CreateCell(cellIndex);
+                        var str = dsrow[col].ToString();
+
+                        var b = EnableNumberCheck && double.TryParse(str, out _);
+                        if (b)
+                        {
+                            cell.SetCellValue(double.Parse(str));
+                            cell.SetCellType(CellType.Numeric);
+                        }
+                        else
+                        {
+                            cell.SetCellValue(str);
+                            cell.SetCellType(CellType.String);
+                        }
+
+                        cellIndex++;
+                        if (!ApplyStyles) continue;
+                        //cell.SetCellType(columns[cellIndex].ToString().FL_SetICellType());
+                        cell.CellStyle = workbook.CreateCellStyle();
+                        cell.CellStyle.SetFont(font);
+                        cell.CellStyle.Alignment = b ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+                        cell.CellStyle.VerticalAlignment = VerticalAlignment.Center;
+
+                        /*if (str.FL_GetStringType() == FL_StringHelper.FL_StringType.String ||
+                            str.FL_GetStringType() == FL_StringHelper.FL_StringType.NullOrEmpty)
+                        {
+                            cell.SetCellValue(str);
+                        }
+                        if (str.FL_GetStringType() == FL_StringHelper.FL_StringType.Int)
+                        {
+                            cell.SetCellValue(int.Parse(str));
+                        }
+                        if (str.FL_GetStringType() == FL_StringHelper.FL_StringType.Double)
+                        {
+                            cell.SetCellValue(double.Parse(str));
+                        }
+                        if (str.FL_GetStringType() == FL_StringHelper.FL_StringType.Date)
+                        {
+                            cell.SetCellValue(DateTime.ParseExact(str, FL_DateHelper.DateParseFormats, CultureInfo.InvariantCulture));
+                        }
+                        else
+                        {
+                            cell.SetCellValue(str);
+                        }
+
+                        */
+                    }
+
+                    //rowIndex++;
+                }
+
+                excelSheet.CreateFreezePane(0, 1, 0, 1);
+                workbook.Write(tempStream);
+            }
+           
+        }
+
+        public static void FL_WriteExcelWorkBook(this FL_ExcelData Sheet, IWorkbook workbook, int SheetNumber = 0)
+        {
+            var excelSheet = string.IsNullOrEmpty(Sheet.SheetName) ? SheetNumber == 0 ? workbook.CreateSheet("Sheet1") : workbook.CreateSheet($"Sheet{SheetNumber}") : workbook.CreateSheet(Sheet.SheetName);
+
+            var EnableNumberCheck = Sheet.EnableNumberCheck.GetValueOrDefault(true);
+            var DataItems = Sheet.ExcelSuperHeadDataItems.Any() ?
+                Sheet.ExcelSuperHeadDataItems.OrderBy(e => e.VItemPosition).ThenBy(e => e.HItemPosition).ToList() :
+                new List<FL_ExcelSuperHeadDataItem>();
+            var HeadList = Sheet.HeadNames;
+            var dataList = Sheet.SheetData;
+            var ApplyStyles = Sheet.ApplyStyles.GetValueOrDefault(true);
+            var ApplyHeadStyles = Sheet.ApplyHeadStyles.GetValueOrDefault(true);
+            var ApplySuperHeadStyles = Sheet.ApplySuperHeadStyles.GetValueOrDefault(true);
+
+            var row = excelSheet.CreateRow(0);
+            //var columnIndex = 0;
+            var rowIndex = 0;
+            if (DataItems.Count > 0)
+            {
+                var _rowIndex = DataItems.Max(e => e.VItemPosition);
+                for (var i = 0; i <= _rowIndex; i++)
+                {
+                    var itms = DataItems.Where(e => e.VItemPosition == i).OrderBy(e => e.HItemPosition).ToList();
+                    row = excelSheet.CreateRow(i);
+                    foreach (var _itm in itms)
+                    {
+                        var cell = row.CreateCell(_itm.HItemPosition);
+                        cell.SetCellValue(_itm.ItemValue.ToString());
+                        if (!_itm.ApplyStyles.GetValueOrDefault(true)) continue;
+                        cell.CellStyle = workbook.FL_CreateDefaultSuperHeadStyle();
+                    }
+                }
+
+                rowIndex = _rowIndex + 1;
+            }
+            var x = false;
+            if (HeadList != null && HeadList.Any())
+            {
+                row = excelSheet.CreateRow(rowIndex);
+                for (var i = 0; i < HeadList.Count(); i++)
+                {
+                    var cell = row.CreateCell(i);
+                    cell.SetCellValue(HeadList[i]);
+                    if (!ApplyHeadStyles) continue;
+                    cell.CellStyle = workbook.FL_CreateDefaultHeadStyle();
+
+                    //columnIndex++;
+                }
+
+                rowIndex++;
+                x = true;
             }
 
+            var topRow = rowIndex;
+
+            //var rowIndex = 1;
+            for (var i = 0; i < dataList.Count; i++)
+            {
+                var columns = dataList[i];
+                row = excelSheet.CreateRow(rowIndex);
+                var cellIndex = 0;
+                foreach (var cell in columns.Select(col => row.CreateCell(cellIndex)))
+                {
+                    var str = columns[cellIndex];
+                    var b = EnableNumberCheck && double.TryParse(str, out _);
+
+                    if (b)
+                    {
+                        cell.SetCellValue(double.Parse(str));
+                        cell.SetCellType(CellType.Numeric);
+                    }
+                    else
+                    {
+                        cell.SetCellValue(str);
+                        cell.SetCellType(CellType.String);
+                    }
+
+                    cellIndex++;
+                    if (!ApplyStyles) continue;
+                    cell.CellStyle = workbook.FL_CreateDefaultStyle(IfNumber: b);
+                }
+
+                rowIndex++;
+            }
+
+            if (x)
+            {
+                excelSheet.CreateFreezePane(Sheet.ColSplit.GetValueOrDefault(0), topRow, Sheet.ColSplit.GetValueOrDefault(0), topRow);
+            }
+        }
+
+        public static void FL_WriteExcelAsync(this FL_ExcelData Sheet)
+        {
+            if (Sheet == null) return;
+            var filePath = Sheet.SaveExcelAsFile.GetValueOrDefault(true) ? Sheet.FilePath : Path.GetTempFileName();
+            var ms = new MemoryStream();
+            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            IWorkbook workbook = new XSSFWorkbook();
+            Sheet.FL_WriteExcelWorkBook(workbook);
+
+            workbook.Write(tempStream);
+        }
+
+        public static void FL_WriteExcelAsync(this List<FL_ExcelData> SheetList)
+        {
+            if (SheetList == null || SheetList.Count == 0) return;
+            var filePath = SheetList.First().SaveExcelAsFile.GetValueOrDefault(true) ? SheetList.First().FilePath : Path.GetTempFileName();
+            var ms = new MemoryStream();
+            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            IWorkbook workbook = new XSSFWorkbook();
+            var sheetNo = 1;
+            SheetList.ForEach(sheet =>
+            {
+                sheet.FL_WriteExcelWorkBook(workbook, sheetNo);
+                sheetNo++;
+            });
+
+            workbook.Write(tempStream);
+        }
+
+        public static void FL_WriteExcelWorkBook(this FL_ExcelDataDT SheetDT, IWorkbook workbook, int SheetNumber = 0)
+        {
+            var excelSheet = string.IsNullOrEmpty(SheetDT.SheetName) ? SheetNumber == 0 ? workbook.CreateSheet("Sheet1") : workbook.CreateSheet($"Sheet{SheetNumber}") : workbook.CreateSheet(SheetDT.SheetName);
+
+            var ApplyStyles = SheetDT.ApplyStyles.GetValueOrDefault(true);
+            var ApplyHeadStyles = SheetDT.ApplyHeadStyles.GetValueOrDefault(true);
+            var ApplySuperHeadStyles = SheetDT.ApplySuperHeadStyles.GetValueOrDefault(true);
+
+            var EnableNumberCheck = SheetDT.EnableNumberCheck.GetValueOrDefault(true);
+            var DataItems = SheetDT.ExcelSuperHeadDataItems.Any() ?
+                SheetDT.ExcelSuperHeadDataItems.OrderBy(e => e.VItemPosition).ThenBy(e => e.HItemPosition).ToList() :
+                new List<FL_ExcelSuperHeadDataItem>();
+            var dataTable = SheetDT.SheetData;
+            var HeadList = SheetDT.HeadNames;
+
+            var columns = new List<string>();
+            var row = excelSheet.CreateRow(0);
+
+            //var columnIndex = 0;
+            var rowIndex = 0;
+            if (DataItems.Count > 0)
+            {
+                var _rowIndex = DataItems.Max(e => e.VItemPosition);
+                for (var i = 0; i <= _rowIndex; i++)
+                {
+                    var itms = DataItems.Where(e => e.VItemPosition == i).OrderBy(e => e.HItemPosition).ToList();
+                    row = excelSheet.CreateRow(i);
+                    foreach (var _itm in itms)
+                    {
+                        var cell = row.CreateCell(_itm.HItemPosition);
+                        cell.SetCellValue(_itm.ItemValue.ToString());
+                        if (!_itm.ApplyStyles.GetValueOrDefault(true)) continue;
+                        cell.CellStyle = workbook.FL_CreateDefaultSuperHeadStyle();
+                    }
+                }
+
+                rowIndex = _rowIndex + 1;
+            }
+            //var columnIndex = 0;
+            if (HeadList != null && HeadList.Any())
+            {
+                row = excelSheet.CreateRow(rowIndex);
+                for (var i = 0; i < HeadList.Count(); i++)
+                {
+                    columns.Add(HeadList[i].FL_UnSpaced());
+                    var cell = row.CreateCell(i);
+                    cell.SetCellValue(HeadList[i]);
+                    if (!ApplyHeadStyles) continue;
+                    cell.CellStyle = workbook.FL_CreateDefaultHeadStyle();
+                }
+
+                rowIndex++;
+            }
+            else
+            {
+                row = excelSheet.CreateRow(rowIndex);
+                for (var i = 0; i < dataTable.Columns.Count; i++)
+                {
+                    var column = dataTable.Columns[i];
+                    columns.Add(column.ColumnName);
+                    var cell = row.CreateCell(i);
+                    cell.SetCellValue(column.ColumnName);
+                    if (!ApplyHeadStyles) continue;
+                    cell.CellStyle = workbook.FL_CreateDefaultHeadStyle();
+                }
+
+                rowIndex++;
+            }
+
+            var topRow = rowIndex;
+            //var rowIndex = 1;
+            for (var j = 0; j < dataTable.Rows.Count; j++)
+            {
+                var dsrow = dataTable.Rows[j];
+                if (rowIndex != 0)
+                {
+                    row = excelSheet.CreateRow(rowIndex);
+                }
+                var cellIndex = 0;
+                for (var i = 0; i < columns.Count; i++)
+                {
+                    // var _colType = dataTable.Columns[columns[i]].DataType;
+                    var col = columns[i];
+                    var cell = row.CreateCell(cellIndex);
+                    //var str = dsrow[col].ToString();
+                    var _dType = dataTable.Columns[columns[i]].DataType;
+                    var val = dsrow[col];
+                    var b = _dType == typeof(double) || _dType == typeof(int) || _dType == typeof(float) || _dType == typeof(decimal) || _dType == typeof(long);
+                    if (b)
+                    {
+                        if (_dType == typeof(double))
+                        {
+                            var _val = ((double?)val);
+                            if (_val.GetValueOrDefault(0) != 0)
+                            {
+                                cell.SetCellValue(_val.Value);
+                            }
+                        }
+                        else if (_dType == typeof(int))
+                        {
+                            var _val = ((int?)val);
+                            if (_val.GetValueOrDefault(0) != 0)
+                            {
+                                cell.SetCellValue(_val.Value);
+                            }
+                        }
+                        else if (_dType == typeof(float))
+                        {
+                            var _val = ((float?)val);
+                            if (_val.GetValueOrDefault(0) != 0)
+                            {
+                                cell.SetCellValue(_val.Value);
+                            }
+                        }
+                        else if (_dType == typeof(decimal))
+                        {
+                            var _val = ((decimal?)val);
+                            if (_val.GetValueOrDefault(0) != 0)
+                            {
+                                cell.SetCellValue((double)_val.Value);
+                            }
+                        }
+                        else if (_dType == typeof(long))
+                        {
+                            var _val = ((long?)val);
+                            if (_val.GetValueOrDefault(0) != 0)
+                            {
+                                cell.SetCellValue(_val.Value);
+                            }
+                        }
+                        else
+                        {
+                            cell.SetCellValue(val.ToString());
+                        }
+                        cell.SetCellType(CellType.Numeric);
+                    }
+                    else
+                    {
+                        cell.SetCellValue(val.ToString());
+                        cell.SetCellType(CellType.String);
+                    }
+                    cellIndex++;
+                    if (!ApplyStyles) continue;
+                    cell.CellStyle = workbook.FL_CreateDefaultStyle(IfNumber: b);
+                }
+
+                rowIndex++;
+            }
+
+            excelSheet.CreateFreezePane(SheetDT.ColSplit.GetValueOrDefault(0), topRow, SheetDT.ColSplit.GetValueOrDefault(0), topRow);
+        }
+
+        public static void FL_WriteExcelAsync(this FL_ExcelDataDT SheetDT)
+        {
+            if (SheetDT == null) return;
+            var filePath = SheetDT.SaveExcelAsFile.GetValueOrDefault(true) ? SheetDT.FilePath : Path.GetTempFileName();
+            var ms = new MemoryStream();
+            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            IWorkbook workbook = new XSSFWorkbook();
+            SheetDT.FL_WriteExcelWorkBook(workbook);
+            workbook.Write(tempStream);
+        }
+
+        public static void FL_WriteExcelAsync(this List<FL_ExcelDataDT> SheetDTList)
+        {
+            if (SheetDTList == null || SheetDTList.Count == 0) return;
+            var filePath = SheetDTList.First().SaveExcelAsFile.GetValueOrDefault(true) ? SheetDTList.First().FilePath : Path.GetTempFileName();
+            var ms = new MemoryStream();
+            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            IWorkbook workbook = new XSSFWorkbook();
+            var sheet = 1;
+            SheetDTList.ForEach(SheetDT =>
+            {
+                SheetDT.FL_WriteExcelWorkBook(workbook, sheet);
+                sheet++;
+            });
             workbook.Write(tempStream);
             /*
             using var stream = new FileStream(filePath, FileMode.Open);
@@ -897,6 +650,232 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
             stream.Close();
             stream.Dispose();
             return ms;*/
+        }
+
+        public static void FL_WriteExcelWorkBook(this FL_ExcelDataIT SheetIT, IWorkbook workbook, int SheetNumber = 0)
+        {
+            var excelSheet = string.IsNullOrEmpty(SheetIT.SheetName) ? SheetNumber == 0 ? workbook.CreateSheet("Sheet1") : workbook.CreateSheet($"Sheet{SheetNumber}") : workbook.CreateSheet(SheetIT.SheetName);
+            var EnableNumberCheck = SheetIT.EnableNumberCheck.GetValueOrDefault(true);
+            var ExcelSuperHeadDataItems = SheetIT.ExcelSuperHeadDataItems.Any() ?
+                SheetIT.ExcelSuperHeadDataItems.OrderBy(e => e.VItemPosition).ThenBy(e => e.HItemPosition).ToList() :
+                new List<FL_ExcelSuperHeadDataItem>();
+            var ApplySuperHeadStyles = SheetIT.ApplySuperHeadStyles.GetValueOrDefault(false);
+            var ApplyHeadStyles = SheetIT.ApplyHeadStyles.GetValueOrDefault(false);
+            var ApplyStyles = SheetIT.ApplyStyles.GetValueOrDefault(false);
+            var ExcelDataItems = SheetIT.ExcelDataItems;
+            var ExcelHeads = SheetIT.ExcelHeads;
+            var dataTable = SheetIT.SheetData;
+
+            var columns = new List<string>();
+            var row = excelSheet.CreateRow(0);
+
+            //var columnIndex = 0;
+            var rowIndex = 0;
+            if (ExcelSuperHeadDataItems.Count > 0)
+            {
+                var _rowIndex = ExcelSuperHeadDataItems.Max(e => e.VItemPosition);
+                for (var i = 0; i <= _rowIndex; i++)
+                {
+                    var itms = ExcelSuperHeadDataItems.Where(e => e.VItemPosition == i).OrderBy(e => e.HItemPosition).ToList();
+                    row = excelSheet.CreateRow(i);
+                    foreach (var _itm in itms)
+                    {
+                        var cell = row.CreateCell(_itm.HItemPosition);
+                        cell.SetCellValue(_itm.ItemValue.ToString());
+                        if (!_itm.ApplyStyles.GetValueOrDefault(true) && !ApplySuperHeadStyles) continue;
+                        cell.CellStyle = workbook.FL_CreateDefaultSuperHeadStyle(_itm);
+                    }
+                }
+
+                rowIndex = _rowIndex + 1;
+            }
+            //var columnIndex = 0;
+            if (ExcelHeads != null && ExcelHeads.Any())
+            {
+                row = excelSheet.CreateRow(rowIndex);
+                for (var i = 0; i < ExcelHeads.Count(); i++)
+                {
+                    var ix = ExcelHeads[i];
+                    columns.Add(ix.ItemValue.ToString().FL_UnSpaced());
+                    var cell = row.CreateCell(i);
+                    cell.SetCellValue(ix.ItemValue.ToString());
+                    if (!ix.ApplyStyles.GetValueOrDefault(false) && !ApplyHeadStyles) continue;
+                    var fontHead = workbook.FL_CreateDefaultHeadStyle(ix);
+
+                    //columnIndex++;
+                }
+
+                rowIndex++;
+            }
+            else if (dataTable != null)
+            {
+                row = excelSheet.CreateRow(rowIndex);
+                for (var i = 0; i < dataTable.Columns.Count; i++)
+                {
+                    var column = dataTable.Columns[i];
+                    columns.Add(column.ColumnName);
+                    var cell = row.CreateCell(i);
+                    cell.SetCellValue(column.ColumnName);
+                    if (!ApplyStyles) continue;
+                    var fontHead = workbook.FL_CreateDefaultHeadStyle();
+                    //columnIndex++;
+                }
+
+                rowIndex++;
+            }
+            var topRow = rowIndex;
+            //var rowIndex = 1;
+            if (ExcelDataItems != null && ExcelDataItems.Count > 0)
+            {
+                for (var j = 0; j < ExcelDataItems.Count; j++)
+                {
+                    var dsrow = ExcelDataItems[j];
+                    if (rowIndex != 0)
+                    {
+                        row = excelSheet.CreateRow(rowIndex);
+                    }
+                    var cellIndex = 0;
+                    for (var i = 0; i < dsrow.Count; i++)
+                    {
+                        var cell = row.CreateCell(cellIndex);
+                        var ix = dsrow[i];
+                        var icell = row.CreateCell(i);
+                        //var str = dsrow[col].ToString();
+                        if (ix.ItemValue == null) continue;
+                        var _dType = ix.ItemValue.GetType();
+                        var b = _dType == typeof(double) || _dType == typeof(int) || _dType == typeof(float) || _dType == typeof(decimal) || _dType == typeof(long);
+                        var val = ix.ItemValue;
+                        if (b)
+                        {
+                            if (_dType == typeof(double))
+                            {
+                                var _val = ((double?)val);
+                                if (_val.GetValueOrDefault(0) != 0)
+                                {
+                                    cell.SetCellValue(_val.Value);
+                                }
+                            }
+                            else if (_dType == typeof(int))
+                            {
+                                var _val = ((int?)val);
+                                if (_val.GetValueOrDefault(0) != 0)
+                                {
+                                    cell.SetCellValue(_val.Value);
+                                }
+                            }
+                            else if (_dType == typeof(float))
+                            {
+                                var _val = ((float?)val);
+                                if (_val.GetValueOrDefault(0) != 0)
+                                {
+                                    cell.SetCellValue(_val.Value);
+                                }
+                            }
+                            else if (_dType == typeof(decimal))
+                            {
+                                var _val = ((decimal?)val);
+                                if (_val.GetValueOrDefault(0) != 0)
+                                {
+                                    cell.SetCellValue((double)_val.Value);
+                                }
+                            }
+                            else if (_dType == typeof(long))
+                            {
+                                var _val = ((long?)val);
+                                if (_val.GetValueOrDefault(0) != 0)
+                                {
+                                    cell.SetCellValue(_val.Value);
+                                }
+                            }
+                            else
+                            {
+                                cell.SetCellValue(val.ToString());
+                            }
+                            cell.SetCellType(ix.cellType ?? CellType.Numeric);
+                        }
+                        else
+                        {
+                            cell.SetCellValue(val.ToString());
+                            cell.SetCellType(ix.cellType ?? CellType.String);
+                        }
+                        cellIndex++;
+
+                        if (!ix.ApplyStyles.GetValueOrDefault(false)) continue;
+                        cell.CellStyle = workbook.FL_CreateDefaultStyle(ix, b);
+                    }
+
+                    rowIndex++;
+                }
+            }
+            else if (dataTable != null && dataTable.Rows.Count > 0)
+            {
+                for (var j = 0; j < dataTable.Rows.Count; j++)
+                {
+                    var dsrow = dataTable.Rows[j];
+                    if (rowIndex != 0)
+                    {
+                        row = excelSheet.CreateRow(rowIndex);
+                    }
+                    var cellIndex = 0;
+                    for (var i = 0; i < columns.Count; i++)
+                    {
+                        var col = columns[i];
+                        var cell = row.CreateCell(cellIndex);
+                        var b = dataTable.Columns[columns[i]].DataType == typeof(double);
+                        if (b)
+                        {
+                            var val = (double?)dsrow[col];
+                            if (val.GetValueOrDefault(0) != 0)
+                            {
+                                cell.SetCellValue(val.Value);
+                            }
+                            cell.SetCellType(CellType.Numeric);
+                        }
+                        else
+                        {
+                            cell.SetCellValue(dsrow[col].ToString());
+                            cell.SetCellType(CellType.String);
+                        }
+                        cellIndex++;
+                        if (!ApplyStyles) continue;
+                        //cell.SetCellType(columns[cellIndex].ToString().FL_SetICellType());
+                        cell.CellStyle = workbook.FL_CreateDefaultStyle(IfNumber: b);
+                    }
+
+                    rowIndex++;
+                }
+            }
+
+            excelSheet.CreateFreezePane(SheetIT.ColSplit.GetValueOrDefault(0), topRow, SheetIT.ColSplit.GetValueOrDefault(0), topRow);
+            //return excelSheet;
+        }
+
+        public static void FL_WriteExcelAsync(this FL_ExcelDataIT SheetIT)
+{
+            if (SheetIT == null) return;
+            var filePath = SheetIT.SaveExcelAsFile.GetValueOrDefault(true) ? SheetIT.FilePath : Path.GetTempFileName();
+            var ms = new MemoryStream();
+            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            IWorkbook workbook = new XSSFWorkbook();
+            SheetIT.FL_WriteExcelWorkBook(workbook);
+            workbook.Write(tempStream);
+        }
+
+        public static void FL_WriteExcelAsync(this List<FL_ExcelDataIT> SheetITList)
+        {
+            if (SheetITList == null || SheetITList.Count == 0) return;
+            var filePath = SheetITList.First().SaveExcelAsFile.GetValueOrDefault(true) ? SheetITList.First().FilePath : Path.GetTempFileName();
+            var ms = new MemoryStream();
+            using var tempStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+            IWorkbook workbook = new XSSFWorkbook();
+            
+            var sheetNumber = 1;
+            SheetITList.ForEach(SheetIT =>
+            {
+                SheetIT.FL_WriteExcelWorkBook(workbook, sheetNumber);
+                sheetNumber++;
+            });
+            workbook.Write(tempStream);
         }
 
         #endregion Excel Writer
@@ -942,10 +921,10 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         {
             List<UserDetails> persons = new List<UserDetails>()
             {
-                new UserDetails() {ID = "1001", Name = "ABCD", City = "City1", Country = "USA"},
-                new UserDetails() {ID = "1002", Name = "PQRS", City = "City2", Country = "INDIA"},
-                new UserDetails() {ID = "1003", Name = "XYZZ", City = "City3", Country = "CHINA"},
-                new UserDetails() {ID = "1004", Name = "LMNO", City = "City4", Country = "UK"},
+                new UserDetails() {ID = "1001", IDCODE=1001, Name = "ABCD", City = "City1", Country = "USA"},
+                new UserDetails() {ID = "1002", IDCODE=1002, Name = "PQRS", City = "City2", Country = "INDIA"},
+                new UserDetails() {ID = "1003", IDCODE=1003, Name = "XYZZ", City = "City3", Country = "CHINA"},
+                new UserDetails() {ID = "1004", IDCODE=1004, Name = "LMNO", City = "City4", Country = "UK"},
             };
 
             // Lets converts our object data to Datatable for a simplified logic.
