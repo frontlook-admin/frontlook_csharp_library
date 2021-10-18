@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Data.SqlClient;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using frontlook_csharp_library.FL_DataBase;
 using frontlook_csharp_library.FL_General;
+using JetBrains.Annotations;
 
 namespace frontlook_csharp_library.FL_Dbf_Helper
 {
@@ -95,7 +100,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
         }
 
 
-        public static DataTable FL_DBF_ExecuteQuery(this string sql, string DbfFolderPath, bool UseDirectoryPath = true)
+        public static DataTable FL_DBF_ExecuteQuery(this string sql, string DbfFolderPath, bool UseDirectoryPath = true, bool ShowExceptionMessage = true)
         {
             //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
             string dbfConstring1 = UseDirectoryPath ? FL_DBFConstring(DbfFolderPath) : FL_dbf_constring(DbfFolderPath);
@@ -116,7 +121,10 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             }
             catch (OleDbException e)
             {
-                MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (ShowExceptionMessage)
+                {
+                    MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             return dt;
         }
@@ -150,8 +158,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             return dt;
         }
 
-
-        public static int FL_DBF_ExecuteNonQuery(this string DbfFolderPath, string sql, bool UseDirectoryPath = true)
+        public static int FL_DBF_ExecuteNonQuery(this string DbfFolderPath, string sql, bool UseDirectoryPath = true, bool UseTransaction = true)
         {
             //string dbfConstring1 = FL_dbf_constring(dbfFilepath);
             string dbfConstring1 = FL_GetDbfConnectionString(DbfFolderPath,UseDirectoryPath);
@@ -159,29 +166,88 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             //DataTable dt = new DataTable();
             OleDbConnection connection = new OleDbConnection(dbfConstring1);
             connection.Open();
-            using var transaction = connection.BeginTransaction();
-            OleDbCommand cmd = new OleDbCommand(sql, connection, transaction);
+            if (UseTransaction)
+            {
+                using var transaction = connection.BeginTransaction();
+                OleDbCommand cmd = new OleDbCommand(sql, connection, transaction);
+                try
+                {
+
+                    i = cmd.ExecuteNonQuery();
+                    //BackgroundWorker bgw = new BackgroundWorker();
+                    transaction.Commit();
+                    cmd.Dispose();
+                    transaction.Dispose();
+                    connection.Close();
+                    connection.Dispose();
+                }
+                catch (OleDbException e)
+                {
+                    cmd.Dispose();
+                    transaction.Rollback();
+                    transaction.Dispose();
+                    connection.Close();
+                    connection.Dispose();
+                    MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                return i;
+            }
+            else
+            {
+                OleDbCommand cmd = new OleDbCommand(sql, connection);
+                try
+                {
+
+                    i = cmd.ExecuteNonQuery();
+                    //BackgroundWorker bgw = new BackgroundWorker();
+                    //transaction.Commit();
+                    cmd.Dispose();
+                    //transaction.Dispose();
+                    connection.Close();
+                    connection.Dispose();
+                }
+                catch (OleDbException e)
+                {
+                    cmd.Dispose();
+                    //transaction.Rollback();
+                    //transaction.Dispose();
+                    connection.Close();
+                    connection.Dispose();
+                    MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                return i;
+            }
+        }
+
+        public static void FL_DBF_BulkExecuteNonQuery(this DataTable dt, string DbfFolderPath, OleDbConnection connection = null, OleDbCommand cmd = null,[CanBeNull] string destinationTableName = null, bool UseDirectoryPath = true, bool UseTransaction = true)
+        {
+            string dbfConstring1 = DbfFolderPath.FL_GetDbfConnectionString(UseDirectoryPath);
+
+            //DataTable dt = new DataTable();
+            destinationTableName = destinationTableName ?? dt.TableName;
+            if(connection == null || cmd == null)
+            {
+                 connection = new OleDbConnection(dbfConstring1);
+                 cmd = new OleDbCommand("", connection);
+            }
+            var sql = new Sql(dt, true, destinationTableName).InsertSqls;
+            var dsql = "";
             try
             {
-                
-                i = cmd.ExecuteNonQuery();
-                //BackgroundWorker bgw = new BackgroundWorker();
-                transaction.Commit();
-                cmd.Dispose();
-                transaction.Dispose();
-                connection.Close();
-                connection.Dispose();
+                for (int i = 0; i < sql.Count; i++)
+                {
+                    string _sql = sql[i];
+                    dsql = _sql;
+                    cmd.CommandText = _sql;
+                    cmd.ExecuteNonQuery();
+                    //BackgroundWorker bgw = new BackgroundWorker();
+                }
             }
             catch (OleDbException e)
             {
-                cmd.Dispose();
-                transaction.Rollback();
-                transaction.Dispose();
-                connection.Close();
-                connection.Dispose();
-                MessageBox.Show("Error : " + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                throw new Exception($"{e.Message}\n Sql: {dsql}");
             }
-            return i;
         }
 
         public static int FL_DBF_ExecuteNonQuery(string DbfFolderPath, List<string> sql, bool UseDirectoryPath = true)

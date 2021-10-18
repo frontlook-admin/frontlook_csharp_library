@@ -271,6 +271,7 @@ namespace frontlook_csharp_library.FL_Excel_Data_Interop
         public List<List<string>> SheetData => SheetOData.Select(e => e.Select(f => f.ToString()).ToList()).ToList();
         public bool? EnableNumberCheck { get; set; }
         public bool? ApplySuperHeadStyles { get; set; }
+        public bool? FontWrap { get; set; }
         public bool? ApplyHeadStyles { get; set; }
         public bool? ApplyStyles { get; set; }
         public bool? SaveExcelAsFile { get; set; }

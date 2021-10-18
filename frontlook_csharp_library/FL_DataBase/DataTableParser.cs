@@ -88,7 +88,7 @@ namespace frontlook_csharp_library.FL_DataBase
                 Rows.Add(new Row(dsrow, Cols, tableName));
             }
 
-            Sqls = new Sql(dt);
+            Sqls = new Sql(dt,false);
 
         }
 
@@ -181,33 +181,79 @@ namespace frontlook_csharp_library.FL_DataBase
             return InsertQ2_Fields;
         }
 
-        public string GetInsertSqlValues()
+        public string GetInsertSqlValues(out string InsertQ2_Fields, bool EnableNull)
         {
             string InsertQ3_Values = "";
+            string _InsertQ2_Values = "";
+
+            var k = 0;
             for (var i = 0; i < colValues.Count; i++)
             {
                 var val = colValues[i].colValue.FL_AceDataTableDataParser();
-                if (i == 0)
+                if (EnableNull)
                 {
-                    InsertQ3_Values += $"({val}";
-                }
-                else if (i == colValues.Count - 1)
-                {
-                    InsertQ3_Values += $", {val})";
+                    if (i== 0)
+                    {
+                        InsertQ3_Values += $"({val}";
+                        _InsertQ2_Values += $"(`{colValues[i].ColumnName}`";
+                    }
+                    else if (i == colValues.Count - (1))
+                    {
+                        InsertQ3_Values += $", {val})";
+                        _InsertQ2_Values += $", `{colValues[i].ColumnName}`) values ";
+                    }
+                    else
+                    {
+                        InsertQ3_Values += $", {val}";
+                        _InsertQ2_Values += $", `{colValues[i].ColumnName}`";
+                    }
                 }
                 else
                 {
-                    InsertQ3_Values += $", {val}";
+
+                    if (val.ToString() != "null")
+                    {
+                        if (i - k == 0)
+                        {
+                            InsertQ3_Values += $"({val}";
+                            _InsertQ2_Values += $"(`{colValues[i].ColumnName}`";
+                        }
+                        else if (i - k == colValues.Count - (1 + k))
+                        {
+                            InsertQ3_Values += $", {val})";
+                            _InsertQ2_Values += $", `{colValues[i].ColumnName}`) values ";
+                        }
+                        else
+                        {
+                            InsertQ3_Values += $", {val}";
+                            _InsertQ2_Values += $", `{colValues[i].ColumnName}`";
+                        }
+                    }
+                    else
+                    {
+                        if (i - k == colValues.Count - (1 + k))
+                        {
+                            InsertQ3_Values += $")";
+                            _InsertQ2_Values += $") values ";
+                        }
+                        else
+                        {
+                            k++;
+                        }
+                    }
                 }
             }
+
+            InsertQ2_Fields = _InsertQ2_Values;
             return InsertQ3_Values;
         }
 
         public string GetRowSql()
         {
             string InsertQ1_Init = $"INSERT INTO {tableName} ";
-            var InsertQ2_Fields = GetInsertSqlFields();
-            string InsertQ3_Values = GetInsertSqlValues();
+            //var InsertQ2_Fields = GetInsertSqlFields();
+            var InsertQ2_Fields = "";
+            string InsertQ3_Values = GetInsertSqlValues(out InsertQ2_Fields,false);
 
             /*for (var i = 0; i < colValues.Count; i++)
             {
@@ -266,52 +312,106 @@ namespace frontlook_csharp_library.FL_DataBase
 
     public class Sql : Data
     {
-        public Sql(DataTable dt, [CanBeNull] string TableName = null)
+        public Sql(DataTable dt, bool EnableNull, [CanBeNull] string TableName = null)
         {
+            InsertSqls = new List<string>();
             tableName = TableName ?? dt.TableName;
             var Cols = dt.Columns;
+
+            for (var j = 0; j < dt.Rows.Count; j++)
+            {
+                string _InsertQ2_Values = "";
+                string InsertQ3_Values = "";
+                var k = 0;
+                for (var i = 0; i < dt.Columns.Count; i++)
+                {
+                    var val = dt.Rows[j][dt.Columns[i]].FL_AceDataTableDataParser();
+                    if (EnableNull)
+                    {
+                        if (i == 0)
+                        {
+                            InsertQ3_Values += $"({val}";
+                            _InsertQ2_Values += $"(`{dt.Columns[i].ColumnName}`";
+                        }
+                        else if (i == dt.Columns.Count - (1))
+                        {
+                            InsertQ3_Values += $", {val})";
+                            _InsertQ2_Values += $", `{dt.Columns[i].ColumnName}`) values ";
+                        }
+                        else
+                        {
+                            InsertQ3_Values += $", {val}";
+                            _InsertQ2_Values += $", `{dt.Columns[i].ColumnName}`";
+                        }
+                    }
+                    else
+                    {
+                        if (val.ToString() != "null")
+                        {
+                            if (i - k == 0)
+                            {
+                                InsertQ3_Values += $"({val}";
+                                _InsertQ2_Values += $"(`{dt.Columns[i].ColumnName}`";
+                            }
+                            else if (i - k == dt.Columns.Count - (1 + k))
+                            {
+                                InsertQ3_Values += $", {val})";
+                                _InsertQ2_Values += $", `{dt.Columns[i].ColumnName}`) values ";
+                            }
+                            else
+                            {
+                                InsertQ3_Values += $", {val}";
+                                _InsertQ2_Values += $", `{dt.Columns[i].ColumnName}`";
+                            }
+                        }
+                        else
+                        {
+                            if (i - k == dt.Columns.Count - (1 + k))
+                            {
+                                InsertQ3_Values += $")";
+                                _InsertQ2_Values += $") values ";
+                            }
+                            else
+                            {
+                                k++;
+                            }
+                        }
+                    }
+                }
+
+                InsertSqls.Add($"{InsertQ1_Init}{_InsertQ2_Values}{InsertQ3_Values};");
+            }
+
+
+        }
+
+        public Sql(DataTable dt, string TableName, string a)
+        {
+            tableName = TableName;
+            var Cols = dt.Columns;
             InsertQ2_Fields = "";
+            string InsertQ3_Values = "";
             for (var i = 0; i < Cols.Count; i++)
             {
                 if (i == 0)
                 {
                     InsertQ2_Fields += $"(`{Cols[i].ColumnName}`";
+                    InsertQ3_Values += $"(?";
                 }
                 else if (i == Cols.Count - 1)
                 {
                     InsertQ2_Fields += $", `{Cols[i].ColumnName}`) values ";
+                    InsertQ3_Values += $", ?)";
                 }
                 else
                 {
-                    InsertQ2_Fields += $", `{Cols[i].ColumnName}`";
-                }
-            }
-            var Rows = dt.Rows;
-            InsertSqls = new List<string>();
-            foreach (DataRow row in Rows)
-            {
-                string InsertQ3_Values = "";
-                for (var i = 0; i < Cols.Count; i++)
-                {
-                    var col = Cols[i];
-                    var data = row[col].FL_AceDataTableDataParser();
-                    //var data = AceDataTableDataParser(row[col],row[col].GetType());
-                    if (i == 0)
-                    {
-                        InsertQ3_Values += $"({data}";
-                    }
-                    else if (i == Cols.Count - 1)
-                    {
-                        InsertQ3_Values += $", {data})";
-                    }
-                    else
-                    {
-                        InsertQ3_Values += $", {data}";
-                    }
-                }
-                InsertSqls.Add($"{InsertQ1_Init}{InsertQ2_Fields}{InsertQ3_Values};");
-            }
 
+                    InsertQ2_Fields += $", `{Cols[i].ColumnName}`";
+                    InsertQ3_Values += $", ?";
+                }
+            }
+            InsertSqls = new List<string>();
+            InsertCmd = $"{InsertQ1_Init}{InsertQ2_Fields}{InsertQ3_Values}";
         }
 
         public Sql(string TableName, List<ColName> Cols, List<Row> Rows)
@@ -369,6 +469,7 @@ namespace frontlook_csharp_library.FL_DataBase
         public string tableName { get; set; }
         private string InsertQ1_Init => $"INSERT INTO {tableName} ";
         private string InsertQ2_Fields { get; set; }
+        public string InsertCmd { get; set; }
 
         public List<string> InsertSqls { get; set; }
     }

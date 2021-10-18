@@ -32,6 +32,41 @@ namespace frontlook_csharp_library.FL_General
             }
         }
 
+        public static Report FL_GenerateReportFromDataTableAlt(this DataTable dt, string ReportFilePath, string DatabaseName, [CanBeNull] Exception GetExceptions = null)
+        {
+            try
+            {
+                var report = new Report();
+                report.Report.RegisterData(dt, DatabaseName);
+                report.Report.Load(ReportFilePath);
+                report.Report.Prepare();
+                return report;
+            }
+            catch (Exception e)
+            {
+                GetExceptions = e;
+                return null;
+            }
+        }
+
+        public static Report FL_GenerateReportFromDataTable<T>(this IEnumerable<T> dt, string ReportFilePath, string DatabaseName, [CanBeNull] Exception GetExceptions = null)
+        {
+            try
+            {
+                //var ds = dt.FL_DataTableToDataSet("Database");
+                var report = new Report();
+                report.Report.RegisterData(dt, DatabaseName);
+                report.Report.Load(ReportFilePath);
+                report.Report.Prepare();
+                return report;
+            }
+            catch (Exception e)
+            {
+                GetExceptions = e;
+                return null;
+            }
+        }
+
         public static WebReport FL_GenerateWebReportFromDataTable(this DataTable dt, string ReportFilePath, string DatabaseName, [CanBeNull] Exception GetExceptions = null)
         {
             try
@@ -153,7 +188,7 @@ namespace frontlook_csharp_library.FL_General
             return converted;
         }
 
-        public static DataTable FL_ConvertToDataTable<T>(IEnumerable<T> list, string name)
+        public static DataTable FL_ConvertToDataTable<T>(this IEnumerable<T> list, string name)
         {
             var propInfo = typeof(T).GetProperties();
             var enumerable = list.ToList();

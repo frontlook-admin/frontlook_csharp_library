@@ -31,6 +31,18 @@ namespace frontlook_csharp_library.FL_General
             }
         }
 
+        public static string FL_SetNewCodeNumber(this string code, bool DebugMode = false)
+        {
+            if (DebugMode)
+            {
+                return (int.Parse(code)+1).ToString();
+            }
+            else
+            {
+                return (int.Parse(code) + 1).ToString();
+            }
+        }
+
         public static double FL_Z_Asc(this string LastCode, bool DebugMode = false)
         {
             try
