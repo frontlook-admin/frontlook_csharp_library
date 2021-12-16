@@ -28,6 +28,7 @@ namespace frontlook_csharp_library.FL_General
         public string Host { get;set; }
         public FTP_Action Action { get;set; }
         public string RemoteFolderPath { get;set; }
+        public bool EnableDefaultZip { get;set; }
         public string FileName => Path.GetFileName(FilePath);
 
         private string ZippedFilePath()
@@ -70,11 +71,11 @@ namespace frontlook_csharp_library.FL_General
             }
             else if (Action == FTP_Action.Delete)
             {
-                return Download();
+                return Delete();
             }
             else
             {
-                throw new Exception("FTP Action: Unknown parameters");
+                return "";//throw new Exception("FTP Action: Unknown parameters");
             }
         }
 
@@ -82,7 +83,7 @@ namespace frontlook_csharp_library.FL_General
         {
 
             var _rPath = string.IsNullOrEmpty(RemoteFolderPath) ? "" : $"/{RemoteFolderPath}";
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"ftp://{Host}{_rPath}/{FileName}");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create($"ftp://{Host}{_rPath}/{Path.GetFileName(AbsolutePath)}");
 
             //If you need to use network credentials
             request.Credentials = new NetworkCredential(UserName, Password);
@@ -99,7 +100,7 @@ namespace frontlook_csharp_library.FL_General
 
         private string Upload()
         {
-            FilePath = FL_PS.Zipper(AbsolutePath);
+            FilePath = FL_PS.Zipper(AbsolutePath, EnableDefaultZip);
             //FL_PS.UnZipper(AbsolutePath);
             using (var client = new WebClient())
             {
@@ -113,11 +114,20 @@ namespace frontlook_csharp_library.FL_General
 
         private string Download()
         {
+            if (File.Exists(AbsolutePath))
+            {
+                File.Delete(AbsolutePath);
+            }
+            if (Directory.Exists(Path.Combine(Path.GetDirectoryName(AbsolutePath), Path.GetFileNameWithoutExtension(AbsolutePath))))
+            {
+                Directory.Delete(Path.Combine(Path.GetDirectoryName(AbsolutePath), Path.GetFileNameWithoutExtension(AbsolutePath)), true);
+            }
             using var client = new WebClient();
             client.Credentials = new NetworkCredential(UserName, Password);
             var _rPath = string.IsNullOrEmpty(RemoteFolderPath) ? "" : $"/{RemoteFolderPath}";
+            
             client.DownloadFile($"ftp://{Host}{_rPath}/{Path.GetFileName(AbsolutePath)}", AbsolutePath);
-            return FL_PS.UnZipper(AbsolutePath);
+            return FL_PS.UnZipper(AbsolutePath, EnableDefaultZip);
         }
 
         /*public void UploadFtpFile()

@@ -1,5 +1,7 @@
 ﻿using frontlook_csharp_library.FL_Dbf_Helper;
 using frontlook_csharp_library.FL_General;
+using System.Data;
+using System.Linq;
 
 namespace frontlook_csharp_library.FL_Ace
 {
@@ -31,16 +33,42 @@ namespace frontlook_csharp_library.FL_Ace
             }
         }
 
-        public static string FL_GetAceLastCode(this string TableName, string FieldName, string DbfFolderPath, bool UseDirectoryPath = true)
+        public static string FL_GetAceLastCode(this string TableName, string FieldName, string DbfFolderPath, bool UseDirectoryPath = true, bool EnablePadding = true, int PaddingChar = 4)
         {
             string query =  $"select top 1 {FieldName} as valFld from {TableName} order by {FieldName} desc";
             var dt = query.FL_DBF_ExecuteQuery(DbfFolderPath, UseDirectoryPath);
             var code = " ";
             if (dt.Rows.Count > 0)
             {
-                code = dt.Rows[0]["valFld"].ToString().PadRight(paddChar,' ');
+                code = EnablePadding ? dt.Rows[0]["valFld"].ToString().PadRight(PaddingChar, ' '): dt.Rows[0]["valFld"].ToString();
             }
             return code;
         }
+
+        public static string FL_GetAceLastCodeAlt(this string TableName, string FieldName, string DbfFolderPath, bool UseDirectoryPath = true, bool EnablePadding = true, int PaddingChar = 4)
+        {
+            string query = $"select * from {TableName}";
+            var dt = query.FL_DBF_ExecuteQuery(DbfFolderPath, UseDirectoryPath);
+            var rs = dt.AsEnumerable().OrderByDescending(e => (long)FL_AsciiSerial.FL_Z_Asc(e.Field<string>(FieldName))).ToList().First()[FieldName];
+            var cdc = rs.ToString();
+            var code = " ";
+            if (dt.Rows.Count > 0)
+            {
+                code = EnablePadding ? cdc.PadRight(PaddingChar, ' ') : cdc.ToString();
+            }
+            return code;
+        }
+
+        /*public static string FL_GetAceLastCodeAlt(this string TableName, string FieldName, string DbfFolderPath, bool UseDirectoryPath = true)
+        {
+            string query =  $"select top 1 {FieldName} as valFld from {TableName} order by {FieldName} desc";
+            var dt = query.FL_DBF_ExecuteQuery(DbfFolderPath, UseDirectoryPath);
+            var code = " ";
+            if (dt.Rows.Count > 0)
+            {
+                code = dt.Rows[0]["valFld"].ToString();
+            }
+            return code;
+        }*/
     }
 }

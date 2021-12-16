@@ -48,6 +48,7 @@
             this.query = new System.Windows.Forms.RichTextBox();
             this.progress = new frontlook_csharp_library.FL_Controls.FL_ProgressBar();
             this.stop = new System.Windows.Forms.Button();
+            this.companyDetails = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -88,9 +89,9 @@
             this.test.BackColor = System.Drawing.Color.Aquamarine;
             this.test.FlatAppearance.BorderSize = 0;
             this.test.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.test.Location = new System.Drawing.Point(521, 44);
+            this.test.Location = new System.Drawing.Point(451, 44);
             this.test.Name = "test";
-            this.test.Size = new System.Drawing.Size(247, 31);
+            this.test.Size = new System.Drawing.Size(174, 31);
             this.test.TabIndex = 0;
             this.test.Text = "EXECUTE QUERY";
             this.test.UseVisualStyleBackColor = false;
@@ -103,7 +104,7 @@
             this.nonquery.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.nonquery.Location = new System.Drawing.Point(268, 45);
             this.nonquery.Name = "nonquery";
-            this.nonquery.Size = new System.Drawing.Size(247, 31);
+            this.nonquery.Size = new System.Drawing.Size(177, 31);
             this.nonquery.TabIndex = 0;
             this.nonquery.Text = "EXECUTE NON QUERY";
             this.nonquery.UseVisualStyleBackColor = false;
@@ -263,13 +264,26 @@
             this.stop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.stop.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stop.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.stop.Location = new System.Drawing.Point(774, 44);
+            this.stop.Location = new System.Drawing.Point(811, 45);
             this.stop.Name = "stop";
             this.stop.Size = new System.Drawing.Size(113, 31);
             this.stop.TabIndex = 0;
             this.stop.Text = "STOP";
             this.stop.UseVisualStyleBackColor = false;
             this.stop.Click += new System.EventHandler(this.stop_Click);
+            // 
+            // companyDetails
+            // 
+            this.companyDetails.BackColor = System.Drawing.Color.Aquamarine;
+            this.companyDetails.FlatAppearance.BorderSize = 0;
+            this.companyDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.companyDetails.Location = new System.Drawing.Point(631, 44);
+            this.companyDetails.Name = "companyDetails";
+            this.companyDetails.Size = new System.Drawing.Size(174, 31);
+            this.companyDetails.TabIndex = 0;
+            this.companyDetails.Text = "SHOW COMPANY";
+            this.companyDetails.UseVisualStyleBackColor = false;
+            this.companyDetails.Click += new System.EventHandler(this.CompanyDetails);
             // 
             // FL_SqlQueryManager
             // 
@@ -279,6 +293,7 @@
             this.Controls.Add(this.progress);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.stop);
+            this.Controls.Add(this.companyDetails);
             this.Controls.Add(this.test);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.nonquery);
@@ -318,6 +333,7 @@
         private System.Windows.Forms.Button button2;
         private FL_ProgressBar progress;
         private System.Windows.Forms.Button stop;
+        private System.Windows.Forms.Button companyDetails;
     }
 }
 

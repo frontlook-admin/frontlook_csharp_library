@@ -26,11 +26,13 @@ namespace frontlook_csharp_library.FL_Controls
 
         private string dbf_constring, dbf_constring1, dbf_constring2, s_without_ext;
         private string[] filePaths;
+        Form formx;
 
-        public FL_SqlQueryManager([CanBeNull] string path = null)
+        public FL_SqlQueryManager(Form form1,[CanBeNull] string path = null)
         {
             this.Dock = DockStyle.Fill;
             InitializeComponent();
+            formx = form1;
             if (path != null)
             {
                 dbf_filepath = path;
@@ -38,6 +40,10 @@ namespace frontlook_csharp_library.FL_Controls
                 dbf_filename_withext = string.Empty;
                 filePaths = Directory.GetFiles(Path.GetDirectoryName(path), "*.dbf");
                 filePaths.ToList().ForEach(e => e.FL_ConsoleWriteDebug());
+                if (filePaths.Any(e => e.ToLower().Contains("comp.dbf")))
+                {
+                    UpdateWindowName();
+                }
             }
             else
             {
@@ -150,7 +156,8 @@ namespace frontlook_csharp_library.FL_Controls
             //label3.Text = e.ProgressPercentage + "%";
             //progress.Value = e.ProgressPercentage;
 
-            progress.FL_Progress(e.ProgressPercentage + "%", e.ProgressPercentage, true);
+            progress.FL_Progress(e.ProgressPercentage);
+            progress.FL_Progress(e.ProgressPercentage.ToString() + "%","Progress");
         }
 
         private void Dbf_to_excel_series_worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -403,6 +410,7 @@ namespace frontlook_csharp_library.FL_Controls
                 dbf_filepath = dbfselect.FileName;
                 dbf_filename_withext = Path.GetFileNameWithoutExtension(dbf_filepath) + Path.GetExtension(dbf_filepath);
                 dbf_filename = Path.GetFileNameWithoutExtension(dbf_filepath);
+                UpdateWindowName();
                 MessageBox.Show(dbf_filename);
                 //label2.Text = dbf_filepath + "    " + dbf_filename;
 
@@ -461,6 +469,48 @@ namespace frontlook_csharp_library.FL_Controls
                 MessageBox.Show($"{sqlQuery}\n\n THIS QUERY CAN NOT BE EXECUTED FROM EXECUTE QUERY..!!", @"ERROR..!!", MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
             }
+        }
+
+        private void CompanyDetails(object sender, EventArgs e)
+        {
+            //var ci = new CultureInfo("en-IN");
+            //MessageBox.Show(frontlook_csharp_library.database_helper.database_helper.FL_get_os());
+            var sqlQuery = "SELECT CCOD, CNAME,DT1,DT2,DATAPATH,CADD1,CADD2,CADD3 FROM `COMP`";
+
+            var ct = sqlQuery.Count() > 10 ? 10 : sqlQuery.Count() - 1;
+            if (sqlQuery.Substring(0, ct).ToLower().Contains("select"))
+            {
+                if (dbf_filepath.Equals("") || dbf_filepath.Equals(string.Empty))
+                {
+                    dbf_folder_selection();
+                    //try_1();
+                    var v = sqlQuery.FL_DBF_ExecuteQuery(dbf_filepath, false);
+                    dataGridView1.DataSource = v;
+                    //fast_report();
+                    //db_viewer.RunWorkerAsync();
+                }
+                else
+                {
+                    dataGridView1.DataSource = "";
+                    //try_1();
+                    var v = sqlQuery.FL_DBF_ExecuteQuery(dbf_filepath, false);
+                    dataGridView1.DataSource = v;
+                }
+            }
+            else
+            {
+                MessageBox.Show($"{sqlQuery}\n\n THIS QUERY CAN NOT BE EXECUTED FROM EXECUTE QUERY..!!", @"ERROR..!!", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+            }
+        }
+
+        public void UpdateWindowName()
+        {
+            var sqlQuery = "SELECT CCOD, CNAME,DT1,DT2 FROM `COMP`";
+            var v = sqlQuery.FL_DBF_ExecuteQuery(dbf_filepath, false);
+            var dta = $"ACE REPORTER ({v.Rows[0]["CNAME"]} - {v.Rows[0]["CCOD"]} - {(DateTime)v.Rows[0]["DT1"]:dd-MM-yyyy} - {(DateTime)v.Rows[0]["DT2"]:dd-MM-yyyy})";
+            //var parent = this.Parent as Form;
+            this.formx.Text = dta;
         }
 
         public void fast_report()

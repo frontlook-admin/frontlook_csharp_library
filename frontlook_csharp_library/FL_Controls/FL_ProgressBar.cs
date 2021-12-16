@@ -14,9 +14,11 @@ namespace frontlook_csharp_library.FL_Controls
 {
     public partial class FL_ProgressBar : UserControl
     {
+        public string MasterString;
         public FL_ProgressBar()
         {
             InitializeComponent();
+            MasterString = "";
             FL_Progress("", 100, 0, 0);
         }
 
@@ -98,19 +100,15 @@ namespace frontlook_csharp_library.FL_Controls
             }
         }
 
-        public void FL_Progress(string _progressString, int currentValue, bool clear = false)
-        {
-            progressText.Text = clear ? _progressString : $"{progressText.Text}  {_progressString}";
-            progress.Value = currentValue;
-            if (currentValue != progress.Maximum && currentValue != progress.Minimum)
-            {
-                this.Show();
+        public void FL_Progress(string _progressString,string _masterString, bool clear = false)
+		{
+            if(string.IsNullOrEmpty(_masterString))
+			{
+                MasterString = _masterString;
             }
-            else
-            {
-                this.Hide();
-            }
+            progressText.Text = clear ? _progressString : $"{MasterString}  {_progressString}";
         }
+        
 
         public string FL_GetProgressText()
         {
@@ -123,4 +121,11 @@ namespace frontlook_csharp_library.FL_Controls
             this.Hide();
         }
     }
+
+
+    /*public partial class FL_ProgressBarObj : ProgressBar
+    {
+        
+    }*/
+    
 }

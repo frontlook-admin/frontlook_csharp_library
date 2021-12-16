@@ -219,7 +219,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             }
         }
 
-        public static void FL_DBF_BulkExecuteNonQuery(this DataTable dt, string DbfFolderPath, OleDbConnection connection = null, OleDbCommand cmd = null,[CanBeNull] string destinationTableName = null, bool UseDirectoryPath = true, bool UseTransaction = true)
+        public static void FL_DBF_BulkExecuteNonQuery(this DataTable dt, string DbfFolderPath, OleDbConnection connection = null, OleDbCommand cmd = null,[CanBeNull] string destinationTableName = null, bool UseDirectoryPath = true, bool UseTransaction = true, bool EnableNull = false)
         {
             string dbfConstring1 = DbfFolderPath.FL_GetDbfConnectionString(UseDirectoryPath);
 
@@ -230,7 +230,7 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
                  connection = new OleDbConnection(dbfConstring1);
                  cmd = new OleDbCommand("", connection);
             }
-            var sql = new Sql(dt, true, destinationTableName).InsertSqls;
+            var sql = new Sql(dt, EnableNull, destinationTableName).InsertSqls;
             var dsql = "";
             try
             {
@@ -247,6 +247,41 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             {
 
                 throw new Exception($"{e.Message}\n Sql: {dsql}");
+            }
+        }
+
+
+
+        public static int FL_DBF_BulkExecuteNonQueryInt(this DataTable dt, string DbfFolderPath, OleDbConnection connection = null, OleDbCommand cmd = null, [CanBeNull] string destinationTableName = null, bool UseDirectoryPath = true, bool UseTransaction = true, bool EnableNull = false)
+        {
+            string dbfConstring1 = DbfFolderPath.FL_GetDbfConnectionString(UseDirectoryPath);
+
+            //DataTable dt = new DataTable();
+            destinationTableName = destinationTableName ?? dt.TableName;
+            if (connection == null || cmd == null)
+            {
+                connection = new OleDbConnection(dbfConstring1);
+                cmd = new OleDbCommand("", connection);
+            }
+            var sql = new Sql(dt, EnableNull, destinationTableName).InsertSqls;
+            var dsql = "";
+            try
+            {
+                for (int i = 0; i < sql.Count; i++)
+                {
+                    string _sql = sql[i];
+                    dsql = _sql;
+                    cmd.CommandText = _sql;
+                    cmd.ExecuteNonQuery();
+                    //BackgroundWorker bgw = new BackgroundWorker();
+                }
+                return 1;
+            }
+            catch (OleDbException e)
+            {
+
+                throw new Exception($"{e.Message}\n Sql: {dsql}");
+                return 0;
             }
         }
 

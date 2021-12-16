@@ -31,6 +31,25 @@ namespace frontlook_csharp_library.FL_General
             }
         }
 
+        public static string FL_SetNewCodeRev(this string code, bool DebugMode = false)
+        {
+            if (DebugMode)
+            {
+                var LastCode = code;
+                FL_ConsoleManager.FL_ConsoleWriteDebug($"\nLast Code: {LastCode}");
+                var Z_Asc = FL_Z_Asc(LastCode, DebugMode);
+                FL_ConsoleManager.FL_ConsoleWriteDebug($"New Ascii val : {Z_Asc}");
+                FL_ConsoleManager.FL_ConsoleWriteDebug($"New Ascii val (Long): {(long)Z_Asc}");
+                var Z_Chr = FL_Z_Chr((long)Z_Asc - 1L, DebugMode);
+                FL_ConsoleManager.FL_ConsoleWriteDebug($"New Code In Char : {Z_Chr}\n");
+                return Z_Chr;
+            }
+            else
+            {
+                return FL_Z_Chr((long)FL_Z_Asc(code) - 1L);
+            }
+        }
+
         public static string FL_SetNewCodeNumber(this string code, bool DebugMode = false)
         {
             if (DebugMode)
@@ -69,14 +88,14 @@ namespace frontlook_csharp_library.FL_General
         {
             string f_str = "";
             long i = 1L;
-
+            var j = 0;
             try
             {
                 while (i != 0L)
                 {
-                    if (DebugMode) $"Generating char: {f_str}".FL_ConsoleWriteDebug();
-                    if (DebugMode) $"Generating char=> i: {i}".FL_ConsoleWriteDebug();
-                    if (DebugMode) $"Generating char=> Z_Asc: {Z_Asc}".FL_ConsoleWriteDebug();
+                    if (DebugMode) $"Generating char({j}): {f_str}".FL_ConsoleWriteDebug();
+                    if (DebugMode) $"Generating char({j})=> i: {i}".FL_ConsoleWriteDebug();
+                    if (DebugMode) $"Generating char({j})=> Z_Asc: {Z_Asc}".FL_ConsoleWriteDebug();
                     long pg = Convert.ToInt64(Z_Asc % 91L);
                     if (pg == 0L)
                     {
@@ -86,9 +105,9 @@ namespace frontlook_csharp_library.FL_General
                     {
                         pg += 31L;
                     }
+                    if (DebugMode) $"Generating char({j})=> pg: {pg}>{char.ConvertFromUtf32(Convert.ToInt32(pg))}".FL_ConsoleWriteDebug();
                     f_str = char.ConvertFromUtf32(Convert.ToInt32(pg)) + f_str;
                     i = Convert.ToInt64(Math.Truncate(Z_Asc / 91d));
-
 
                     if (pg == 122L)
                     {
@@ -99,7 +118,10 @@ namespace frontlook_csharp_library.FL_General
                     {
                         Z_Asc = Convert.ToInt64(Math.Truncate(Z_Asc / 91d));
                     }
+                    j++;
                 }
+
+                if (DebugMode) $"Generating char(Final)=> {f_str}".FL_ConsoleWriteDebug();
                 return f_str;
             }
             catch

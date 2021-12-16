@@ -1,6 +1,7 @@
 ﻿using FastReport.Data;
 using ICSharpCode.SharpZipLib.Checksum;
 using ICSharpCode.SharpZipLib.Zip;
+using Microsoft.Office.Interop.Excel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -146,47 +147,80 @@ namespace frontlook_csharp_library.FL_General
 
         }
 
-        public static string UnZipper(string AbsolutePath)
+        public static string UnZipper(string AbsolutePath, bool EnableDefault)
         {
-            return UnZipper(AbsolutePath, AbsolutePath.Replace(".zip",""));
+            return UnZipper(AbsolutePath, AbsolutePath.Replace(".zip",""),EnableDefault);
         }
 
-        public static string UnZipper(string AbsoluteZipPath, string AbsolutePath)
+        public static string UnZipper(string AbsoluteZipPath, string AbsolutePath, bool EnableDefault)
         {
-            try
+            if (!EnableDefault)
             {
-                var strings = new[] { AbsoluteZipPath, AbsolutePath };
-                FL_PS.Execute($"Expand-Archive '{AbsoluteZipPath}' '{AbsolutePath}'");
+                try
+                {
+                    var strings = new[] { AbsoluteZipPath, AbsolutePath };
+                    FL_PS.Execute($"Expand-Archive '{AbsoluteZipPath}' '{AbsolutePath}'");
 
-                return ZipMover(AbsolutePath);
+                    return ZipMover(AbsolutePath);
+                }
+                catch
+                {
+                    throw;
+                }
             }
-            catch
+            else
             {
-                throw;
-            }
+                try
+                {
 
+                    System.IO.Compression.ZipFile.ExtractToDirectory(AbsoluteZipPath, AbsolutePath);
+
+                    //return ZipMover(AbsolutePath);
+                    return Path.GetDirectoryName(AbsolutePath);
+                }
+                catch
+                {
+                    throw;
+                }
+            }
         }
 
-        public static string Zipper(string AbsolutePath)
+        public static string Zipper(string AbsolutePath, bool EnableDefault)
         {
-            return Zipper(AbsolutePath, AbsolutePath + ".zip");
+            return Zipper(AbsolutePath, AbsolutePath + ".zip",EnableDefault);
         }
 
-        public static string Zipper(string AbsolutePath, string AbsoluteZipPath)
+        public static string Zipper(string AbsolutePath, string AbsoluteZipPath,bool EnableDefault)
         {
-            try
+            if (!EnableDefault)
             {
-                var strings = new[] { AbsolutePath, AbsoluteZipPath };
-                FL_PS.Execute($"Compress-Archive '{AbsolutePath}' '{AbsoluteZipPath}'");
-                //File.Delete(AbsolutePath);
-                return AbsoluteZipPath;
+                try
+                {
+                    var strings = new[] { AbsolutePath, AbsoluteZipPath };
+                    FL_PS.Execute($"Compress-Archive '{AbsolutePath}' '{AbsoluteZipPath}'");
+                    //File.Delete(AbsolutePath);
+                    return AbsoluteZipPath;
+                }
+                catch
+                {
+                    throw;
+                }
             }
-            catch
+            else
             {
-                throw;
+                try
+                {
+                    System.IO.Compression.ZipFile.CreateFromDirectory(AbsolutePath, AbsoluteZipPath);
+                    return AbsoluteZipPath;
+                }
+                catch
+                {
+                    throw;
+                }
             }
             
         }
+
 
         public static void FL_ZipFile(this List<string> filesToZip, string path, int compression = 9)
         {
