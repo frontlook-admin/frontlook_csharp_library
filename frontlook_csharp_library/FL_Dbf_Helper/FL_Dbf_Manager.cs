@@ -354,6 +354,8 @@ namespace frontlook_csharp_library.FL_Dbf_Helper
             {
                 operatingSystem = "Windows " + operatingSystem;
             }
+            //var c = "Dsn=Visual FoxPro Tables;Provider = .NET Framework Data Provider for ODBC;Table Type=Free Table Directory;Data Source=" + dbfDirectoryFilepath;
+            //return c;
 
             switch (operatingSystem)
             {
