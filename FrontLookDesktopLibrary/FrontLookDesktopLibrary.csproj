@@ -1,0 +1,142 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net461;netcoreapp3.1;</TargetFrameworks>
+    <UseWindowsForms>true</UseWindowsForms>
+	  <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="FL_FastReportForm\print_preview.bmp" />
+    <None Remove="FL_FastReportForm\Resources\print_16.png" />
+    <None Remove="FL_FastReportForm\Resources\print_help_16.png" />
+    <None Remove="FL_FastReportForm\Resources\print_preview.bmp" />
+    <None Remove="FL_FastReportForm\Resources\print_setup_16.png" />
+    <None Remove="FL_FastReportForm\Resources\window_print.bmp" />
+    <None Remove="FL_FastReportForm\window_print.bmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="FL_FastReportForm\print_preview.bmp" />
+    <Content Include="FL_FastReportForm\Resources\print_16.png" />
+    <Content Include="FL_FastReportForm\Resources\print_help_16.png" />
+    <Content Include="FL_FastReportForm\Resources\print_preview.bmp" />
+    <Content Include="FL_FastReportForm\Resources\print_setup_16.png" />
+    <Content Include="FL_FastReportForm\Resources\window_print.bmp" />
+    <Content Include="FL_FastReportForm\window_print.bmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="FL_FastReportForm\Resources\negetive.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle" Version="1.8.9" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+    <PackageReference Include="FastReport.Compat" Version="2021.3.1" />
+    <PackageReference Include="NPOI" Version="2.5.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="FL_Controls\FL_ProgressBar.cs" />
+    <Compile Update="FL_Controls\FL_ProgressBar.Designer.cs">
+      <DependentUpon>FL_ProgressBar.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FL_Controls\FL_SqlQueryManager.cs" />
+    <Compile Update="FL_Controls\FL_SqlQueryManager.designer.cs">
+      <DependentUpon>FL_SqlQueryManager.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FL_FastReportForm\FRPreview.cs" />
+    <Compile Update="FL_FastReportForm\FRPreview.designer.cs">
+      <DependentUpon>FRPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FL_FastReportForm\FRPreviewAlt.cs" />
+    <Compile Update="FL_FastReportForm\FRPreviewAlt.designer.cs">
+      <DependentUpon>FRPreviewAlt.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FL_FastReportForm\FRPrintPreviewControl.cs" />
+    <Compile Update="FL_FastReportForm\FRPrintPreviewControl.designer.cs">
+      <DependentUpon>FRPrintPreviewControl.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FL_FastReportForm\FRPrintPreviewControlAlt.cs" />
+    <Compile Update="FL_FastReportForm\FRPrintPreviewControlAlt.designer.cs">
+      <DependentUpon>FRPrintPreviewControlAlt.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FL_FastReportForm\FRPrintPreviewDialog.cs" />
+    <Compile Update="FL_FastReportForm\FRPrintPreviewDialog.designer.cs">
+      <DependentUpon>FRPrintPreviewDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FL_FastReportForm\FRPrintPreviewDialogAlt.cs" />
+    <Compile Update="FL_FastReportForm\FRPrintPreviewDialogAlt.designer.cs">
+      <DependentUpon>FRPrintPreviewDialogAlt.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FL_Forms\FL_ProgressBarForm.cs" />
+    <Compile Update="FL_Forms\FL_ProgressBarForm.Designer.cs">
+      <DependentUpon>FL_ProgressBarForm.cs</DependentUpon>
+    </Compile>
+    <Compile Update="FL_Forms\FL_SqlQueryManagerForm.cs" />
+    <Compile Update="FL_Forms\FL_SqlQueryManagerForm.designer.cs">
+      <DependentUpon>FL_SqlQueryManagerForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="FL_Controls\FL_ProgressBar.resx">
+      <DependentUpon>FL_ProgressBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FL_Controls\FL_SqlQueryManager.resx">
+      <DependentUpon>FL_SqlQueryManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FL_FastReportForm\FRPreview.resx">
+      <DependentUpon>FRPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FL_FastReportForm\FRPreviewAlt.resx">
+      <DependentUpon>FRPreviewAlt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FL_FastReportForm\FRPrintPreviewControl.resx">
+      <DependentUpon>FRPrintPreviewControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FL_FastReportForm\FRPrintPreviewControlAlt.resx">
+      <DependentUpon>FRPrintPreviewControlAlt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FL_FastReportForm\FRPrintPreviewDialog.resx">
+      <DependentUpon>FRPrintPreviewDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FL_FastReportForm\FRPrintPreviewDialogAlt.resx">
+      <DependentUpon>FRPrintPreviewDialogAlt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FL_Forms\FL_ProgressBarForm.resx">
+      <DependentUpon>FL_ProgressBarForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FL_Forms\FL_SqlQueryManagerForm.resx">
+      <DependentUpon>FL_SqlQueryManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <PackageReference Include="Cake.Powershell" Version = "1.0.1"/>
+    <PackageReference Include="BouncyCastle" Version="1.8.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Feature" Version="2.0.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.0.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Authorization" Version="2.0.1"/>
+    <PackageReference Include="MySql.Data" Version="6.10.9.0"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="Cake.Powershell" Version = "1.0.1"/>
+    <PackageReference Include="BouncyCastle" Version="1.8.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Feature" Version="3.1.24"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Core" Version="2.0.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Authorization" Version="2.0.1"/>
+    <PackageReference Include="MySql.Data" Version="6.10.9.0"/>
+  </ItemGroup>
+
+</Project>

@@ -1,33 +1,36 @@
-﻿namespace frontlook_csharp_library.FL_Controls
+﻿
+using frontlook_csharp_library.FL_Controls;
+
+namespace FrontLookDesktopLibrary.FL_Controls
 {
-    partial class FL_SqlQueryManager
-    {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.IContainer components = null;
+	partial class FL_SqlQueryManagerPort
+	{
+		/// <summary> 
+		/// Required designer variable.
+		/// </summary>
+		private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && (components != null))
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -177,9 +180,9 @@
 			// 
 			// dataGridView1
 			// 
-			this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
 			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
 			dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -236,8 +239,8 @@
 			// 
 			// query
 			// 
-			this.query.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+			this.query.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			| System.Windows.Forms.AnchorStyles.Right)));
 			this.query.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.query.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.query.ForeColor = System.Drawing.Color.Black;
@@ -312,28 +315,28 @@
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
-        }
+		}
 
-        #endregion
-        private System.Windows.Forms.Label label1;
-        private System.ComponentModel.BackgroundWorker dbf_to_excel_series_worker;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button dbf_to_excel_single;
-        private System.Windows.Forms.Button dbf_to_excel_series;
-        private System.Windows.Forms.Button view_db;
-        private System.Windows.Forms.Button clear;
-        private System.ComponentModel.BackgroundWorker db_viewer;
-        private System.ComponentModel.BackgroundWorker db_to_excel_single_worker;
-        private System.Windows.Forms.Button nonquery;
-        private System.Windows.Forms.Button test;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.RichTextBox query;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        //private Microsoft.Reporting.WinForms.ReportViewer rv;
-        private System.Windows.Forms.Button button2;
-        private FL_ProgressBar progress;
-        private System.Windows.Forms.Button stop;
-        private System.Windows.Forms.Button companyDetails;
-    }
+		#endregion
+		private System.Windows.Forms.Label label1;
+		private System.ComponentModel.BackgroundWorker dbf_to_excel_series_worker;
+		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button dbf_to_excel_single;
+		private System.Windows.Forms.Button dbf_to_excel_series;
+		private System.Windows.Forms.Button view_db;
+		private System.Windows.Forms.Button clear;
+		private System.ComponentModel.BackgroundWorker db_viewer;
+		private System.ComponentModel.BackgroundWorker db_to_excel_single_worker;
+		private System.Windows.Forms.Button nonquery;
+		private System.Windows.Forms.Button test;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.RichTextBox query;
+		private System.Windows.Forms.DataGridView dataGridView1;
+		//private Microsoft.Reporting.WinForms.ReportViewer rv;
+		private System.Windows.Forms.Button button2;
+		private FL_ProgressBar progress;
+		private System.Windows.Forms.Button stop;
+		private System.Windows.Forms.Button companyDetails;
+	}
 }
 
