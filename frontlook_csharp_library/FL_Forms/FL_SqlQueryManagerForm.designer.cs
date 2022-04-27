@@ -51,6 +51,8 @@ namespace frontlook_csharp_library.FL_Forms
 			this.progress = new frontlook_csharp_library.FL_Controls.FL_ProgressBar();
 			this.stop = new System.Windows.Forms.Button();
 			this.companyDetails = new System.Windows.Forms.Button();
+			this.button3 = new System.Windows.Forms.Button();
+			this.Dbf_to_class_series_worker = new System.ComponentModel.BackgroundWorker();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -209,7 +211,7 @@ namespace frontlook_csharp_library.FL_Forms
 			dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
 			dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
 			this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-			this.dataGridView1.Size = new System.Drawing.Size(981, 318);
+			this.dataGridView1.Size = new System.Drawing.Size(1003, 318);
 			this.dataGridView1.TabIndex = 2;
 			// 
 			// db_viewer
@@ -245,7 +247,7 @@ namespace frontlook_csharp_library.FL_Forms
 			this.query.ForeColor = System.Drawing.Color.Black;
 			this.query.Location = new System.Drawing.Point(3, 78);
 			this.query.Name = "query";
-			this.query.Size = new System.Drawing.Size(979, 152);
+			this.query.Size = new System.Drawing.Size(1001, 152);
 			this.query.TabIndex = 13;
 			this.query.Text = "";
 			// 
@@ -253,7 +255,7 @@ namespace frontlook_csharp_library.FL_Forms
 			// 
 			this.progress.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.progress.BackColor = System.Drawing.Color.LightSkyBlue;
-			this.progress.Location = new System.Drawing.Point(178, 369);
+			this.progress.Location = new System.Drawing.Point(189, 369);
 			this.progress.Name = "progress";
 			this.progress.Size = new System.Drawing.Size(657, 45);
 			this.progress.TabIndex = 14;
@@ -287,12 +289,32 @@ namespace frontlook_csharp_library.FL_Forms
 			this.companyDetails.UseVisualStyleBackColor = false;
 			this.companyDetails.Click += new System.EventHandler(this.CompanyDetails);
 			// 
+			// button3
+			// 
+			this.button3.BackColor = System.Drawing.Color.PowderBlue;
+			this.button3.FlatAppearance.BorderSize = 0;
+			this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.button3.Location = new System.Drawing.Point(95, 45);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(167, 30);
+			this.button3.TabIndex = 0;
+			this.button3.Text = "Generate Class";
+			this.button3.UseVisualStyleBackColor = false;
+			this.button3.Click += new System.EventHandler(this.Dbf_to_class_series_Click);
+			// 
+			// Dbf_to_class_series_worker
+			// 
+			this.Dbf_to_class_series_worker.WorkerSupportsCancellation = true;
+			this.Dbf_to_class_series_worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.Dbf_to_class_series_worker_DoWork);
+			this.Dbf_to_class_series_worker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.Dbf_to_class_series_worker_ProgressChanged);
+			this.Dbf_to_class_series_worker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.Dbf_to_class_series_worker_RunWorkerCompleted);
+			// 
 			// FL_SqlQueryManagerForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.DeepSkyBlue;
-			this.ClientSize = new System.Drawing.Size(970, 518);
+			this.ClientSize = new System.Drawing.Size(992, 518);
 			this.Controls.Add(this.progress);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.stop);
@@ -304,6 +326,7 @@ namespace frontlook_csharp_library.FL_Forms
 			this.Controls.Add(this.clear);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.dbf_to_excel_single);
+			this.Controls.Add(this.button3);
 			this.Controls.Add(this.dbf_to_excel_series);
 			this.Controls.Add(this.view_db);
 			this.Controls.Add(this.label1);
@@ -337,6 +360,8 @@ namespace frontlook_csharp_library.FL_Forms
         private FL_ProgressBar progress;
         private System.Windows.Forms.Button stop;
         private System.Windows.Forms.Button companyDetails;
-    }
+		private System.Windows.Forms.Button button3;
+		private System.ComponentModel.BackgroundWorker Dbf_to_class_series_worker;
+	}
 }
 

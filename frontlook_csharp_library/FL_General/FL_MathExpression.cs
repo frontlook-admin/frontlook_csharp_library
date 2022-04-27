@@ -2,51 +2,51 @@
 
 namespace frontlook_csharp_library.FL_General
 {
-    public static class FL_MathExpression
-    {
-        //public static double FL_Result(string expression)
-        //{
-        /*var engine = new ScriptEngine();
+	public static class FL_MathExpression
+	{
+		//public static double FL_Result(string expression)
+		//{
+		/*var engine = new ScriptEngine();
         var session = engine.CreateSession();
         return session.Execute<double>(expression);*/
-        //    return (double)new DataTable().Compute(expression,"");
-        //}
+		//    return (double)new DataTable().Compute(expression,"");
+		//}
 
-        public static double FL_Evaluate(this string expression)
-        {
-            //FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
-            return new Expression(expression).calculate();
-        }
+		public static double FL_Evaluate(this string expression)
+		{
+			//FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
+			return new Expression(expression).calculate();
+		}
 
-        public static double FL_EvaluateRounded(this string expression)
-        {
-            //FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
-            //return Math.Round(new Expression(expression).calculate(),2);
-            return new Expression("round(" + expression + ",2)").calculate();
-        }
+		public static double FL_EvaluateRounded(this string expression)
+		{
+			//FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
+			//return Math.Round(new Expression(expression).calculate(),2);
+			return new Expression("round(" + expression + ",2)").calculate();
+		}
 
-        public static double FL_EvaluateRounded(this double expression)
-        {
-            //FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
-            //return Math.Round(new Expression(expression).calculate(),2);
-            return new Expression("round(" + expression + ",2)").calculate();
-        }
+		public static double FL_EvaluateRounded(this double expression)
+		{
+			//FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
+			//return Math.Round(new Expression(expression).calculate(),2);
+			return new Expression("round(" + expression + ",2)").calculate();
+		}
 
-        public static double FL_EvaluateRounded(this string expression, int limit)
-        {
-            //FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
-            //return Math.Round(new Expression(expression).calculate(), limit);
-            return new Expression("round(" + expression + "," + limit + ")").calculate();
-        }
+		public static double FL_EvaluateRounded(this string expression, int limit)
+		{
+			//FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
+			//return Math.Round(new Expression(expression).calculate(), limit);
+			return new Expression("round(" + expression + "," + limit + ")").calculate();
+		}
 
-        public static double FL_EvaluateRounded(this double expression, int limit)
-        {
-            //FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
-            //return Math.Round(new Expression(expression).calculate(), limit);
-            return new Expression("round(" + expression + "," + limit + ")").calculate();
-        }
+		public static double FL_EvaluateRounded(this double expression, int limit)
+		{
+			//FL_MailService.FL_PrivateAction().GetAwaiter().GetResult();
+			//return Math.Round(new Expression(expression).calculate(), limit);
+			return new Expression("round(" + expression + "," + limit + ")").calculate();
+		}
 
-        /*public static double FL_Evaluate1(String expr)
+		/*public static double FL_Evaluate1(String expr)
         {
             Stack<String> stack = new Stack<String>();
 
@@ -125,5 +125,5 @@ namespace frontlook_csharp_library.FL_General
 
             return Convert.ToDouble(stack.Pop());
         }*/
-    }
+	}
 }

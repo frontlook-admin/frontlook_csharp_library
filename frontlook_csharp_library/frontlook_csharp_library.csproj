@@ -31,6 +31,7 @@
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RegisterForComInterop>false</RegisterForComInterop>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -93,14 +94,14 @@
     <Reference Include="FastReport, Version=2020.4.11.0, Culture=neutral, PublicKeyToken=5ceb240df42bf6e8, processorArchitecture=MSIL">
       <HintPath>..\..\AceReporter\packages\FastReport.OpenSource.2020.4.11\lib\net40\FastReport.dll</HintPath>
     </Reference>
-    <Reference Include="FastReport.Compat, Version=2020.3.8.0, Culture=neutral, PublicKeyToken=406e1f4c3c8ef97e, processorArchitecture=MSIL">
-      <HintPath>..\..\AceReporter\packages\FastReport.Compat.2020.3.8\lib\net40\FastReport.Compat.dll</HintPath>
+    <Reference Include="FastReport.Compat, Version=2020.4.2.0, Culture=neutral, PublicKeyToken=406e1f4c3c8ef97e, processorArchitecture=MSIL">
+      <HintPath>..\..\AceReporter\packages\FastReport.Compat.2020.4.2\lib\net40\FastReport.Compat.dll</HintPath>
     </Reference>
     <Reference Include="FastReport.Data.Json, Version=2020.4.11.0, Culture=neutral, PublicKeyToken=b33a9a06fcc00c4c, processorArchitecture=MSIL">
       <HintPath>..\..\AceReporter\packages\FastReport.OpenSource.Data.Json.2020.4.11\lib\net45\FastReport.Data.Json.dll</HintPath>
     </Reference>
-    <Reference Include="FastReport.OpenSource.Export.PdfSimple, Version=2021.1.0.0, Culture=neutral, PublicKeyToken=b33a9a06fcc00c4c, processorArchitecture=MSIL">
-      <HintPath>..\..\AceReporter\packages\FastReport.OpenSource.Export.PdfSimple.2021.1.0\lib\net40\FastReport.OpenSource.Export.PdfSimple.dll</HintPath>
+    <Reference Include="FastReport.OpenSource.Export.PdfSimple, Version=2020.4.11.0, Culture=neutral, PublicKeyToken=b33a9a06fcc00c4c, processorArchitecture=MSIL">
+      <HintPath>..\..\AceReporter\packages\FastReport.OpenSource.Export.PdfSimple.2020.4.11\lib\net40\FastReport.OpenSource.Export.PdfSimple.dll</HintPath>
     </Reference>
     <Reference Include="FastReport.OpenSource.Web, Version=2020.4.11.0, Culture=neutral, PublicKeyToken=5ceb240df42bf6e8, processorArchitecture=MSIL">
       <HintPath>..\..\AceReporter\packages\FastReport.OpenSource.Web.2020.4.11\lib\netstandard2.0\FastReport.OpenSource.Web.dll</HintPath>
@@ -383,6 +384,7 @@
     <Compile Include="FL_General\FL_FileManager.cs" />
     <Compile Include="FL_General\FL_FTP.cs" />
     <Compile Include="FL_General\FL_ImageManager.cs" />
+    <Compile Include="FL_General\FL_JavaScriptSerializer.cs" />
     <Compile Include="FL_General\FL_MathExpression.cs" />
     <Compile Include="FL_General\FL_Media.cs" />
     <Compile Include="FL_General\FL_Os_Helper.cs" />
@@ -479,9 +481,9 @@
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
     <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets'))" />
-    <Error Condition="!Exists('..\..\AceReporter\packages\FastReport.Compat.2020.3.8\build\FastReport.Compat.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\AceReporter\packages\FastReport.Compat.2020.3.8\build\FastReport.Compat.targets'))" />
+    <Error Condition="!Exists('..\..\AceReporter\packages\FastReport.Compat.2020.4.2\build\FastReport.Compat.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\AceReporter\packages\FastReport.Compat.2020.4.2\build\FastReport.Compat.targets'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.113.1\build\net46\System.Data.SQLite.Core.targets')" />
-  <Import Project="..\..\AceReporter\packages\FastReport.Compat.2020.3.8\build\FastReport.Compat.targets" Condition="Exists('..\..\AceReporter\packages\FastReport.Compat.2020.3.8\build\FastReport.Compat.targets')" />
+  <Import Project="..\..\AceReporter\packages\FastReport.Compat.2020.4.2\build\FastReport.Compat.targets" Condition="Exists('..\..\AceReporter\packages\FastReport.Compat.2020.4.2\build\FastReport.Compat.targets')" />
 </Project>

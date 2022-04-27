@@ -1,344 +1,340 @@
+using FastReport;
+using frontlook_csharp_library.FL_General;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Windows.Forms;
-using FastReport;
-using FastReport.Export;
-using FastReport.Export.Image;
-using FastReport.Utils;
-using frontlook_csharp_library.FL_General;
 
 namespace frontlook_csharp_library.FL_FastReportForm
 {
-    public static class Extensions
-    {
-        #region Fields
+	public static class Extensions
+	{
+		#region Fields
 
-        private const float scaleFactor = 300 / 96f;
+		private const float scaleFactor = 300 / 96f;
 
-        #endregion Fields
+		#endregion Fields
 
-        #region Methods
+		#region Methods
 
-        public static void PrintWithDialog(this Report report)
-        {
-            using (var dlg = new PrintDialog())
-            {
-                dlg.AllowSomePages = true;
-                dlg.AllowSelection = true;
-                dlg.UseEXDialog = true;
+		public static void PrintWithDialog(this Report report)
+		{
+			using (var dlg = new PrintDialog())
+			{
+				dlg.AllowSomePages = true;
+				dlg.AllowSelection = true;
+				dlg.UseEXDialog = true;
 
-                if (dlg.ShowDialog() != DialogResult.OK) return;
+				if (dlg.ShowDialog() != DialogResult.OK) return;
 
-                report.Print(dlg.PrinterSettings);
-            }
-        }
+				report.Print(dlg.PrinterSettings);
+			}
+		}
 
-        public static void PrintWithDialogMod(this Report report)
-        {
-            using (var dlg = new PrintDialog())
-            {
-                dlg.AllowSomePages = true;
-                dlg.AllowSelection = true;
-                dlg.UseEXDialog = true;
+		public static void PrintWithDialogMod(this Report report)
+		{
+			using (var dlg = new PrintDialog())
+			{
+				dlg.AllowSomePages = true;
+				dlg.AllowSelection = true;
+				dlg.UseEXDialog = true;
 
-                if (dlg.ShowDialog() != DialogResult.OK) return;
+				if (dlg.ShowDialog() != DialogResult.OK) return;
 
-                report.PrintMod(dlg.PrinterSettings);
-            }
-        }
+				report.PrintMod(dlg.PrinterSettings);
+			}
+		}
 
-        public static void Print(this Report report, PrinterSettings settings = null)
-        {
-            var doc = report.PrepareDoc(settings);
-            if (doc == null) return;
+		public static void Print(this Report report, PrinterSettings settings = null)
+		{
+			var doc = report.PrepareDoc(settings);
+			if (doc == null) return;
 
-            doc.Print();
-            doc.Dispose();
-        }
+			doc.Print();
+			doc.Dispose();
+		}
 
-        public static void PrintMod(this Report report, PrinterSettings settings = null)
-        {
-            var doc = report.PrepareDocMod(settings);
-            if (doc == null) return;
+		public static void PrintMod(this Report report, PrinterSettings settings = null)
+		{
+			var doc = report.PrepareDocMod(settings);
+			if (doc == null) return;
 
-            doc.Print();
-            doc.Dispose();
-        }
+			doc.Print();
+			doc.Dispose();
+		}
 
-        public static void Preview(this Report report, FRPrintPreviewControl preview, PrinterSettings settings = null)
-        {
-            var doc = report.PrepareDoc(settings);
-            if (doc == null) return;
+		public static void Preview(this Report report, FRPrintPreviewControl preview, PrinterSettings settings = null)
+		{
+			var doc = report.PrepareDoc(settings);
+			if (doc == null) return;
 
-            preview.Document = doc;
-        }
+			preview.Document = doc;
+		}
 
-        public static void Preview(this Report report, FRPrintPreviewControlAlt preview, PrinterSettings settings = null)
-        {
-            var doc = report.PrepareDoc(settings);
-            if (doc == null) return;
+		public static void Preview(this Report report, FRPrintPreviewControlAlt preview, PrinterSettings settings = null)
+		{
+			var doc = report.PrepareDoc(settings);
+			if (doc == null) return;
 
-            preview.Document = doc;
-        }
+			preview.Document = doc;
+		}
 
-        public static void PreviewMod(this Report report, FRPrintPreviewControl preview, PrinterSettings settings = null)
-        {
-            var doc = report.PrepareDocMod(settings);
-            if (doc == null) return;
+		public static void PreviewMod(this Report report, FRPrintPreviewControl preview, PrinterSettings settings = null)
+		{
+			var doc = report.PrepareDocMod(settings);
+			if (doc == null) return;
 
-            preview.Document = doc;
-        }
+			preview.Document = doc;
+		}
 
-        public static void PreviewMod(this Report report, FRPrintPreviewControlAlt preview, PrinterSettings settings = null)
-        {
-            var doc = report.PrepareDocMod(settings);
-            if (doc == null) return;
+		public static void PreviewMod(this Report report, FRPrintPreviewControlAlt preview, PrinterSettings settings = null)
+		{
+			var doc = report.PrepareDocMod(settings);
+			if (doc == null) return;
 
-            preview.Document = doc;
-        }
+			preview.Document = doc;
+		}
 
-        public static void Preview(this Report report, PrinterSettings settings = null)
-        {
-            var doc = report.PrepareDoc(settings);
-            if (doc == null) return;
+		public static void Preview(this Report report, PrinterSettings settings = null)
+		{
+			var doc = report.PrepareDoc(settings);
+			if (doc == null) return;
 
-            using (var preview = new FRPrintPreviewDialog() { Document = doc })
-                preview.ShowDialog();
-            doc.Dispose();
-        }
+			using (var preview = new FRPrintPreviewDialog() { Document = doc })
+				preview.ShowDialog();
+			doc.Dispose();
+		}
 
-        public static void PreviewMod(this Report report, PrinterSettings settings = null)
-        {
-            var doc = report.PrepareDocMod(settings);
-            if (doc == null) return;
+		public static void PreviewMod(this Report report, PrinterSettings settings = null)
+		{
+			var doc = report.PrepareDocMod(settings);
+			if (doc == null) return;
 
-            using (var preview = new FRPrintPreviewDialog() { Document = doc })
-                preview.ShowDialog();
-            doc.Dispose();
-        }
+			using (var preview = new FRPrintPreviewDialog() { Document = doc })
+				preview.ShowDialog();
+			doc.Dispose();
+		}
 
-        public static PrinterSettings? GetSetPrinterSettings(PrintType printType, string PrintSettingDirPath, string PrintSettingFilePath, Report Rep)
-        {
-            if (printType == PrintType.Default)
-            {
-                using var pd = new PrintDialog();
-                //pd.PrinterSettings.
-                var pdSettingList = new List<string>();
-                if (File.Exists(PrintSettingFilePath))
-                {
-                    var pf = File.ReadAllLines(PrintSettingFilePath);
-                    if (pf.Length == 5)
-                    {
-                        pd.AllowSomePages = true;
-                        pd.AllowSelection = true;
-                        pd.AllowPrintToFile = true;
-                        pd.UseEXDialog = true;
-                        pd.ShowNetwork = true;
-                        pd.PrinterSettings.PrintRange = PrintRange.AllPages;
-                        pd.PrinterSettings.PrinterName = pf[0];
-                        pd.PrinterSettings.Copies = (short)int.Parse(pf[1]);
-                        pd.PrinterSettings.PrintToFile = bool.Parse(pf[2]);
-                        pd.PrinterSettings.Collate = bool.Parse(pf[3]);
-                        var px = Rep.FL_GetPageSettings();
-                        px.Margins = new Margins(0, 0, 0, 0);
-                        pd.PrinterSettings.DefaultPageSettings.PaperSize = px.PaperSize;
-                        pd.PrinterSettings.DefaultPageSettings.Landscape = bool.Parse(pf[4]);
-                        return pd.PrinterSettings;
-                    }
+		public static PrinterSettings? GetSetPrinterSettings(PrintType printType, string PrintSettingDirPath, string PrintSettingFilePath, Report Rep)
+		{
+			if (printType == PrintType.Default)
+			{
+				using var pd = new PrintDialog();
+				//pd.PrinterSettings.
+				var pdSettingList = new List<string>();
+				if (File.Exists(PrintSettingFilePath))
+				{
+					var pf = File.ReadAllLines(PrintSettingFilePath);
+					if (pf.Length == 5)
+					{
+						pd.AllowSomePages = true;
+						pd.AllowSelection = true;
+						pd.AllowPrintToFile = true;
+						pd.UseEXDialog = true;
+						pd.ShowNetwork = true;
+						pd.PrinterSettings.PrintRange = PrintRange.AllPages;
+						pd.PrinterSettings.PrinterName = pf[0];
+						pd.PrinterSettings.Copies = (short)int.Parse(pf[1]);
+						pd.PrinterSettings.PrintToFile = bool.Parse(pf[2]);
+						pd.PrinterSettings.Collate = bool.Parse(pf[3]);
+						var px = Rep.FL_GetPageSettings();
+						px.Margins = new Margins(0, 0, 0, 0);
+						pd.PrinterSettings.DefaultPageSettings.PaperSize = px.PaperSize;
+						pd.PrinterSettings.DefaultPageSettings.Landscape = bool.Parse(pf[4]);
+						return pd.PrinterSettings;
+					}
 
-                    pd.AllowSomePages = true;
-                    pd.AllowSelection = true;
-                    pd.AllowPrintToFile = true;
-                    pd.UseEXDialog = true;
-                    pd.PrinterSettings.PrintRange = PrintRange.AllPages;
-                    if (pd.ShowDialog() != DialogResult.OK) return null;
-                    pdSettingList.Add(pd.PrinterSettings.PrinterName);
-                    pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
-                    pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
+					pd.AllowSomePages = true;
+					pd.AllowSelection = true;
+					pd.AllowPrintToFile = true;
+					pd.UseEXDialog = true;
+					pd.PrinterSettings.PrintRange = PrintRange.AllPages;
+					if (pd.ShowDialog() != DialogResult.OK) return null;
+					pdSettingList.Add(pd.PrinterSettings.PrinterName);
+					pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
+					pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
+					pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
+					pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
+					pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
 
-                    setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
-                    return pd.PrinterSettings;
-                }
+					setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
+					return pd.PrinterSettings;
+				}
 
-                pd.AllowSomePages = true;
-                pd.AllowSelection = true;
-                pd.AllowPrintToFile = true;
-                pd.ShowNetwork = true;
-                pd.UseEXDialog = true;
-                pd.PrinterSettings.PrintRange = PrintRange.AllPages;
-                if (pd.ShowDialog() != DialogResult.OK) return null;
-                pdSettingList.Add(pd.PrinterSettings.PrinterName);
-                pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
-                pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
-                pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
+				pd.AllowSomePages = true;
+				pd.AllowSelection = true;
+				pd.AllowPrintToFile = true;
+				pd.ShowNetwork = true;
+				pd.UseEXDialog = true;
+				pd.PrinterSettings.PrintRange = PrintRange.AllPages;
+				if (pd.ShowDialog() != DialogResult.OK) return null;
+				pdSettingList.Add(pd.PrinterSettings.PrinterName);
+				pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
+				pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
+				pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
 
-                pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
-                setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
-                return pd.PrinterSettings;
-            }
-            else
-            {
-                using var pd = new PrintDialog();
-                var pdSettingList = new List<string>();
-                if (File.Exists(PrintSettingFilePath))
-                {
-                    var pf = File.ReadAllLines(PrintSettingFilePath);
-                    if (pf.Length == 6)
-                    {
-                        pd.AllowSomePages = true;
-                        pd.AllowSelection = true;
-                        pd.AllowPrintToFile = true;
-                        pd.UseEXDialog = true;
-                        pd.ShowNetwork = true;
-                        pd.PrinterSettings.PrintRange = PrintRange.AllPages;
-                        pd.PrinterSettings.PrinterName = pf[0];
-                        pd.PrinterSettings.Copies = (short)int.Parse(pf[1]);
-                        pd.PrinterSettings.PrintToFile = bool.Parse(pf[2]);
-                        pd.PrinterSettings.Collate = bool.Parse(pf[3]);
-                        var pz = pd.PrinterSettings.FL_SetPaperSize(int.Parse(pf[4]));
-                        pd.PrinterSettings.DefaultPageSettings.PaperSize = pz;
-                        pd.PrinterSettings.DefaultPageSettings.Landscape = bool.Parse(pf[5]);
-                        return pd.PrinterSettings;
-                    }
+				pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
+				setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
+				return pd.PrinterSettings;
+			}
+			else
+			{
+				using var pd = new PrintDialog();
+				var pdSettingList = new List<string>();
+				if (File.Exists(PrintSettingFilePath))
+				{
+					var pf = File.ReadAllLines(PrintSettingFilePath);
+					if (pf.Length == 6)
+					{
+						pd.AllowSomePages = true;
+						pd.AllowSelection = true;
+						pd.AllowPrintToFile = true;
+						pd.UseEXDialog = true;
+						pd.ShowNetwork = true;
+						pd.PrinterSettings.PrintRange = PrintRange.AllPages;
+						pd.PrinterSettings.PrinterName = pf[0];
+						pd.PrinterSettings.Copies = (short)int.Parse(pf[1]);
+						pd.PrinterSettings.PrintToFile = bool.Parse(pf[2]);
+						pd.PrinterSettings.Collate = bool.Parse(pf[3]);
+						var pz = pd.PrinterSettings.FL_SetPaperSize(int.Parse(pf[4]));
+						pd.PrinterSettings.DefaultPageSettings.PaperSize = pz;
+						pd.PrinterSettings.DefaultPageSettings.Landscape = bool.Parse(pf[5]);
+						return pd.PrinterSettings;
+					}
 
-                    pd.AllowSomePages = true;
-                    pd.AllowSelection = true;
-                    pd.AllowPrintToFile = true;
-                    pd.UseEXDialog = true;
-                    pd.PrinterSettings.PrintRange = PrintRange.AllPages;
-                    if (pd.ShowDialog() != DialogResult.OK) return null;
-                    pdSettingList.Add(pd.PrinterSettings.PrinterName);
-                    pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
-                    pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
+					pd.AllowSomePages = true;
+					pd.AllowSelection = true;
+					pd.AllowPrintToFile = true;
+					pd.UseEXDialog = true;
+					pd.PrinterSettings.PrintRange = PrintRange.AllPages;
+					if (pd.ShowDialog() != DialogResult.OK) return null;
+					pdSettingList.Add(pd.PrinterSettings.PrinterName);
+					pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
+					pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
+					pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
+					pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
+					pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
 
-                    setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
-                    return pd.PrinterSettings;
-                }
+					setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
+					return pd.PrinterSettings;
+				}
 
-                pd.AllowSomePages = true;
-                pd.AllowSelection = true;
-                pd.AllowPrintToFile = true;
-                pd.ShowNetwork = true;
-                pd.UseEXDialog = true;
-                pd.PrinterSettings.PrintRange = PrintRange.AllPages;
-                if (pd.ShowDialog() != DialogResult.OK) return null;
-                pdSettingList.Add(pd.PrinterSettings.PrinterName);
-                pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
-                pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
-                pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
-                pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
-                pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
-                setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
-                return pd.PrinterSettings;
-            }
-        }
+				pd.AllowSomePages = true;
+				pd.AllowSelection = true;
+				pd.AllowPrintToFile = true;
+				pd.ShowNetwork = true;
+				pd.UseEXDialog = true;
+				pd.PrinterSettings.PrintRange = PrintRange.AllPages;
+				if (pd.ShowDialog() != DialogResult.OK) return null;
+				pdSettingList.Add(pd.PrinterSettings.PrinterName);
+				pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
+				pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
+				pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
+				pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
+				pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
+				setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
+				return pd.PrinterSettings;
+			}
+		}
 
 
 
-        public static void SetPrinterSettings(PrintType printType, string PrintSettingDirPath, string PrintSettingFilePath)
-        {
-            if (printType == PrintType.Default)
-            {
-                var pdSettingList = new List<string>();
-                using (var pd = new PrintDialog())
-                {
-                    pd.AllowSomePages = true;
-                    pd.AllowSelection = true;
-                    pd.ShowNetwork = true;
-                    pd.AllowPrintToFile = true;
-                    pd.UseEXDialog = true;
-                    pd.PrinterSettings.PrintRange = PrintRange.AllPages;
+		public static void SetPrinterSettings(PrintType printType, string PrintSettingDirPath, string PrintSettingFilePath)
+		{
+			if (printType == PrintType.Default)
+			{
+				var pdSettingList = new List<string>();
+				using (var pd = new PrintDialog())
+				{
+					pd.AllowSomePages = true;
+					pd.AllowSelection = true;
+					pd.ShowNetwork = true;
+					pd.AllowPrintToFile = true;
+					pd.UseEXDialog = true;
+					pd.PrinterSettings.PrintRange = PrintRange.AllPages;
 
-                    if (Directory.Exists(PrintSettingDirPath) && File.Exists(PrintSettingFilePath))
-                    {
-                        var pf = File.ReadAllLines(PrintSettingFilePath);
-                        if (pf.Length == 5)
-                        {
-                            pd.PrinterSettings.PrinterName = pf[0];
-                            pd.PrinterSettings.Copies = (short)int.Parse(pf[1]);
-                            pd.PrinterSettings.PrintToFile = bool.Parse(pf[2]);
-                            pd.PrinterSettings.Collate = bool.Parse(pf[3]);
-                            //var pz = pd.PrinterSettings.FL_SetPaperSize(int.Parse(pf[4]));
-                            //pd.PrinterSettings.DefaultPageSettings.PaperSize = pz;
-                            //pd.PrinterSettings.DefaultPageSettings.Landscape = bool.Parse(pf[5]);
-                        }
-                    }
+					if (Directory.Exists(PrintSettingDirPath) && File.Exists(PrintSettingFilePath))
+					{
+						var pf = File.ReadAllLines(PrintSettingFilePath);
+						if (pf.Length == 5)
+						{
+							pd.PrinterSettings.PrinterName = pf[0];
+							pd.PrinterSettings.Copies = (short)int.Parse(pf[1]);
+							pd.PrinterSettings.PrintToFile = bool.Parse(pf[2]);
+							pd.PrinterSettings.Collate = bool.Parse(pf[3]);
+							//var pz = pd.PrinterSettings.FL_SetPaperSize(int.Parse(pf[4]));
+							//pd.PrinterSettings.DefaultPageSettings.PaperSize = pz;
+							//pd.PrinterSettings.DefaultPageSettings.Landscape = bool.Parse(pf[5]);
+						}
+					}
 
-                    if (pd.ShowDialog() != DialogResult.OK) return;
-                    pdSettingList.Add(pd.PrinterSettings.PrinterName);
-                    pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
-                    //pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
-                    pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
-                    setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
-                }
-            }
-            else
-            {
-                var pdSettingList = new List<string>();
-                using (var pd = new PrintDialog())
-                {
-                    pd.AllowSomePages = true;
-                    pd.AllowSelection = true;
-                    pd.ShowNetwork = true;
-                    pd.AllowPrintToFile = true;
-                    pd.UseEXDialog = true;
-                    pd.PrinterSettings.PrintRange = PrintRange.AllPages;
+					if (pd.ShowDialog() != DialogResult.OK) return;
+					pdSettingList.Add(pd.PrinterSettings.PrinterName);
+					pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
+					pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
+					pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
+					//pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
+					pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
+					setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
+				}
+			}
+			else
+			{
+				var pdSettingList = new List<string>();
+				using (var pd = new PrintDialog())
+				{
+					pd.AllowSomePages = true;
+					pd.AllowSelection = true;
+					pd.ShowNetwork = true;
+					pd.AllowPrintToFile = true;
+					pd.UseEXDialog = true;
+					pd.PrinterSettings.PrintRange = PrintRange.AllPages;
 
-                    if (Directory.Exists(PrintSettingDirPath) && File.Exists(PrintSettingFilePath))
-                    {
-                        var pf = File.ReadAllLines(PrintSettingFilePath);
-                        if (pf.Length == 6)
-                        {
-                            pd.PrinterSettings.PrinterName = pf[0];
-                            pd.PrinterSettings.Copies = (short)int.Parse(pf[1]);
-                            pd.PrinterSettings.PrintToFile = bool.Parse(pf[2]);
-                            pd.PrinterSettings.Collate = bool.Parse(pf[3]);
-                            var pz = pd.PrinterSettings.FL_SetPaperSize(int.Parse(pf[4]));
-                            pd.PrinterSettings.DefaultPageSettings.PaperSize = pz;
-                            pd.PrinterSettings.DefaultPageSettings.Landscape = bool.Parse(pf[5]);
-                        }
-                    }
+					if (Directory.Exists(PrintSettingDirPath) && File.Exists(PrintSettingFilePath))
+					{
+						var pf = File.ReadAllLines(PrintSettingFilePath);
+						if (pf.Length == 6)
+						{
+							pd.PrinterSettings.PrinterName = pf[0];
+							pd.PrinterSettings.Copies = (short)int.Parse(pf[1]);
+							pd.PrinterSettings.PrintToFile = bool.Parse(pf[2]);
+							pd.PrinterSettings.Collate = bool.Parse(pf[3]);
+							var pz = pd.PrinterSettings.FL_SetPaperSize(int.Parse(pf[4]));
+							pd.PrinterSettings.DefaultPageSettings.PaperSize = pz;
+							pd.PrinterSettings.DefaultPageSettings.Landscape = bool.Parse(pf[5]);
+						}
+					}
 
-                    if (pd.ShowDialog() != DialogResult.OK) return;
-                    pdSettingList.Add(pd.PrinterSettings.PrinterName);
-                    pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
-                    pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
-                    pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
-                    setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
-                }
-            }
-        }
+					if (pd.ShowDialog() != DialogResult.OK) return;
+					pdSettingList.Add(pd.PrinterSettings.PrinterName);
+					pdSettingList.Add(pd.PrinterSettings.Copies.ToString());
+					pdSettingList.Add(pd.PrinterSettings.PrintToFile.ToString());
+					pdSettingList.Add(pd.PrinterSettings.Collate.ToString());
+					pdSettingList.Add(pd.PrinterSettings.FL_GetPaperSize().ToString());
+					pdSettingList.Add(pd.PrinterSettings.DefaultPageSettings.Landscape.ToString());
+					setUpPrinter(pdSettingList, PrintSettingDirPath, PrintSettingFilePath);
+				}
+			}
+		}
 
-        private static void setUpPrinter(List<string> pds, string PrintSettingDirPath, string PrintSettingFilePath)
-        {
-            if (!Directory.Exists(PrintSettingDirPath))
-            {
-                Directory.CreateDirectory(PrintSettingDirPath);
-            }
-            File.Delete(PrintSettingFilePath);
-            File.AppendAllLines(PrintSettingFilePath, pds);
-            //pds.ForEach(e => );
-        }
+		private static void setUpPrinter(List<string> pds, string PrintSettingDirPath, string PrintSettingFilePath)
+		{
+			if (!Directory.Exists(PrintSettingDirPath))
+			{
+				Directory.CreateDirectory(PrintSettingDirPath);
+			}
+			File.Delete(PrintSettingFilePath);
+			File.AppendAllLines(PrintSettingFilePath, pds);
+			//pds.ForEach(e => );
+		}
 
-        public enum PrintType
-        {
-            Default = 1,
-            Mod = 2
-        }
+		public enum PrintType
+		{
+			Default = 1,
+			Mod = 2
+		}
 
-        /*
+		/*
                 private static PrintDocument PrepareDoc(this Report report, PrinterSettings settings = null)
                 {
                     if (report.PreparedPages.Count < 1)
@@ -452,6 +448,6 @@ namespace frontlook_csharp_library.FL_FastReportForm
                 }
         */
 
-        #endregion Methods
-    }
+		#endregion Methods
+	}
 }
